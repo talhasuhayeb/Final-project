@@ -1,3 +1,4 @@
+import Hero from "./Components/Hero/Hero";
 import Navbar from "./Components/Navbar/Navbar";
 
 function App() {
@@ -5,6 +6,7 @@ function App() {
     <>
       <div className="w-screen min-h-screen bg-[#8A0302]">
         <Navbar />
+        <Hero />
       </div>
     </>
   );
