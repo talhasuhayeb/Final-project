@@ -28,7 +28,7 @@ export default function Navbar() {
               href="#"
               className="px-3 py-1 rounded-md transition duration-300 font-medium hover:bg-[#B79455] hover:scale-105 hover:font-bold hover:text-red-800"
             >
-              Group Detection
+              Home
             </a>
             <a
               href="#"
