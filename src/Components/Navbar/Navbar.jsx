@@ -104,36 +104,43 @@ export default function Navbar() {
       {/* Mobile Menu */}
       {isOpen && (
         <div className="md:hidden bg-red-700 px-2 pt-2 pb-3 space-y-1">
-          <a
-            href="#"
+          <Link
+            to="/"
             className="block px-3 py-2 rounded text-white hover:bg-red-500 transition duration-300"
           >
             Home
-          </a>
-          <a
-            href="#"
+          </Link>
+          <Link
+            to="/about"
             className="block px-3 py-2 rounded text-white hover:bg-red-500 transition duration-300"
+            onClick={(e) => {
+              e.preventDefault();
+              const aboutSection = document.getElementById("about");
+              if (aboutSection) {
+                aboutSection.scrollIntoView({ behavior: "smooth" });
+              }
+            }}
           >
             About
-          </a>
-          <a
-            href="#"
+          </Link>
+          <Link
+            to="#"
             className="block px-3 py-2 rounded text-white hover:bg-red-500 transition duration-300"
           >
-            Services
-          </a>
-          <a
-            href="#register"
+            Blood Bank
+          </Link>
+          <Link
+            to="/register"
             className="block px-3 py-2 rounded text-red-600 bg-white font-semibold hover:bg-red-100 transition duration-300"
           >
             Register
-          </a>
-          <a
-            href="#login"
+          </Link>
+          <Link
+            to="/login"
             className="block px-3 py-2 rounded border border-white text-white hover:bg-red-100 hover:text-red-600 transition duration-300"
           >
             Login
-          </a>
+          </Link>
         </div>
       )}
     </nav>
