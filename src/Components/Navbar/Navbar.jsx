@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -9,8 +10,8 @@ export default function Navbar() {
         <div className="flex justify-between h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <a href="/" className="flex items-center space-x-2">
-              {/* Blood drop logo image */}
+            <Link to="/" className="flex items-center space-x-2">
+              {/*  logo img */}
               <img
                 src="src/assets/logo.png"
                 alt="BloodDetect logo"
@@ -19,44 +20,51 @@ export default function Navbar() {
               <span className="font-bold text-xl select-none">
                 Blood Detection System
               </span>
-            </a>
+            </Link>
           </div>
 
-          {/* Desktop Navigation Links */}
+          {/* Nav Links */}
           <div className="hidden md:flex items-center space-x-4">
-            <a
-              href="#"
+            <Link
+              to="/"
               className="px-3 py-1 rounded-md transition duration-300 font-medium hover:bg-[#B79455] hover:scale-105 hover:font-bold hover:text-red-800"
             >
               Home
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              to="#about"
               className="px-3 py-1 rounded-md transition duration-300 font-medium hover:bg-[#B79455] hover:scale-105 hover:font-bold hover:text-red-800"
+              onClick={(e) => {
+                e.preventDefault();
+                const aboutSection = document.getElementById("about");
+                if (aboutSection) {
+                  aboutSection.scrollIntoView({ behavior: "smooth" });
+                }
+              }}
             >
               About
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              to="#"
               className="px-3 py-1 rounded-md transition duration-300 font-medium hover:bg-[#B79455] hover:scale-105 hover:font-bold hover:text-red-800"
             >
               Blood Bank
-            </a>
+            </Link>
           </div>
           {/* Register / Login Buttons */}
           <div className="hidden md:flex items-center space-x-4">
-            <a
-              href="#register"
+            <Link
+              to="/register"
               className="px-4 py-2 bg-white text-red-600 font-semibold rounded hover:bg-red-100 transition duration-300"
             >
               Register
-            </a>
-            <a
-              href="#login"
+            </Link>
+            <Link
+              to="/login"
               className="px-4 py-2 border border-white rounded font-medium hover:bg-red-100 hover:font-bold hover:text-red-600 transition duration-300"
             >
               Login
-            </a>
+            </Link>
           </div>
           {/* Mobile menu button */}
           <div className="flex items-center md:hidden">

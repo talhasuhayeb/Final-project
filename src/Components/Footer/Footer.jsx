@@ -5,7 +5,6 @@ const Footer = () => {
     <footer className="bg-gray-900 text-white py-8">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-center">
-          {/* Logo and copyright */}
           <div className="mb-4 md:mb-0">
             <div className="flex items-center">
               <img
@@ -18,8 +17,7 @@ const Footer = () => {
               </span>
             </div>
             <p className="text-gray-400 text-sm mt-2">
-              © {new Date().getFullYear()} Blood Group Detection System. All
-              rights reserved.
+              © 2025 Blood Group Detection System. All rights reserved.
             </p>
           </div>
 

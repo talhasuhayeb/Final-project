@@ -2,7 +2,10 @@ import React from "react";
 
 const About = () => {
   return (
-    <section className="bg-gradient-to-br  text-white min-h-screen flex items-center justify-center p-6">
+    <section
+      id="about"
+      className="bg-gradient-to-br  text-white min-h-screen flex items-center justify-center p-6"
+    >
       <div className="max-w-6xl mx-auto w-full">
         {/* Text Section */}
         <div className="text-center mb-12">
