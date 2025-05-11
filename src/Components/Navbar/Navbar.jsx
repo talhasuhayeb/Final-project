@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import Logo from "../../assets/logo.png";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,7 +14,7 @@ export default function Navbar() {
             <Link to="/" className="flex items-center space-x-2">
               {/*  logo img */}
               <img
-                src="src/assets/logo.png"
+                src={Logo}
                 alt="BloodDetect logo"
                 className=" h-20 w-20 object-cover"
               />

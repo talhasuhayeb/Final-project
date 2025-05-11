@@ -1,12 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import HeroBanner from "../../assets/hero_pic3.png";
 
 const Hero = () => {
   return (
     <div
       className="hero min-h-screen object-contain"
       style={{
-        backgroundImage: "url(src/assets/hero_pic3.png) ",
+        backgroundImage: `url(${HeroBanner})`,
       }}
     >
       <div className="hero-overlay"></div>

@@ -1,4 +1,5 @@
 import React from "react";
+import Logo from "../../assets/logo.png";
 
 const Footer = () => {
   return (
@@ -7,11 +8,7 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="mb-4 md:mb-0">
             <div className="flex items-center">
-              <img
-                src="src\assets\logo.png"
-                className=" h-20 w-20 object-cover"
-                alt=""
-              />
+              <img src={Logo} className=" h-20 w-20 object-cover" alt="" />
               <span className="font-semibold text-lg">
                 Blood Detection System
               </span>
