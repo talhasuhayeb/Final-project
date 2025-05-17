@@ -42,12 +42,17 @@ const Register = () => {
         body: JSON.stringify(formData),
       });
       const result = await response.json();
-      const { success, message } = result;
+      const { success, message, error } = result;
       if (success) {
         toast.success(message, { position: "top-center" });
         setTimeout(() => {
           navigate("/dashboard");
         }, 2000);
+      } else if (error) {
+        const details = error?.details[0].message;
+        toast.error(details, { position: "top-center" });
+      } else if (!success) {
+        toast.error(message, { position: "top-center" });
       }
     } catch (err) {
       toast.error(err);
@@ -75,7 +80,7 @@ const Register = () => {
                       value={formData.name}
                       onChange={handleChange}
                       className="w-full px-3 py-3 bg-transparent border-b border-[#B79455] focus:outline-none focus:border-[#8A0302]"
-                      required
+                      placeholder="Enter your name"
                     />
                     <label
                       htmlFor="regName"
@@ -93,7 +98,7 @@ const Register = () => {
                       value={formData.email}
                       onChange={handleChange}
                       className="w-full px-3 py-3 bg-transparent border-b border-[#B79455] focus:outline-none focus:border-[#8A0302]"
-                      required
+                      placeholder="Enter your email"
                     />
                     <label
                       htmlFor="regEmail"
@@ -111,7 +116,7 @@ const Register = () => {
                       value={formData.password}
                       onChange={handleChange}
                       className="w-full px-3 py-3 bg-transparent border-b border-[#B79455] focus:outline-none focus:border-[#8A0302]"
-                      required
+                      placeholder="Enter your password"
                     />
                     <label
                       htmlFor="regPassword"
@@ -134,7 +139,6 @@ const Register = () => {
                           checked={formData.gender === "Male"}
                           onChange={handleChange}
                           className="text-[#8A0302] focus:ring-[#8A0302]"
-                          required
                         />
                         <span className="ml-2 text-white">Male</span>
                       </label>
@@ -171,8 +175,7 @@ const Register = () => {
                       value={formData.phone}
                       onChange={handleChange}
                       className="w-full px-3 py-3 bg-transparent border-b border-[#B79455] focus:outline-none focus:border-[#8A0302]"
-                      placeholder=" "
-                      required
+                      placeholder="Enter your phone number"
                     />
                     <label
                       htmlFor="regPhone"
