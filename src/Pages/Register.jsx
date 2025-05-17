@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Register = () => {
   const [isLogin, setIsLogin] = useState(false); // Changed to false to show register first
@@ -9,21 +12,47 @@ const Register = () => {
     gender: "",
     phone: "",
   });
-
+  const navigate = useNavigate();
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    console.log(name, value);
+    const copyFormData = { ...formData };
+    copyFormData[name] = value;
+    setFormData(copyFormData);
   };
+  console.log("formData ->", formData);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(isLogin ? "Login data:" : "Register data:", formData);
-    //...
+    const { name, email, password, gender, phone } = formData;
+    if (!name || !email || !password || !gender || !phone) {
+      toast.error("Please fill all fields", {
+        position: "top-center",
+      });
+      return;
+    }
+    try {
+      const url = "http://localhost:8080/auth/register";
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const result = await response.json();
+      const { success, message } = result;
+      if (success) {
+        toast.success(message, { position: "top-center" });
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 2000);
+      }
+    } catch (err) {
+      toast.error(err);
+    }
   };
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900 p-4">
       <div className="w-full max-w-md">
@@ -101,8 +130,8 @@ const Register = () => {
                         <input
                           type="radio"
                           name="gender"
-                          value="male"
-                          checked={formData.gender === "male"}
+                          value="Male"
+                          checked={formData.gender === "Male"}
                           onChange={handleChange}
                           className="text-[#8A0302] focus:ring-[#8A0302]"
                           required
@@ -113,8 +142,8 @@ const Register = () => {
                         <input
                           type="radio"
                           name="gender"
-                          value="female"
-                          checked={formData.gender === "female"}
+                          value="Female"
+                          checked={formData.gender === "Female"}
                           onChange={handleChange}
                           className="text-[#8A0302] focus:ring-[#8A0302]"
                         />
@@ -124,8 +153,8 @@ const Register = () => {
                         <input
                           type="radio"
                           name="gender"
-                          value="other"
-                          checked={formData.gender === "other"}
+                          value="Other"
+                          checked={formData.gender === "Other"}
                           onChange={handleChange}
                           className="text-[#8A0302] focus:ring-[#8A0302]"
                         />
@@ -159,6 +188,7 @@ const Register = () => {
                   >
                     Register
                   </button>
+                  <ToastContainer />
                 </form>
               </div>
             ) : (
@@ -256,5 +286,4 @@ const Register = () => {
     </div>
   );
 };
-
 export default Register;
