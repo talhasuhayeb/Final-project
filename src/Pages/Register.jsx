@@ -4,7 +4,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Register = () => {
-  const [isLogin, setIsLogin] = useState(false); // Changed to false to show register first
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -24,7 +23,7 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(isLogin ? "Login data:" : "Register data:", formData);
+
     const { name, email, password, gender, phone } = formData;
     if (!name || !email || !password || !gender || !phone) {
       toast.error("Please fill all fields", {
@@ -46,8 +45,8 @@ const Register = () => {
       if (success) {
         toast.success(message, { position: "top-center" });
         setTimeout(() => {
-          navigate("/dashboard");
-        }, 2000);
+          navigate("/");
+        }, 3000);
       } else if (error) {
         const details = error?.details[0].message;
         toast.error(details, { position: "top-center" });
@@ -69,7 +68,11 @@ const Register = () => {
               </h2>
               <p className="text-[#d1d1d1]">Please enter your details!</p>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form
+                onSubmit={handleSubmit}
+                className="space-y-6 "
+                autoComplete="off"
+              >
                 <div className="relative">
                   <input
                     type="text"
@@ -78,6 +81,7 @@ const Register = () => {
                     value={formData.name}
                     onChange={handleChange}
                     className="w-full px-3 py-3 bg-transparent border-b border-[#B79455] focus:outline-none focus:border-[#8A0302]"
+                    autoComplete="off"
                   />
                   <label
                     htmlFor="regName"

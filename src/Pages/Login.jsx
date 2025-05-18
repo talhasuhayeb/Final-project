@@ -4,7 +4,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
-  const [isLogin, setIsLogin] = useState(false); // Changed to false to show register first
   const [loginInfo, setLoginInfo] = useState({
     email: "",
     password: "",
@@ -21,7 +20,7 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log(isLogin ? "Login data:" : "Register data:", loginInfo);
+
     const { email, password } = loginInfo;
     if (!email || !password) {
       toast.error(" email & Password required", {
@@ -70,7 +69,11 @@ const Login = () => {
                 Please enter your email and password!
               </p>
 
-              <form onSubmit={handleLogin} className="space-y-6">
+              <form
+                onSubmit={handleLogin}
+                className="space-y-6"
+                autoComplete="off"
+              >
                 <div className="relative">
                   <input
                     type="email"

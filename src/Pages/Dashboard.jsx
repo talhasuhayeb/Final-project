@@ -1,14 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Footer from "../Components/Footer/Footer";
 import { useNavigate } from "react-router-dom";
 import logo from "../../src/assets/logo.png";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function Dashboard() {
+  const [loggedInUser, setLoggedInUser] = useState("");
+
+  useEffect(() => {
+    setLoggedInUser(localStorage.getItem("loggedInUser"));
+  }, []);
   const navigate = useNavigate();
   const [selectedImage, setSelectedImage] = useState(null);
 
-  const handleLogout = () => {
-    navigate("/login");
+  const handleLogout = (e) => {
+    localStorage.removeItem("loggedInUser");
+    localStorage.removeItem("token");
+    toast.success("User Logged Out", { position: "top-center" });
+    setTimeout(() => {
+      navigate("/login");
+    }, 1000);
   };
 
   const handleDetect = () => {
@@ -47,7 +58,7 @@ export default function Dashboard() {
 
               <div className="flex items-center space-x-2 sm:space-x-4">
                 <span className="font-semibold text-md sm:text-lg select-none">
-                  Welcome, User
+                  Welcome, {loggedInUser}
                 </span>
                 <button
                   onClick={handleLogout}
@@ -89,6 +100,7 @@ export default function Dashboard() {
             >
               Detect
             </button>
+            <ToastContainer />
           </div>
         </div>
       </main>
