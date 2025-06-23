@@ -9,10 +9,12 @@
     "lint": "eslint .",
     "preview": "vite preview"
   },
+  "proxy": "http://localhost:5000",
   "dependencies": {
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/vite": "^4.1.5",
     "daisyui": "^5.0.35",
+    "framer-motion": "^12.19.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-icons": "^5.5.0",
