@@ -6,14 +6,15 @@ import { ToastContainer, toast } from "react-toastify";
 
 export default function Dashboard() {
   const [loggedInUser, setLoggedInUser] = useState("");
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImageFile, setSelectedImageFile] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setLoggedInUser(localStorage.getItem("loggedInUser"));
   }, []);
-  const navigate = useNavigate();
-  const [selectedImage, setSelectedImage] = useState(null);
 
-  const handleLogout = (e) => {
+  const handleLogout = () => {
     localStorage.removeItem("loggedInUser");
     localStorage.removeItem("token");
     toast.success("User Logged Out", { position: "top-center" });
@@ -22,20 +23,53 @@ export default function Dashboard() {
     }, 1000);
   };
 
-  const handleDetect = () => {
-    alert("Detection triggered!");
-  };
-
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      setSelectedImageFile(file); // Save actual file for backend
+
       const reader = new FileReader();
-
       reader.onloadend = () => {
-        setSelectedImage(reader.result);
+        setSelectedImage(reader.result); // Preview image
       };
-
       reader.readAsDataURL(file);
+    }
+  };
+
+  const handleDetect = async () => {
+    if (!selectedImageFile) {
+      toast.warn("Please upload an image first", { position: "top-center" });
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", selectedImageFile);
+
+    try {
+      const response = await fetch("http://localhost:5000/predict", {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        toast.success(
+          `Prediction: ${result.predicted_label} (Confidence: ${(
+            result.confidence * 100
+          ).toFixed(2)}%)`,
+          { position: "top-center" }
+        );
+      } else {
+        toast.error(result.error || "Prediction failed", {
+          position: "top-center",
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Error connecting to the model server", {
+        position: "top-center",
+      });
     }
   };
 
@@ -51,18 +85,17 @@ export default function Dashboard() {
                   alt="BloodDetect logo"
                   className="h-16 w-16 object-cover"
                 />
-                <span className="font-bold text-xl select-none text-center sm:text-left">
+                <span className="font-bold text-xl text-center sm:text-left">
                   Blood Detection System
                 </span>
               </div>
-
-              <div className="flex items-center space-x-2 sm:space-x-4">
-                <span className="font-semibold text-md sm:text-lg select-none">
+              <div className="flex items-center space-x-4">
+                <span className="font-semibold text-md sm:text-lg">
                   Welcome, {loggedInUser}
                 </span>
                 <button
                   onClick={handleLogout}
-                  className="px-4 py-2 border border-white rounded font-medium hover:bg-red-100 hover:font-bold hover:text-red-600 transition duration-300"
+                  className="px-4 py-2 border border-white rounded hover:bg-red-100 hover:text-red-600 transition duration-300"
                 >
                   Logout
                 </button>
@@ -83,13 +116,13 @@ export default function Dashboard() {
               type="file"
               accept="image/*"
               onChange={handleImageChange}
-              className="file-input file-input-bordered file-input-md w-full max-w-md"
+              className="file-input file-input-bordered w-full max-w-md"
             />
 
             {selectedImage && (
               <img
                 src={selectedImage}
-                alt="Uploaded Preview"
+                alt="Preview"
                 className="mt-4 max-w-full h-64 rounded shadow object-contain"
               />
             )}
