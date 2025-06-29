@@ -8,6 +8,8 @@ export default function Dashboard() {
   const [loggedInUser, setLoggedInUser] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedImageFile, setSelectedImageFile] = useState(null);
+  const [isUploaded, setIsUploaded] = useState(false);
+  const [predictionResults, setPredictionResults] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,8 +38,30 @@ export default function Dashboard() {
     }
   };
 
-  const handleDetect = async () => {
+  const handleUpload = () => {
     if (!selectedImageFile) {
+      toast.warn("Please select an image first", { position: "top-center" });
+      return;
+    }
+    setIsUploaded(true);
+    toast.success("Image uploaded successfully! You can now detect.", {
+      position: "top-center",
+    });
+  };
+
+  const handleRemoveImage = () => {
+    setSelectedImage(null);
+    setSelectedImageFile(null);
+    setIsUploaded(false);
+    setPredictionResults(null);
+    // Reset file input
+    const fileInput = document.querySelector('input[type="file"]');
+    if (fileInput) fileInput.value = "";
+    toast.info("Image removed", { position: "top-center" });
+  };
+
+  const handleDetect = async () => {
+    if (!isUploaded || !selectedImageFile) {
       toast.warn("Please upload an image first", { position: "top-center" });
       return;
     }
@@ -54,12 +78,34 @@ export default function Dashboard() {
       const result = await response.json();
 
       if (response.ok) {
-        toast.success(
-          `Prediction: ${result.predicted_label} (Confidence: ${(
-            result.confidence * 100
-          ).toFixed(2)}%)`,
-          { position: "top-center" }
-        );
+        // Store prediction results
+        setPredictionResults({
+          bloodGroup: result.predicted_label,
+          confidence: result.confidence_percentage,
+          processingTime: result.processing_time,
+          imageQuality: result.image_quality_score,
+          timestamp: result.timestamp,
+        });
+
+        // Save fingerprint data to user's record
+        const token = localStorage.getItem("token");
+        if (token && result.filename) {
+          try {
+            await fetch("http://localhost:8080/auth/update-fingerprint", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({
+                filename: result.filename,
+                bloodType: result.predicted_label,
+              }),
+            });
+          } catch (err) {
+            console.error("Error saving fingerprint data:", err);
+          }
+        }
       } else {
         toast.error(result.error || "Prediction failed", {
           position: "top-center",
@@ -120,19 +166,114 @@ export default function Dashboard() {
             />
 
             {selectedImage && (
-              <img
-                src={selectedImage}
-                alt="Preview"
-                className="mt-4 max-w-full h-64 rounded shadow object-contain"
-              />
+              <div className="flex flex-col items-center space-y-2">
+                <img
+                  src={selectedImage}
+                  alt="Preview"
+                  className="mt-4 max-w-full h-64 rounded shadow object-contain"
+                />
+                <button
+                  onClick={handleRemoveImage}
+                  className="btn btn-sm bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg"
+                >
+                  Remove Image
+                </button>
+              </div>
             )}
 
-            <button
-              onClick={handleDetect}
-              className="btn w-full sm:w-auto py-3 px-6 rounded-lg bg-[#8A0302] hover:bg-[#6e0202] text-white font-bold transition duration-300"
-            >
-              Detect
-            </button>
+            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+              <button
+                onClick={handleUpload}
+                disabled={!selectedImageFile || isUploaded}
+                className={`btn py-3 px-6 rounded-lg font-bold transition duration-300 ${
+                  !selectedImageFile || isUploaded
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-blue-600 hover:bg-blue-700 text-white"
+                }`}
+              >
+                {isUploaded ? "Uploaded ✓" : "Upload"}
+              </button>
+
+              <button
+                onClick={handleDetect}
+                disabled={!isUploaded}
+                className={`btn py-3 px-6 rounded-lg font-bold transition duration-300 ${
+                  !isUploaded
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-[#8A0302] hover:bg-[#6e0202] text-white"
+                }`}
+              >
+                Detect
+              </button>
+            </div>
+
+            {/* Prediction Results Table */}
+            {predictionResults && (
+              <div className="w-full mt-6">
+                <h3 className="text-xl font-bold mb-3 text-center text-[#A41214]">
+                  Detection Results
+                </h3>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full bg-gray-50 border border-gray-300 rounded-lg">
+                    <thead className="bg-[#A41214] text-white">
+                      <tr>
+                        <th className="px-4 py-3 text-left font-semibold">
+                          Metric
+                        </th>
+                        <th className="px-4 py-3 text-left font-semibold">
+                          Value
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="border-b border-gray-200">
+                        <td className="px-4 py-3 font-medium text-gray-700">
+                          Detected Blood Group
+                        </td>
+                        <td className="px-4 py-3">
+                          <span className="bg-[#8A0302] text-white px-3 py-1 rounded-full font-bold">
+                            {predictionResults.bloodGroup}
+                          </span>
+                        </td>
+                      </tr>
+                      <tr className="border-b border-gray-200">
+                        <td className="px-4 py-3 font-medium text-gray-700">
+                          Confidence Score
+                        </td>
+                        <td className="px-4 py-3 font-semibold text-green-600">
+                          {predictionResults.confidence}%
+                        </td>
+                      </tr>
+                      <tr className="border-b border-gray-200">
+                        <td className="px-4 py-3 font-medium text-gray-700">
+                          Processing Time
+                        </td>
+                        <td className="px-4 py-3 font-semibold text-blue-600">
+                          {predictionResults.processingTime} ms
+                        </td>
+                      </tr>
+                      <tr className="border-b border-gray-200">
+                        <td className="px-4 py-3 font-medium text-gray-700">
+                          Image Quality Score
+                        </td>
+                        <td className="px-4 py-3 font-semibold text-purple-600">
+                          {predictionResults.imageQuality}/100
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="px-4 py-3 font-medium text-gray-700">
+                          Prediction Timestamp
+                        </td>
+                        <td className="px-4 py-3 font-semibold text-gray-600">
+                          {predictionResults.timestamp}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
             <ToastContainer />
           </div>
         </div>

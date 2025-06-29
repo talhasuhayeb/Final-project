@@ -25,6 +25,14 @@ const userSchema = new Schema({
     required: true,
     match: /^[0-9]{11}$/,
   },
+  fingerprintImage: {
+    type: String,
+    default: null,
+  },
+  bloodType: {
+    type: String,
+    default: null,
+  },
 });
 
 const UserModel = mongoose.model("users", userSchema);

@@ -7,21 +7,19 @@ const Login = () => {
   const [loginInfo, setLoginInfo] = useState({
     email: "",
     password: "",
+    role: "user", // default role
   });
   const navigate = useNavigate();
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(name, value);
     const copyLoginInfo = { ...loginInfo };
     copyLoginInfo[name] = value;
     setLoginInfo(copyLoginInfo);
   };
-  console.log("loginInfo ->", loginInfo);
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
-    const { email, password } = loginInfo;
+    const { email, password, role } = loginInfo;
     if (!email || !password) {
       toast.error(" email & Password required", {
         position: "top-center",
@@ -38,17 +36,29 @@ const Login = () => {
         body: JSON.stringify(loginInfo),
       });
       const result = await response.json();
-      const { success, message, error, name, jwtToken } = result;
+      const {
+        success,
+        message,
+        error,
+        name,
+        jwtToken,
+        role: returnedRole,
+      } = result;
       if (success) {
         toast.success(message, { position: "top-center" });
         localStorage.setItem("token", jwtToken);
         localStorage.setItem("loggedInUser", name);
+        localStorage.setItem("role", returnedRole);
         setTimeout(() => {
-          navigate("/dashboard");
+          if (returnedRole === "admin") {
+            navigate("/admin-dashboard");
+          } else {
+            navigate("/dashboard");
+          }
         }, 2000);
       } else if (error) {
-        const details = error?.details[0].message;
-        toast.error(details, { position: "top-center" });
+        const details = error?.details?.[0]?.message;
+        toast.error(details || message, { position: "top-center" });
       } else if (!success) {
         toast.error(message, { position: "top-center" });
       }
@@ -105,6 +115,24 @@ const Login = () => {
                     className="absolute left-0 -top-3.5 text-[#B79455] text-sm transition-all pointer-events-none"
                   >
                     Password
+                  </label>
+                </div>
+
+                <div className="relative">
+                  <select
+                    name="role"
+                    value={loginInfo.role}
+                    onChange={handleChange}
+                    className="w-full px-3 py-3 bg-transparent border-b border-[#B79455] focus:outline-none focus:border-[#8A0302] text-[#B79455]"
+                  >
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                  <label
+                    htmlFor="role"
+                    className="absolute left-0 -top-3.5 text-[#B79455] text-sm transition-all pointer-events-none"
+                  >
+                    Role
                   </label>
                 </div>
 

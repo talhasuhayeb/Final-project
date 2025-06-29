@@ -5,14 +5,25 @@ const signupValidation = (req, res, next) => {
     name: Joi.string().min(3).max(100).required(),
     email: Joi.string().email().required(),
     password: Joi.string().min(4).max(100).required(),
-    gender: Joi.string().valid("Male", "Female", "Other").required(),
+    gender: Joi.string()
+      .valid("Male", "Female", "Other")
+      .when("role", {
+        is: Joi.string().valid("admin"),
+        then: Joi.optional(),
+        otherwise: Joi.required(),
+      }),
 
     phone: Joi.string()
       .pattern(/^[0-9]{11}$/)
-      .required()
+      .when("role", {
+        is: Joi.string().valid("admin"),
+        then: Joi.optional(),
+        otherwise: Joi.required(),
+      })
       .messages({
         "string.pattern.base": "Phone number must be exactly 11 digits.",
       }),
+    role: Joi.string().valid("user", "admin").default("user"),
   });
 
   const { error } = schema.validate(req.body);
@@ -27,6 +38,7 @@ const loginValidation = (req, res, next) => {
   const schema = Joi.object({
     email: Joi.string().email().required(),
     password: Joi.string().min(4).max(100).required(),
+    role: Joi.string().valid("user", "admin").default("user"),
   });
 
   const { error } = schema.validate(req.body);
