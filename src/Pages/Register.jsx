@@ -14,16 +14,13 @@ const Register = () => {
   const navigate = useNavigate();
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(name, value);
     const copyFormData = { ...formData };
     copyFormData[name] = value;
     setFormData(copyFormData);
   };
-  console.log("formData ->", formData);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const { name, email, password, gender, phone } = formData;
     if (!name || !email || !password || !gender || !phone) {
       toast.error("Please fill all fields", {
@@ -48,8 +45,8 @@ const Register = () => {
           navigate("/");
         }, 3000);
       } else if (error) {
-        const details = error?.details[0].message;
-        toast.error(details, { position: "top-center" });
+        const details = error?.details?.[0]?.message;
+        toast.error(details || message, { position: "top-center" });
       } else if (!success) {
         toast.error(message, { position: "top-center" });
       }
@@ -58,19 +55,18 @@ const Register = () => {
     }
   };
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#FAF5EF] via-[#D7D1C9] to-[#99B19C]/40 p-4">
       <div className="w-full max-w-md">
-        <div className="bg-[#2c2c2c] text-white rounded-xl shadow-lg border border-[#B79455] overflow-hidden">
-          <div className="p-8 text-center">
+        <div className="bg-white/70 backdrop-blur-lg text-[#6D2932] rounded-2xl shadow-2xl border border-[#99B19C]/40 overflow-hidden">
+          <div className="p-8 text-center text-xs sm:text-sm">
             <div className="space-y-6">
-              <h2 className="text-2xl font-bold uppercase text-[#B79455]">
+              <h2 className="text-2xl font-extrabold uppercase text-[#6D2932] tracking-tight">
                 Register
               </h2>
-              <p className="text-[#d1d1d1]">Please enter your details!</p>
-
+              <p className="text-[#99B19C] font-medium">Create your account</p>
               <form
                 onSubmit={handleSubmit}
-                className="space-y-6 "
+                className="space-y-6"
                 autoComplete="off"
               >
                 <div className="relative">
@@ -80,17 +76,10 @@ const Register = () => {
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full px-3 py-3 bg-transparent border-b border-[#B79455] focus:outline-none focus:border-[#8A0302]"
-                    autoComplete="off"
+                    className="w-full px-4 py-2 bg-transparent border-b-2 border-[#99B19C] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#99B19C] transition-all text-xs sm:text-sm"
+                    placeholder="Full Name"
                   />
-                  <label
-                    htmlFor="regName"
-                    className="absolute left-0 -top-3.5 text-[#B79455] text-sm transition-all pointer-events-none"
-                  >
-                    Full Name
-                  </label>
                 </div>
-
                 <div className="relative">
                   <input
                     type="email"
@@ -98,16 +87,10 @@ const Register = () => {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full px-3 py-3 bg-transparent border-b border-[#B79455] focus:outline-none focus:border-[#8A0302]"
+                    className="w-full px-4 py-2 bg-transparent border-b-2 border-[#99B19C] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#99B19C] transition-all text-xs sm:text-sm"
+                    placeholder="Email"
                   />
-                  <label
-                    htmlFor="regEmail"
-                    className="absolute left-0 -top-3.5 text-[#B79455] text-sm transition-all pointer-events-none"
-                  >
-                    Email
-                  </label>
                 </div>
-
                 <div className="relative">
                   <input
                     type="password"
@@ -115,21 +98,26 @@ const Register = () => {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    className="w-full px-3 py-3 bg-transparent border-b border-[#B79455] focus:outline-none focus:border-[#8A0302]"
+                    className="w-full px-4 py-2 bg-transparent border-b-2 border-[#99B19C] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#99B19C] transition-all text-xs sm:text-sm"
+                    placeholder="Password"
                   />
-                  <label
-                    htmlFor="regPassword"
-                    className="absolute left-0 -top-3.5 text-[#B79455] text-sm transition-all pointer-events-none"
-                  >
-                    Password
-                  </label>
                 </div>
-
-                <div className="pt-2">
-                  <label className="block text-left text-[#B79455] mb-3 text-sm">
+                <div className="relative">
+                  <input
+                    type="tel"
+                    id="regPhone"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 bg-transparent border-b-2 border-[#99B19C] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#99B19C] transition-all text-xs sm:text-sm"
+                    placeholder="Phone Number"
+                  />
+                </div>
+                <div className="relative flex flex-col items-start">
+                  <span className="text-[#99B19C] text-xs sm:text-sm mb-2">
                     Gender
-                  </label>
-                  <div className="flex flex-wrap gap-4 justify-center">
+                  </span>
+                  <div className="flex gap-6">
                     <label className="inline-flex items-center">
                       <input
                         type="radio"
@@ -137,9 +125,11 @@ const Register = () => {
                         value="Male"
                         checked={formData.gender === "Male"}
                         onChange={handleChange}
-                        className="text-[#8A0302] focus:ring-[#8A0302]"
+                        className="text-[#6D2932] focus:ring-[#99B19C] text-xs sm:text-sm"
                       />
-                      <span className="ml-2 text-white">Male</span>
+                      <span className="ml-2 text-[#6D2932] text-xs sm:text-sm">
+                        Male
+                      </span>
                     </label>
                     <label className="inline-flex items-center">
                       <input
@@ -148,9 +138,11 @@ const Register = () => {
                         value="Female"
                         checked={formData.gender === "Female"}
                         onChange={handleChange}
-                        className="text-[#8A0302] focus:ring-[#8A0302]"
+                        className="text-[#6D2932] focus:ring-[#99B19C] text-xs sm:text-sm"
                       />
-                      <span className="ml-2 text-white">Female</span>
+                      <span className="ml-2 text-[#6D2932] text-xs sm:text-sm">
+                        Female
+                      </span>
                     </label>
                     <label className="inline-flex items-center">
                       <input
@@ -159,47 +151,29 @@ const Register = () => {
                         value="Other"
                         checked={formData.gender === "Other"}
                         onChange={handleChange}
-                        className="text-[#8A0302] focus:ring-[#8A0302]"
+                        className="text-[#6D2932] focus:ring-[#99B19C] text-xs sm:text-sm"
                       />
-                      <span className="ml-2 text-white">Other</span>
+                      <span className="ml-2 text-[#6D2932] text-xs sm:text-sm">
+                        Other
+                      </span>
                     </label>
                   </div>
                 </div>
-
-                <div className="relative">
-                  <input
-                    type="tel"
-                    id="regPhone"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className="w-full px-3 py-3 bg-transparent border-b border-[#B79455] focus:outline-none focus:border-[#8A0302]"
-                  />
-                  <label
-                    htmlFor="regPhone"
-                    className="absolute left-0 -top-3.5 text-[#B79455] text-sm transition-all pointer-events-none"
-                  >
-                    Phone Number
-                  </label>
-                </div>
-
                 <button
                   type="submit"
-                  className="w-full py-3 rounded-lg bg-[#8A0302] hover:bg-[#6e0202] text-white font-bold transition duration-300"
+                  className="w-full py-2 rounded-full bg-[#6D2932] hover:bg-[#99B19C] text-[#FAF5EF] font-bold text-base shadow-md transition-all duration-300 border-2 border-[#6D2932] hover:border-[#99B19C] focus:outline-none focus:ring-2 focus:ring-[#99B19C]/50  sm:text-sm"
                 >
                   Register
                 </button>
-                <span>
-                  <p className="text-[#d1d1d1] text-sm">
-                    Already have an account?
-                    <Link
-                      to="/login"
-                      className="text-[#B79455] font-bold px-1 hover:text-[#8A0302] cursor-pointer focus:outline-none"
-                    >
-                      Login
-                    </Link>
-                  </p>
-                </span>
+                <p className="text-[#99B19C] text-xs sm:text-sm text-center mt-2">
+                  Already have an account?
+                  <Link
+                    to="/login"
+                    className="text-[#6D2932] font-bold px-1 hover:text-[#99B19C] cursor-pointer focus:outline-none"
+                  >
+                    Login
+                  </Link>
+                </p>
               </form>
               <ToastContainer />
             </div>

@@ -67,15 +67,15 @@ const Login = () => {
     }
   };
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#FAF5EF] via-[#D7D1C9] to-[#99B19C]/40 p-4">
       <div className="w-full max-w-md">
-        <div className="bg-[#2c2c2c] text-white rounded-xl shadow-lg border border-[#B79455] overflow-hidden">
-          <div className="p-8 text-center">
+        <div className="bg-white/70 backdrop-blur-lg text-[#6D2932] rounded-2xl shadow-2xl border border-[#99B19C]/40 overflow-hidden">
+          <div className="p-8 text-center text-xs sm:text-sm">
             <div className="space-y-6">
-              <h2 className="text-2xl font-bold uppercase text-[#B79455]">
+              <h2 className="text-2xl font-extrabold uppercase text-[#6D2932] tracking-tight">
                 Login
               </h2>
-              <p className="text-[#d1d1d1]">
+              <p className="text-[#99B19C] font-medium">
                 Please enter your email and password!
               </p>
 
@@ -91,14 +91,9 @@ const Login = () => {
                     name="email"
                     value={loginInfo.email}
                     onChange={handleChange}
-                    className="w-full px-3 py-3 bg-transparent border-b border-[#B79455] focus:outline-none focus:border-[#8A0302]"
+                    className="w-full px-4 py-2 bg-transparent border-b-2 border-[#99B19C] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#99B19C] transition-all text-xs sm:text-sm"
+                    placeholder="Email"
                   />
-                  <label
-                    htmlFor="regEmail"
-                    className="absolute left-0 -top-3.5 text-[#B79455] text-sm transition-all pointer-events-none"
-                  >
-                    Email
-                  </label>
                 </div>
 
                 <div className="relative">
@@ -108,14 +103,9 @@ const Login = () => {
                     name="password"
                     value={loginInfo.password}
                     onChange={handleChange}
-                    className="w-full px-3 py-3 bg-transparent border-b border-[#B79455] focus:outline-none focus:border-[#8A0302]"
+                    className="w-full px-4 py-2 bg-transparent border-b-2 border-[#99B19C] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#99B19C] transition-all text-xs sm:text-sm"
+                    placeholder="Password"
                   />
-                  <label
-                    htmlFor="regPassword"
-                    className="absolute left-0 -top-3.5 text-[#B79455] text-sm transition-all pointer-events-none"
-                  >
-                    Password
-                  </label>
                 </div>
 
                 <div className="relative">
@@ -123,31 +113,25 @@ const Login = () => {
                     name="role"
                     value={loginInfo.role}
                     onChange={handleChange}
-                    className="w-full px-3 py-3 bg-transparent border-b border-[#B79455] focus:outline-none focus:border-[#8A0302] text-[#B79455]"
+                    className="w-full px-4 py-2 bg-transparent border-b-2 border-[#99B19C] focus:outline-none focus:border-[#6D2932] text-[#6D2932] text-xs sm:text-sm"
                   >
                     <option value="user">User</option>
                     <option value="admin">Admin</option>
                   </select>
-                  <label
-                    htmlFor="role"
-                    className="absolute left-0 -top-3.5 text-[#B79455] text-sm transition-all pointer-events-none"
-                  >
-                    Role
-                  </label>
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full py-3 rounded-lg bg-[#8A0302] hover:bg-[#6e0202] text-white font-bold transition duration-300"
+                  className="w-full py-2 rounded-full bg-[#6D2932] hover:bg-[#99B19C] text-[#FAF5EF] font-bold  shadow-md transition-all duration-300 border-2 border-[#6D2932] hover:border-[#99B19C] focus:outline-none focus:ring-2 focus:ring-[#99B19C]/50 text-xs sm:text-sm"
                 >
                   Login
                 </button>
                 <span>
-                  <p className="text-[#d1d1d1] text-sm">
+                  <p className="text-[#99B19C] text-xs sm:text-sm">
                     Don't have an account?
                     <Link
                       to="/register"
-                      className="text-[#B79455] font-bold px-1 hover:text-[#8A0302] cursor-pointer focus:outline-none"
+                      className="text-[#6D2932] font-bold px-1 hover:text-[#99B19C] cursor-pointer focus:outline-none"
                     >
                       Register
                     </Link>

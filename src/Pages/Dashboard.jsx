@@ -120,28 +120,36 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-between bg-[#8A0302]">
+    <div className="min-h-screen flex flex-col justify-between bg-gradient-to-br from-[#FAF5EF] via-[#D7D1C9] to-[#99B19C]/40">
       <header>
-        <nav className="bg-[#A41214] text-[#B79455] shadow-lg rounded-xl">
+        <nav className="bg-white/80 backdrop-blur-md text-[#6D2932] shadow-lg border-b border-[#D7D1C9]/60">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col sm:flex-row justify-between items-center sm:h-20 py-4 gap-4">
-              <div className="flex items-center gap-2">
-                <img
-                  src={logo}
-                  alt="BloodDetect logo"
-                  className="h-16 w-16 object-cover"
-                />
-                <span className="font-bold text-xl text-center sm:text-left">
-                  Blood Detection System
-                </span>
+              <div className="flex items-center space-x-3 group">
+                <div className="relative">
+                  <img
+                    src={logo}
+                    alt="BloodDetect logo"
+                    className="h-10 w-10 object-cover rounded-full transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg"
+                  />
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#6D2932] to-[#99B19C] opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+                </div>
+                <div className="flex flex-col">
+                  <span className="font-bold text-lg text-[#6D2932] tracking-tight group-hover:text-[#99B19C] transition-colors duration-300">
+                    Bindu
+                  </span>
+                  <span className="text-xs text-[#99B19C] opacity-70 font-medium">
+                    AI-Powered Detection
+                  </span>
+                </div>
               </div>
               <div className="flex items-center space-x-4">
-                <span className="font-semibold text-md sm:text-lg">
+                <span className="font-semibold text-sm sm:text-base text-[#99B19C]">
                   Welcome, {loggedInUser}
                 </span>
                 <button
                   onClick={handleLogout}
-                  className="px-4 py-2 border border-white rounded hover:bg-red-100 hover:text-red-600 transition duration-300"
+                  className="px-4 py-1.5 rounded-full bg-[#6D2932] hover:bg-[#99B19C] text-[#FAF5EF] font-bold transition-all duration-300 border-2 border-[#6D2932] hover:border-[#99B19C] focus:outline-none focus:ring-2 focus:ring-[#99B19C]/50 text-xs sm:text-sm"
                 >
                   Logout
                 </button>
@@ -152,17 +160,17 @@ export default function Dashboard() {
       </header>
 
       <main className="flex-grow py-8 px-4">
-        <div className="w-full max-w-3xl mx-auto p-6 bg-white shadow-md rounded-xl border border-[#B79455]">
-          <h2 className="text-2xl font-bold mb-4 text-center text-[#A41214]">
+        <div className="w-full max-w-3xl mx-auto p-8 bg-white/80 backdrop-blur-lg shadow-2xl rounded-2xl border border-[#99B19C]/40">
+          <h2 className="text-2xl font-extrabold mb-6 text-center text-[#6D2932] tracking-tight">
             Upload Fingerprint
           </h2>
 
-          <div className="flex flex-col items-center space-y-4">
+          <div className="flex flex-col items-center space-y-6 text-xs sm:text-sm">
             <input
               type="file"
               accept="image/*"
               onChange={handleImageChange}
-              className="file-input file-input-bordered w-full max-w-md"
+              className="file-input file-input-bordered w-full max-w-md border border-[#99B19C] rounded-lg bg-white/70 text-[#6D2932] focus:border-[#6D2932] focus:outline-none text-xs sm:text-sm"
             />
 
             {selectedImage && (
@@ -170,11 +178,11 @@ export default function Dashboard() {
                 <img
                   src={selectedImage}
                   alt="Preview"
-                  className="mt-4 max-w-full h-64 rounded shadow object-contain"
+                  className="mt-4 max-w-full h-64 rounded-xl shadow object-contain border border-[#99B19C]/40"
                 />
                 <button
                   onClick={handleRemoveImage}
-                  className="btn btn-sm bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg"
+                  className="px-4 py-1.5 rounded-full bg-red-500 hover:bg-red-600 text-white font-bold transition-all duration-300 shadow border-2 border-red-500 hover:border-red-600 text-xs sm:text-sm"
                 >
                   Remove Image
                 </button>
@@ -185,10 +193,10 @@ export default function Dashboard() {
               <button
                 onClick={handleUpload}
                 disabled={!selectedImageFile || isUploaded}
-                className={`btn py-3 px-6 rounded-lg font-bold transition duration-300 ${
+                className={`px-5 py-2 rounded-full font-bold transition-all duration-300 border-2 focus:outline-none focus:ring-2 focus:ring-[#99B19C]/50 text-xs sm:text-sm ${
                   !selectedImageFile || isUploaded
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-blue-600 hover:bg-blue-700 text-white"
+                    ? "bg-gray-300 text-gray-400 border-gray-300 cursor-not-allowed"
+                    : "bg-[#99B19C] text-[#6D2932] border-[#99B19C] hover:bg-[#6D2932] hover:text-[#FAF5EF] hover:border-[#6D2932]"
                 }`}
               >
                 {isUploaded ? "Uploaded ✓" : "Upload"}
@@ -197,10 +205,10 @@ export default function Dashboard() {
               <button
                 onClick={handleDetect}
                 disabled={!isUploaded}
-                className={`btn py-3 px-6 rounded-lg font-bold transition duration-300 ${
+                className={`px-5 py-2 rounded-full font-bold transition-all duration-300 border-2 focus:outline-none focus:ring-2 focus:ring-[#99B19C]/50 text-xs sm:text-sm ${
                   !isUploaded
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-[#8A0302] hover:bg-[#6e0202] text-white"
+                    ? "bg-gray-300 text-gray-400 border-gray-300 cursor-not-allowed"
+                    : "bg-[#6D2932] text-[#FAF5EF] border-[#6D2932] hover:bg-[#99B19C] hover:text-[#6D2932] hover:border-[#99B19C]"
                 }`}
               >
                 Detect
@@ -209,62 +217,62 @@ export default function Dashboard() {
 
             {/* Prediction Results Table */}
             {predictionResults && (
-              <div className="w-full mt-6">
-                <h3 className="text-xl font-bold mb-3 text-center text-[#A41214]">
+              <div className="w-full mt-8">
+                <h3 className="text-lg font-bold mb-4 text-center text-[#6D2932]">
                   Detection Results
                 </h3>
                 <div className="overflow-x-auto">
-                  <table className="min-w-full bg-gray-50 border border-gray-300 rounded-lg">
-                    <thead className="bg-[#A41214] text-white">
+                  <table className="min-w-full bg-white/90 border border-[#99B19C]/40 rounded-xl shadow text-xs sm:text-sm">
+                    <thead className="bg-[#99B19C] text-[#6D2932]">
                       <tr>
-                        <th className="px-4 py-3 text-left font-semibold">
+                        <th className="px-4 py-2 text-center font-semibold">
                           Metric
                         </th>
-                        <th className="px-4 py-3 text-left font-semibold">
+                        <th className="px-4 py-2 text-center font-semibold">
                           Value
                         </th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr className="border-b border-gray-200">
-                        <td className="px-4 py-3 font-medium text-gray-700">
+                      <tr className="border-b border-[#D7D1C9]">
+                        <td className="px-4 py-2 font-medium text-[#6D2932] text-center">
                           Detected Blood Group
                         </td>
-                        <td className="px-4 py-3">
-                          <span className="bg-[#8A0302] text-white px-3 py-1 rounded-full font-bold">
+                        <td className="px-4 py-2 text-center">
+                          <span className="bg-[#6D2932] text-[#FAF5EF] px-3 py-1 rounded-full font-bold text-xs sm:text-sm">
                             {predictionResults.bloodGroup}
                           </span>
                         </td>
                       </tr>
-                      <tr className="border-b border-gray-200">
-                        <td className="px-4 py-3 font-medium text-gray-700">
+                      <tr className="border-b border-[#D7D1C9]">
+                        <td className="px-4 py-2 font-medium text-[#6D2932] text-center">
                           Confidence Score
                         </td>
-                        <td className="px-4 py-3 font-semibold text-green-600">
+                        <td className="px-4 py-2 font-semibold text-green-600 text-center">
                           {predictionResults.confidence}%
                         </td>
                       </tr>
-                      <tr className="border-b border-gray-200">
-                        <td className="px-4 py-3 font-medium text-gray-700">
+                      <tr className="border-b border-[#D7D1C9]">
+                        <td className="px-4 py-2 font-medium text-[#6D2932] text-center">
                           Processing Time
                         </td>
-                        <td className="px-4 py-3 font-semibold text-blue-600">
+                        <td className="px-4 py-2 font-semibold text-blue-600 text-center">
                           {predictionResults.processingTime} ms
                         </td>
                       </tr>
-                      <tr className="border-b border-gray-200">
-                        <td className="px-4 py-3 font-medium text-gray-700">
+                      <tr className="border-b border-[#D7D1C9]">
+                        <td className="px-4 py-2 font-medium text-[#6D2932] text-center">
                           Image Quality Score
                         </td>
-                        <td className="px-4 py-3 font-semibold text-purple-600">
+                        <td className="px-4 py-2 font-semibold text-purple-600 text-center">
                           {predictionResults.imageQuality}/100
                         </td>
                       </tr>
                       <tr>
-                        <td className="px-4 py-3 font-medium text-gray-700">
+                        <td className="px-4 py-2 font-medium text-[#6D2932] text-center">
                           Prediction Timestamp
                         </td>
-                        <td className="px-4 py-3 font-semibold text-gray-600">
+                        <td className="px-4 py-2 font-semibold text-[#99B19C] text-center">
                           {predictionResults.timestamp}
                         </td>
                       </tr>

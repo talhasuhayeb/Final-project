@@ -6,35 +6,45 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="bg-[#A41214] text-[#B79455] shadow-lg rounded-xl">
+    <nav className="bg-[#FAF5EF] shadow-sm border-b border-[#D7D1C9]/30 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
+        <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <Link to="/" className="flex items-center space-x-2">
-              {/*  logo img */}
-              <img
-                src={Logo}
-                alt="BloodDetect logo"
-                className=" h-20 w-20 object-cover"
-              />
-              <span className="font-bold text-xl select-none">
-                Blood Detection System
-              </span>
+            <Link to="/" className="flex items-center space-x-3 group">
+              <div className="relative">
+                <img
+                  src={Logo}
+                  alt="BloodDetect logo"
+                  className="h-10 w-10 object-cover rounded-full transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg"
+                />
+                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#6D2932] to-[#99B19C] opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+              </div>
+              <div className="flex flex-col">
+                <span className="font-bold text-lg text-[#6D2932] tracking-tight group-hover:text-[#99B19C] transition-colors duration-300">
+                  Bindu
+                </span>
+                <span className="text-xs text-[#99B19C] opacity-70 font-medium">
+                  AI-Powered Detection
+                </span>
+              </div>
             </Link>
           </div>
 
           {/* Nav Links */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-1">
             <Link
               to="/"
-              className="px-3 py-1 rounded-md transition duration-300 font-medium hover:bg-[#B79455] hover:scale-105 hover:font-bold hover:text-red-800"
+              className="relative px-3 py-1.5 text-sm text-[#99B19C] font-medium transition-all duration-300 group"
             >
-              Home
+              <span className="relative z-10 group-hover:text-[#6D2932] transition-colors duration-300">
+                Home
+              </span>
+              <div className="absolute inset-0 bg-[#D7D1C9] rounded-lg opacity-0 group-hover:opacity-30 transition-all duration-300 transform scale-95 group-hover:scale-100"></div>
             </Link>
             <Link
               to="#about"
-              className="px-3 py-1 rounded-md transition duration-300 font-medium hover:bg-[#B79455] hover:scale-105 hover:font-bold hover:text-red-800"
+              className="relative px-3 py-1.5 text-sm text-[#99B19C] font-medium transition-all duration-300 group"
               onClick={(e) => {
                 e.preventDefault();
                 const aboutSection = document.getElementById("about");
@@ -43,26 +53,33 @@ export default function Navbar() {
                 }
               }}
             >
-              About
+              <span className="relative z-10 group-hover:text-[#6D2932] transition-colors duration-300">
+                About
+              </span>
+              <div className="absolute inset-0 bg-[#D7D1C9] rounded-lg opacity-0 group-hover:opacity-30 transition-all duration-300 transform scale-95 group-hover:scale-100"></div>
             </Link>
             <Link
               to="#"
-              className="px-3 py-1 rounded-md transition duration-300 font-medium hover:bg-[#B79455] hover:scale-105 hover:font-bold hover:text-red-800"
+              className="relative px-3 py-1.5 text-sm text-[#99B19C] font-medium transition-all duration-300 group"
             >
-              Blood Bank
+              <span className="relative z-10 group-hover:text-[#6D2932] transition-colors duration-300">
+                Blood Bank
+              </span>
+              <div className="absolute inset-0 bg-[#D7D1C9] rounded-lg opacity-0 group-hover:opacity-30 transition-all duration-300 transform scale-95 group-hover:scale-100"></div>
             </Link>
           </div>
+
           {/* Register / Login Buttons */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="flex items-center space-x-3">
             <Link
               to="/register"
-              className="px-4 py-2 bg-white text-red-600 font-semibold rounded hover:bg-red-100 transition duration-300"
+              className="px-4 py-2 text-sm text-[#6D2932] font-medium border border-[#6D2932]/20 rounded-full hover:bg-[#6D2932]/5 hover:border-[#6D2932] transition-all duration-300 transform hover:scale-105"
             >
               Register
             </Link>
             <Link
               to="/login"
-              className="px-4 py-2 border border-white rounded font-medium hover:bg-red-100 hover:font-bold hover:text-red-600 transition duration-300"
+              className="px-4 py-2 text-sm bg-gradient-to-r from-[#6D2932] to-[#6D2932]/90 text-[#FAF5EF] font-medium rounded-full hover:from-[#99B19C] hover:to-[#99B19C]/90 hover:shadow-lg transition-all duration-300 transform hover:scale-105"
             >
               Login
             </Link>
@@ -73,10 +90,10 @@ export default function Navbar() {
               onClick={() => setIsOpen(!isOpen)}
               type="button"
               aria-label="Toggle menu"
-              className="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-red-600 focus:ring-white"
+              className="p-2 rounded-lg text-[#99B19C] hover:text-[#6D2932] hover:bg-[#D7D1C9]/30 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#6D2932]/20 focus:ring-opacity-50"
             >
               <svg
-                className="h-6 w-6 text-white"
+                className="h-5 w-5"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -104,44 +121,48 @@ export default function Navbar() {
       </div>
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden bg-red-700 px-2 pt-2 pb-3 space-y-1">
-          <Link
-            to="/"
-            className="block px-3 py-2 rounded text-white hover:bg-red-500 transition duration-300"
-          >
-            Home
-          </Link>
-          <Link
-            to="/about"
-            className="block px-3 py-2 rounded text-white hover:bg-red-500 transition duration-300"
-            onClick={(e) => {
-              e.preventDefault();
-              const aboutSection = document.getElementById("about");
-              if (aboutSection) {
-                aboutSection.scrollIntoView({ behavior: "smooth" });
-              }
-            }}
-          >
-            About
-          </Link>
-          <Link
-            to="#"
-            className="block px-3 py-2 rounded text-white hover:bg-red-500 transition duration-300"
-          >
-            Blood Bank
-          </Link>
-          <Link
-            to="/register"
-            className="block px-3 py-2 rounded text-red-600 bg-white font-semibold hover:bg-red-100 transition duration-300"
-          >
-            Register
-          </Link>
-          <Link
-            to="/login"
-            className="block px-3 py-2 rounded border border-white text-white hover:bg-red-100 hover:text-red-600 transition duration-300"
-          >
-            Login
-          </Link>
+        <div className="md:hidden bg-[#FAF5EF]/95 border-t border-[#D7D1C9]/30 px-4 pt-4 pb-6 backdrop-blur-sm">
+          <div className="space-y-3">
+            <Link
+              to="/"
+              className="block px-4 py-3 text-[#99B19C] font-medium rounded-lg hover:bg-[#D7D1C9] hover:text-[#6D2932] transition-all duration-300"
+            >
+              Home
+            </Link>
+            <Link
+              to="#about"
+              className="block px-4 py-3 text-[#99B19C] font-medium rounded-lg hover:bg-[#D7D1C9] hover:text-[#6D2932] transition-all duration-300"
+              onClick={(e) => {
+                e.preventDefault();
+                const aboutSection = document.getElementById("about");
+                if (aboutSection) {
+                  aboutSection.scrollIntoView({ behavior: "smooth" });
+                }
+              }}
+            >
+              About
+            </Link>
+            <Link
+              to="#"
+              className="block px-4 py-3 text-[#99B19C] font-medium rounded-lg hover:bg-[#D7D1C9] hover:text-[#6D2932] transition-all duration-300"
+            >
+              Blood Bank
+            </Link>
+            <div className="pt-4 border-t border-[#D7D1C9] space-y-3">
+              <Link
+                to="/register"
+                className="block w-full px-4 py-3 text-center text-[#6D2932] font-medium border border-[#6D2932]/20 rounded-lg hover:bg-[#6D2932]/5 transition-all duration-300"
+              >
+                Register
+              </Link>
+              <Link
+                to="/login"
+                className="block w-full px-4 py-3 text-center bg-gradient-to-r from-[#6D2932] to-[#6D2932]/90 text-[#FAF5EF] font-medium rounded-lg hover:from-[#99B19C] hover:to-[#99B19C]/90 transition-all duration-300"
+              >
+                Login
+              </Link>
+            </div>
+          </div>
         </div>
       )}
     </nav>

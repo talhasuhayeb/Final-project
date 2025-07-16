@@ -4,23 +4,23 @@ const About = () => {
   return (
     <section
       id="about"
-      className="bg-gradient-to-br  text-white min-h-screen flex items-center justify-center p-6"
+      className="bg-gradient-to-br from-[#FAF5EF] via-[#D7D1C9] to-[#99B19C]/40 min-h-screen flex items-center justify-center p-6"
     >
       <div className="max-w-6xl mx-auto w-full">
         {/* Text Section */}
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-extrabold tracking-wide border-b-4 border-[#B79455] pb-2 inline-block">
+        <div className="text-center mb-14">
+          <h2 className="text-4xl md:text-5xl font-extrabold tracking-wide text-[#6D2932] border-b-4 border-[#99B19C] pb-2 inline-block shadow-sm">
             How Our Blood Group Detection System Works
           </h2>
         </div>
 
         <div className="flex justify-center">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-5xl">
             {/* Card-1 */}
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-[#B79455]/30 hover:border-[#B79455] transition-all">
+            <div className="bg-white/60 backdrop-blur-lg rounded-2xl p-8 border border-[#99B19C]/30 hover:border-[#6D2932] shadow-lg transition-all duration-300 group hover:scale-105">
               <div className="flex justify-center mb-4">
                 <svg
-                  className="w-16 h-16 text-[#B79455]"
+                  className="w-16 h-16 text-[#6D2932] group-hover:text-[#99B19C] transition-colors duration-300"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -34,20 +34,20 @@ const About = () => {
                   />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold mb-2 text-[#B79455] text-center">
+              <h3 className="text-xl font-bold mb-2 text-[#6D2932] text-center">
                 1. Sample Collection
               </h3>
-              <p className="text-white/90 font-medium text-center">
+              <p className="text-[#6D2932]/80 font-medium text-center text-xs sm:text-sm">
                 Users begin by uploading a high-quality image of their
                 fingerprint through our secure web interface.
               </p>
             </div>
 
             {/* Card 2 */}
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-[#B79455]/30 hover:border-[#B79455] transition-all">
+            <div className="bg-white/60 backdrop-blur-lg rounded-2xl p-8 border border-[#99B19C]/30 hover:border-[#6D2932] shadow-lg transition-all duration-300 group hover:scale-105">
               <div className="flex justify-center mb-4">
                 <svg
-                  className="w-16 h-16 text-[#B79455]"
+                  className="w-16 h-16 text-[#6D2932] group-hover:text-[#99B19C] transition-colors duration-300"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -61,10 +61,10 @@ const About = () => {
                   />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold mb-2 text-[#B79455] text-center">
+              <h3 className="text-xl font-bold mb-2 text-[#6D2932] text-center">
                 2. AI Analysis
               </h3>
-              <p className="text-white/90 font-medium text-center">
+              <p className="text-[#6D2932]/80 font-medium text-center text-xs sm:text-sm">
                 Our trained neural network analyzes the blood sample images,
                 detecting agglutination patterns that indicate blood type
                 reactions with anti-A, anti-B, and anti-D antibodies.
@@ -72,10 +72,10 @@ const About = () => {
             </div>
 
             {/* Card-3 */}
-            <div className="bg-white/10 font-medium backdrop-blur-sm rounded-xl p-6 border border-[#B79455]/30 hover:border-[#B79455] transition-all">
+            <div className="bg-white/60 backdrop-blur-lg rounded-2xl p-8 border border-[#99B19C]/30 hover:border-[#6D2932] shadow-lg transition-all duration-300 group hover:scale-105">
               <div className="flex justify-center mb-4">
                 <svg
-                  className="w-16 h-16 text-[#B79455]"
+                  className="w-16 h-16 text-[#6D2932] group-hover:text-[#99B19C] transition-colors duration-300"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -89,10 +89,10 @@ const About = () => {
                   />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold mb-2 text-[#B79455] text-center">
+              <h3 className="text-xl font-bold mb-2 text-[#6D2932] text-center">
                 3. Result Verification
               </h3>
-              <p className="text-white/90 text-center">
+              <p className="text-[#6D2932]/80 text-center font-medium text-xs sm:text-sm">
                 The system cross-references findings with our medical database
                 and provides a verified blood type result (A/B/AB/O and Rh
                 factor) with 99.8% accuracy.
