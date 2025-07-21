@@ -143,6 +143,14 @@ const Login = () => {
           </div>
         </div>
       </div>
+      {/* Floating Home Button */}
+      <button
+        onClick={() => navigate("/")}
+        className="fixed bottom-6 right-6 z-50 px-5 py-3 rounded-full bg-[#99B19C] hover:bg-[#6D2932] text-[#FAF5EF] font-bold shadow-lg border-2 border-[#99B19C] hover:border-[#6D2932] transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#6D2932]/50 text-xs sm:text-sm"
+        aria-label="Go to Home"
+      >
+        Home
+      </button>
     </div>
   );
 };

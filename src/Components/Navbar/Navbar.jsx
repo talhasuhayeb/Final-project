@@ -1,9 +1,35 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useRef, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../assets/logo.png";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef();
+  const navigate = useNavigate();
+  const loggedInUser = localStorage.getItem("loggedInUser");
+  const role = localStorage.getItem("role");
+
+  const handleLogout = () => {
+    localStorage.removeItem("loggedInUser");
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    navigate("/login");
+  };
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuOpen(false);
+      }
+    }
+    if (menuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuOpen]);
 
   return (
     <nav className="bg-[#FAF5EF] shadow-sm border-b border-[#D7D1C9]/30 backdrop-blur-sm">
@@ -69,20 +95,45 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Register / Login Buttons */}
+          {/* Register / Login or Dashboard/Logout buttons */}
           <div className="flex items-center space-x-3">
-            <Link
-              to="/register"
-              className="px-4 py-2 text-sm text-[#6D2932] font-medium border border-[#6D2932]/20 rounded-full hover:bg-[#6D2932]/5 hover:border-[#6D2932] transition-all duration-300 transform hover:scale-105"
-            >
-              Register
-            </Link>
-            <Link
-              to="/login"
-              className="px-4 py-2 text-sm bg-gradient-to-r from-[#6D2932] to-[#6D2932]/90 text-[#FAF5EF] font-medium rounded-full hover:from-[#99B19C] hover:to-[#99B19C]/90 hover:shadow-lg transition-all duration-300 transform hover:scale-105"
-            >
-              Login
-            </Link>
+            {!loggedInUser ? (
+              <>
+                <Link
+                  to="/register"
+                  className="px-4 py-2 text-sm text-[#6D2932] font-medium border border-[#6D2932]/20 rounded-full hover:bg-[#6D2932]/5 hover:border-[#6D2932] transition-all duration-300 transform hover:scale-105"
+                >
+                  Register
+                </Link>
+                <Link
+                  to="/login"
+                  className="px-4 py-2 text-sm bg-gradient-to-r from-[#6D2932] to-[#6D2932]/90 text-[#FAF5EF] font-medium rounded-full hover:from-[#99B19C] hover:to-[#99B19C]/90 hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                >
+                  Login
+                </Link>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() =>
+                    navigate(
+                      role === "admin" ? "/admin-dashboard" : "/dashboard"
+                    )
+                  }
+                  className="px-4 py-2 text-sm text-[#6D2932] font-medium border border-[#99B19C]/40 rounded-full hover:bg-[#99B19C]/10 transition-all duration-300 transform hover:scale-105"
+                  type="button"
+                >
+                  Dashboard
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="px-4 py-2 text-sm bg-gradient-to-r from-[#6D2932] to-[#6D2932]/90 text-[#FAF5EF] font-medium rounded-full hover:from-[#99B19C] hover:to-[#99B19C]/90 hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                  type="button"
+                >
+                  Logout
+                </button>
+              </>
+            )}
           </div>
           {/* Mobile menu button */}
           <div className="flex items-center md:hidden">
@@ -149,18 +200,43 @@ export default function Navbar() {
               Blood Bank
             </Link>
             <div className="pt-4 border-t border-[#D7D1C9] space-y-3">
-              <Link
-                to="/register"
-                className="block w-full px-4 py-3 text-center text-[#6D2932] font-medium border border-[#6D2932]/20 rounded-lg hover:bg-[#6D2932]/5 transition-all duration-300"
-              >
-                Register
-              </Link>
-              <Link
-                to="/login"
-                className="block w-full px-4 py-3 text-center bg-gradient-to-r from-[#6D2932] to-[#6D2932]/90 text-[#FAF5EF] font-medium rounded-lg hover:from-[#99B19C] hover:to-[#99B19C]/90 transition-all duration-300"
-              >
-                Login
-              </Link>
+              {!loggedInUser ? (
+                <>
+                  <Link
+                    to="/register"
+                    className="block w-full px-4 py-3 text-center text-[#6D2932] font-medium border border-[#6D2932]/20 rounded-lg hover:bg-[#6D2932]/5 transition-all duration-300"
+                  >
+                    Register
+                  </Link>
+                  <Link
+                    to="/login"
+                    className="block w-full px-4 py-3 text-center bg-gradient-to-r from-[#6D2932] to-[#6D2932]/90 text-[#FAF5EF] font-medium rounded-lg hover:from-[#99B19C] hover:to-[#99B19C]/90 transition-all duration-300"
+                  >
+                    Login
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={() =>
+                      navigate(
+                        role === "admin" ? "/admin-dashboard" : "/dashboard"
+                      )
+                    }
+                    className="block w-full text-left px-4 py-3 text-[#6D2932] font-medium hover:bg-[#99B19C]/10 rounded-t-lg transition-all duration-200"
+                    type="button"
+                  >
+                    Dashboard
+                  </button>
+                  <button
+                    onClick={handleLogout}
+                    className="block w-full text-left px-4 py-3 text-[#FAF5EF] font-medium bg-gradient-to-r from-[#6D2932] to-[#6D2932]/90 hover:from-[#99B19C] hover:to-[#99B19C]/90 rounded-b-lg transition-all duration-200"
+                    type="button"
+                  >
+                    Logout
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>
