@@ -3,6 +3,9 @@ import Footer from "../Components/Footer/Footer";
 import { useNavigate } from "react-router-dom";
 import logo from "../../src/assets/logo.png";
 import { ToastContainer, toast } from "react-toastify";
+import heroPic3 from "../../src/assets/distribution.png";
+import modelAccuracy from "../../src/assets/modelAccuracy.png";
+import confusionMatrix from "../../src/assets/confusionMatrix.png";
 
 export default function Dashboard() {
   const [loggedInUser, setLoggedInUser] = useState("");
@@ -10,6 +13,8 @@ export default function Dashboard() {
   const [selectedImageFile, setSelectedImageFile] = useState(null);
   const [isUploaded, setIsUploaded] = useState(false);
   const [predictionResults, setPredictionResults] = useState(null);
+  const [activeSection, setActiveSection] = useState("main"); // sidebar navigation
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -168,135 +173,252 @@ export default function Dashboard() {
           </div>
         </nav>
       </header>
-
-      <main className="flex-grow py-8 px-4">
-        <div className="w-full max-w-3xl mx-auto p-8 bg-white/80 backdrop-blur-lg shadow-2xl rounded-2xl border border-[#99B19C]/40">
-          <h2 className="text-2xl font-extrabold mb-6 text-center text-[#6D2932] tracking-tight">
-            Upload Fingerprint
-          </h2>
-
-          <div className="flex flex-col items-center space-y-6 text-xs sm:text-sm">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="file-input file-input-bordered w-full max-w-md border border-[#99B19C] rounded-lg bg-white/70 text-[#6D2932] focus:border-[#6D2932] focus:outline-none text-xs sm:text-sm"
-            />
-
-            {selectedImage && (
-              <div className="flex flex-col items-center space-y-2">
-                <img
-                  src={selectedImage}
-                  alt="Preview"
-                  className="mt-4 max-w-full h-64 rounded-xl shadow object-contain border border-[#99B19C]/40"
-                />
-                <button
-                  onClick={handleRemoveImage}
-                  className="px-4 py-1.5 rounded-full bg-red-500 hover:bg-red-600 text-white font-bold transition-all duration-300 shadow border-2 border-red-500 hover:border-red-600 text-xs sm:text-sm"
-                >
-                  Remove Image
-                </button>
-              </div>
-            )}
-
-            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-              <button
-                onClick={handleUpload}
-                disabled={!selectedImageFile || isUploaded}
-                className={`px-5 py-2 rounded-full font-bold transition-all duration-300 border-2 focus:outline-none focus:ring-2 focus:ring-[#99B19C]/50 text-xs sm:text-sm ${
-                  !selectedImageFile || isUploaded
-                    ? "bg-gray-300 text-gray-400 border-gray-300 cursor-not-allowed"
-                    : "bg-[#99B19C] text-[#6D2932] border-[#99B19C] hover:bg-[#6D2932] hover:text-[#FAF5EF] hover:border-[#6D2932]"
-                }`}
-              >
-                {isUploaded ? "Uploaded ✓" : "Upload"}
-              </button>
-
-              <button
-                onClick={handleDetect}
-                disabled={!isUploaded}
-                className={`px-5 py-2 rounded-full font-bold transition-all duration-300 border-2 focus:outline-none focus:ring-2 focus:ring-[#99B19C]/50 text-xs sm:text-sm ${
-                  !isUploaded
-                    ? "bg-gray-300 text-gray-400 border-gray-300 cursor-not-allowed"
-                    : "bg-[#6D2932] text-[#FAF5EF] border-[#6D2932] hover:bg-[#99B19C] hover:text-[#6D2932] hover:border-[#99B19C]"
-                }`}
-              >
-                Detect
-              </button>
-            </div>
-
-            {/* Prediction Results Table */}
-            {predictionResults && (
-              <div className="w-full mt-8">
-                <h3 className="text-lg font-bold mb-4 text-center text-[#6D2932]">
-                  Detection Results
-                </h3>
-                <div className="overflow-x-auto">
-                  <table className="min-w-full bg-white/90 border border-[#99B19C]/40 rounded-xl shadow text-xs sm:text-sm">
-                    <thead className="bg-[#99B19C] text-[#6D2932]">
-                      <tr>
-                        <th className="px-4 py-2 text-center font-semibold">
-                          Metric
-                        </th>
-                        <th className="px-4 py-2 text-center font-semibold">
-                          Value
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className="border-b border-[#D7D1C9]">
-                        <td className="px-4 py-2 font-medium text-[#6D2932] text-center">
-                          Detected Blood Group
-                        </td>
-                        <td className="px-4 py-2 text-center">
-                          <span className="bg-[#6D2932] text-[#FAF5EF] px-3 py-1 rounded-full font-bold text-xs sm:text-sm">
-                            {predictionResults.bloodGroup}
-                          </span>
-                        </td>
-                      </tr>
-                      <tr className="border-b border-[#D7D1C9]">
-                        <td className="px-4 py-2 font-medium text-[#6D2932] text-center">
-                          Confidence Score
-                        </td>
-                        <td className="px-4 py-2 font-semibold text-green-600 text-center">
-                          {predictionResults.confidence}%
-                        </td>
-                      </tr>
-                      <tr className="border-b border-[#D7D1C9]">
-                        <td className="px-4 py-2 font-medium text-[#6D2932] text-center">
-                          Processing Time
-                        </td>
-                        <td className="px-4 py-2 font-semibold text-blue-600 text-center">
-                          {predictionResults.processingTime} ms
-                        </td>
-                      </tr>
-                      <tr className="border-b border-[#D7D1C9]">
-                        <td className="px-4 py-2 font-medium text-[#6D2932] text-center">
-                          Image Quality Score
-                        </td>
-                        <td className="px-4 py-2 font-semibold text-purple-600 text-center">
-                          {predictionResults.imageQuality}/100
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="px-4 py-2 font-medium text-[#6D2932] text-center">
-                          Prediction Timestamp
-                        </td>
-                        <td className="px-4 py-2 font-semibold text-[#99B19C] text-center">
-                          {predictionResults.timestamp}
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            )}
-
-            <ToastContainer />
+      <main className="flex-grow py-8 px-4 flex">
+        {/* Sidebar Trigger Icon */}
+        <div
+          className="fixed top-1/2 left-0 z-50 transform -translate-y-1/2 cursor-pointer"
+          onMouseEnter={() => setSidebarOpen(true)}
+          onMouseLeave={() => setSidebarOpen(false)}
+        >
+          <div className="bg-[#99B19C] hover:bg-[#6D2932] text-[#FAF5EF] p-3 w-10 h-10 rounded-r-2xl shadow-lg flex items-center justify-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
           </div>
         </div>
-      </main>
+        {/* Sliding Sidebar */}
+        <div
+          className={`fixed top-1/2 left-0 h-72 w-44 bg-white/80 backdrop-blur-lg shadow-lg rounded-r-2xl border border-[#99B19C]/40 p-3 space-y-3 z-40 transition-transform duration-300 transform -translate-y-1/2 ${
+            sidebarOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
+          onMouseEnter={() => setSidebarOpen(true)}
+          onMouseLeave={() => setSidebarOpen(false)}
+        >
+          <button
+            onClick={() => setActiveSection("main")}
+            className={`w-full text-left px-4 py-2 rounded-lg font-bold text-[#6D2932] border border-[#99B19C]/40 mb-2 transition-all duration-200 hover:bg-[#99B19C]/10 ${
+              activeSection === "main" ? "bg-[#99B19C]/20" : ""
+            }`}
+          >
+            Detection
+          </button>
+          <button
+            onClick={() => setActiveSection("methodology")}
+            className={`w-full text-left px-4 py-2 rounded-lg font-bold text-[#6D2932] border border-[#99B19C]/40 mb-2 transition-all duration-200 hover:bg-[#99B19C]/10 ${
+              activeSection === "methodology" ? "bg-[#99B19C]/20" : ""
+            }`}
+          >
+            Methodology
+          </button>
+          <button
+            onClick={() => setActiveSection("bloodArticle")}
+            className={`w-full text-left px-4 py-2 rounded-lg font-bold text-[#6D2932] border border-[#99B19C]/40 transition-all duration-200 hover:bg-[#99B19C]/10 ${
+              activeSection === "bloodArticle" ? "bg-[#99B19C]/20" : ""
+            }`}
+          >
+            Blood Article
+          </button>
+        </div>
+        {/* Main Content */}
+        <div className="flex-1 ml-0 md:ml-64">
+          {activeSection === "main" && (
+            <div className="w-full max-w-3xl mx-auto p-8 bg-white/80 backdrop-blur-lg shadow-2xl rounded-2xl border border-[#99B19C]/40">
+              <h2 className="text-2xl font-extrabold mb-6 text-center text-[#6D2932] tracking-tight">
+                Upload Fingerprint
+              </h2>
 
+              <div className="flex flex-col items-center space-y-6 text-xs sm:text-sm">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="file-input file-input-bordered w-full max-w-md border border-[#99B19C] rounded-lg bg-white/70 text-[#6D2932] focus:border-[#6D2932] focus:outline-none text-xs sm:text-sm"
+                />
+
+                {selectedImage && (
+                  <div className="flex flex-col items-center space-y-2">
+                    <img
+                      src={selectedImage}
+                      alt="Preview"
+                      className="mt-4 max-w-full h-64 rounded-xl shadow object-contain border border-[#99B19C]/40"
+                    />
+                    <button
+                      onClick={handleRemoveImage}
+                      className="px-4 py-1.5 rounded-full bg-red-500 hover:bg-red-600 text-white font-bold transition-all duration-300 shadow border-2 border-red-500 hover:border-red-600 text-xs sm:text-sm"
+                    >
+                      Remove Image
+                    </button>
+                  </div>
+                )}
+
+                <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                  <button
+                    onClick={handleUpload}
+                    disabled={!selectedImageFile || isUploaded}
+                    className={`px-5 py-2 rounded-full font-bold transition-all duration-300 border-2 focus:outline-none focus:ring-2 focus:ring-[#99B19C]/50 text-xs sm:text-sm ${
+                      !selectedImageFile || isUploaded
+                        ? "bg-gray-300 text-gray-400 border-gray-300 cursor-not-allowed"
+                        : "bg-[#99B19C] text-[#6D2932] border-[#99B19C] hover:bg-[#6D2932] hover:text-[#FAF5EF] hover:border-[#6D2932]"
+                    }`}
+                  >
+                    {isUploaded ? "Uploaded ✓" : "Upload"}
+                  </button>
+
+                  <button
+                    onClick={handleDetect}
+                    disabled={!isUploaded}
+                    className={`px-5 py-2 rounded-full font-bold transition-all duration-300 border-2 focus:outline-none focus:ring-2 focus:ring-[#99B19C]/50 text-xs sm:text-sm ${
+                      !isUploaded
+                        ? "bg-gray-300 text-gray-400 border-gray-300 cursor-not-allowed"
+                        : "bg-[#6D2932] text-[#FAF5EF] border-[#6D2932] hover:bg-[#99B19C] hover:text-[#6D2932] hover:border-[#99B19C]"
+                    }`}
+                  >
+                    Detect
+                  </button>
+                </div>
+
+                {/* Prediction Results Table */}
+                {predictionResults && (
+                  <div className="w-full mt-8">
+                    <h3 className="text-lg font-bold mb-4 text-center text-[#6D2932]">
+                      Detection Results
+                    </h3>
+                    <div className="overflow-x-auto">
+                      <table className="min-w-full bg-white/90 border border-[#99B19C]/40 rounded-xl shadow text-xs sm:text-sm">
+                        <thead className="bg-[#99B19C] text-[#6D2932]">
+                          <tr>
+                            <th className="px-4 py-2 text-center font-semibold">
+                              Metric
+                            </th>
+                            <th className="px-4 py-2 text-center font-semibold">
+                              Value
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr className="border-b border-[#D7D1C9]">
+                            <td className="px-4 py-2 font-medium text-[#6D2932] text-center">
+                              Detected Blood Group
+                            </td>
+                            <td className="px-4 py-2 text-center">
+                              <span className="bg-[#6D2932] text-[#FAF5EF] px-3 py-1 rounded-full font-bold text-xs sm:text-sm">
+                                {predictionResults.bloodGroup}
+                              </span>
+                            </td>
+                          </tr>
+                          <tr className="border-b border-[#D7D1C9]">
+                            <td className="px-4 py-2 font-medium text-[#6D2932] text-center">
+                              Confidence Score
+                            </td>
+                            <td className="px-4 py-2 font-semibold text-green-600 text-center">
+                              {predictionResults.confidence}%
+                            </td>
+                          </tr>
+                          <tr className="border-b border-[#D7D1C9]">
+                            <td className="px-4 py-2 font-medium text-[#6D2932] text-center">
+                              Processing Time
+                            </td>
+                            <td className="px-4 py-2 font-semibold text-blue-600 text-center">
+                              {predictionResults.processingTime} ms
+                            </td>
+                          </tr>
+                          <tr className="border-b border-[#D7D1C9]">
+                            <td className="px-4 py-2 font-medium text-[#6D2932] text-center">
+                              Image Quality Score
+                            </td>
+                            <td className="px-4 py-2 font-semibold text-purple-600 text-center">
+                              {predictionResults.imageQuality}/100
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="px-4 py-2 font-medium text-[#6D2932] text-center">
+                              Prediction Timestamp
+                            </td>
+                            <td className="px-4 py-2 font-semibold text-[#99B19C] text-center">
+                              {predictionResults.timestamp}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+
+                <ToastContainer />
+              </div>
+            </div>
+          )}
+          {activeSection === "methodology" && (
+            <div className="p-8 bg-white/80 rounded-2xl">
+              <h2 className="text-2xl font-bold mb-4 text-[#6D2932]">
+                Methodology
+              </h2>
+              <p className="text-[#6D2932] text-sm mb-6">
+                The bar chart below shows the number of samples for each blood
+                group in our dataset. A- is the most common, while A+ is the
+                least. This helps us understand the distribution of blood types
+                in our data.
+              </p>
+              <div className="flex justify-center mb-8">
+                <img
+                  src={heroPic3}
+                  alt="Blood Group Distribution Diagram"
+                  className="w-full max-w-2xl rounded-xl"
+                />
+              </div>
+              <p className="text-[#6D2932] text-sm mb-6">
+                The line chart below shows how the model’s accuracy improves as
+                it trains. Both training and validation accuracy increase over
+                time, reaching 94.88%.With this accuracy, our model reliably
+                predicts blood groups from fingerprints. This high score means
+                the system is effective and ready for real-world use.
+              </p>
+              <div className="flex justify-center mb-4">
+                <img
+                  src={modelAccuracy}
+                  alt="Model Accuracy Chart"
+                  className="w-full max-w-2xl rounded-xl"
+                />
+              </div>
+              <p className="text-[#6D2932] text-sm mb-6">
+                The confusion matrix above shows that most predictions match the
+                true blood group labels, with very few misclassifications. This
+                demonstrates the model’s reliability across all blood types.
+              </p>
+              <div className="flex justify-center mb-4">
+                <img
+                  src={confusionMatrix}
+                  alt="Confusion Matrix"
+                  className="w-full max-w-2xl rounded-xl"
+                />
+              </div>
+              <p className="text-[#6D2932] text-sm text-center"></p>
+            </div>
+          )}
+          {activeSection === "bloodArticle" && (
+            <div className="p-8 bg-white/80 rounded-2xl shadow-xl border border-[#99B19C]/40">
+              <h2 className="text-2xl font-bold mb-4 text-[#6D2932]">
+                Blood Article
+              </h2>
+              <p className="text-[#6D2932] text-sm">
+                Add your blood-related article or educational content here. You
+                can include images, facts, and references.
+              </p>
+            </div>
+          )}
+        </div>
+      </main>
       <Footer />
     </div>
   );
