@@ -47,6 +47,7 @@ export default function Dashboard() {
   const [selectedImageFile, setSelectedImageFile] = useState(null);
   const [isUploaded, setIsUploaded] = useState(false);
   const [predictionResults, setPredictionResults] = useState(null);
+  const [phoneNumber, setPhoneNumber] = useState(""); // Will be set from DB
   const [activeSection, setActiveSection] = useState("main"); // sidebar navigation
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState(null);
@@ -58,6 +59,22 @@ export default function Dashboard() {
     setLoggedInUser(user);
     if (!user) {
       navigate("/login");
+    } else {
+      // Fetch user phone number from backend
+      const token = localStorage.getItem("token");
+      if (token) {
+        fetch("http://localhost:8080/auth/me", {
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}` },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data && data.phoneNumber) setPhoneNumber(data.phoneNumber);
+          })
+          .catch((err) =>
+            console.error("Failed to fetch user phone number", err)
+          );
+      }
     }
   }, [navigate]);
 
@@ -111,6 +128,13 @@ export default function Dashboard() {
       return;
     }
 
+    if (!phoneNumber || phoneNumber.length < 10) {
+      toast.warn("User phone number not found or invalid", {
+        position: "top-center",
+      });
+      return;
+    }
+
     const formData = new FormData();
     formData.append("file", selectedImageFile);
 
@@ -123,7 +147,6 @@ export default function Dashboard() {
       const result = await response.json();
 
       if (response.ok) {
-        // Store prediction results
         setPredictionResults({
           bloodGroup: result.predicted_label,
           confidence: result.confidence_percentage,
@@ -150,6 +173,33 @@ export default function Dashboard() {
           } catch (err) {
             console.error("Error saving fingerprint data:", err);
           }
+        }
+
+        // Send SMS to user
+        try {
+          const smsRes = await fetch("http://localhost:8080/send-sms", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              phoneNumber,
+              bloodGroup: result.predicted_label,
+              confidence: result.confidence_percentage,
+              timestamp: result.timestamp,
+            }),
+          });
+          const smsData = await smsRes.json();
+          if (smsRes.ok) {
+            toast.success("Prediction sent to user's phone!", {
+              position: "top-center",
+            });
+          } else {
+            toast.error(smsData.error || "Failed to send SMS", {
+              position: "top-center",
+            });
+          }
+        } catch (err) {
+          console.error("Error sending SMS:", err);
+          toast.error("Error sending SMS", { position: "top-center" });
         }
       } else {
         toast.error(result.error || "Prediction failed", {
