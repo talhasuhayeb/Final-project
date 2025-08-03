@@ -1,71 +1,90 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const Login = () => {
-  const [loginInfo, setLoginInfo] = useState({
-    email: "",
+const ResetPassword = () => {
+  const [resetInfo, setResetInfo] = useState({
     password: "",
+    confirmPassword: "",
     role: "user", // default role
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const { token } = useParams();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!token) {
+      toast.error("Invalid reset link", { position: "top-center" });
+      navigate("/login");
+    }
+  }, [token, navigate]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const copyLoginInfo = { ...loginInfo };
-    copyLoginInfo[name] = value;
-    setLoginInfo(copyLoginInfo);
+    setResetInfo((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  const handleLogin = async (e) => {
+  const handleResetPassword = async (e) => {
     e.preventDefault();
-    const { email, password, role } = loginInfo;
-    if (!email || !password) {
-      toast.error(" email & Password required", {
+    const { password, confirmPassword, role } = resetInfo;
+
+    if (!password || !confirmPassword) {
+      toast.error("Please fill in all fields", {
         position: "top-center",
       });
       return;
     }
+
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match", {
+        position: "top-center",
+      });
+      return;
+    }
+
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters long", {
+        position: "top-center",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+
     try {
-      const url = "http://localhost:8080/auth/login";
+      const url = `http://localhost:8080/auth/reset-password/${token}`;
       const response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(loginInfo),
+        body: JSON.stringify({ password, role }),
       });
+
       const result = await response.json();
-      const {
-        success,
-        message,
-        error,
-        name,
-        jwtToken,
-        role: returnedRole,
-      } = result;
+      const { success, message } = result;
+
       if (success) {
         toast.success(message, { position: "top-center" });
-        localStorage.setItem("token", jwtToken);
-        localStorage.setItem("loggedInUser", name);
-        localStorage.setItem("role", returnedRole);
         setTimeout(() => {
-          if (returnedRole === "admin") {
-            navigate("/admin-dashboard");
-          } else {
-            navigate("/dashboard");
-          }
-        }, 2000);
-      } else if (error) {
-        const details = error?.details?.[0]?.message;
-        toast.error(details || message, { position: "top-center" });
-      } else if (!success) {
+          navigate("/login");
+        }, 3000);
+      } else {
         toast.error(message, { position: "top-center" });
       }
     } catch (err) {
-      toast.error(err);
+      toast.error("Network error. Please try again.", {
+        position: "top-center",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#FAF5EF] via-[#D7D1C9] to-[#99B19C]/40 p-4">
       <div className="w-full max-w-md">
@@ -73,45 +92,47 @@ const Login = () => {
           <div className="p-8 text-center text-xs sm:text-sm">
             <div className="space-y-6">
               <h2 className="text-2xl font-extrabold uppercase text-[#6D2932] tracking-tight">
-                Login
+                Reset Password
               </h2>
               <p className="text-[#99B19C] font-medium">
-                Please enter your email and password!
+                Enter your new password below.
               </p>
 
               <form
-                onSubmit={handleLogin}
+                onSubmit={handleResetPassword}
                 className="space-y-6"
                 autoComplete="off"
               >
                 <div className="relative">
                   <input
-                    type="email"
-                    id="regEmail"
-                    name="email"
-                    value={loginInfo.email}
+                    type="password"
+                    id="newPassword"
+                    name="password"
+                    value={resetInfo.password}
                     onChange={handleChange}
                     className="w-full px-4 py-2 bg-transparent border-b-2 border-[#99B19C] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#99B19C] transition-all text-xs sm:text-sm"
-                    placeholder="Email"
+                    placeholder="New Password"
+                    required
                   />
                 </div>
 
                 <div className="relative">
                   <input
                     type="password"
-                    id="regPassword"
-                    name="password"
-                    value={loginInfo.password}
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    value={resetInfo.confirmPassword}
                     onChange={handleChange}
                     className="w-full px-4 py-2 bg-transparent border-b-2 border-[#99B19C] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#99B19C] transition-all text-xs sm:text-sm"
-                    placeholder="Password"
+                    placeholder="Confirm New Password"
+                    required
                   />
                 </div>
 
                 <div className="relative">
                   <select
                     name="role"
-                    value={loginInfo.role}
+                    value={resetInfo.role}
                     onChange={handleChange}
                     className="w-full px-4 py-2 bg-transparent border-b-2 border-[#99B19C] focus:outline-none focus:border-[#6D2932] text-[#6D2932] text-xs sm:text-sm"
                   >
@@ -122,28 +143,26 @@ const Login = () => {
 
                 <button
                   type="submit"
-                  className="w-full py-2 rounded-full bg-[#6D2932] hover:bg-[#99B19C] text-[#FAF5EF] font-bold text-base shadow-md transition-all duration-300 border-2 border-[#6D2932] hover:border-[#99B19C] focus:outline-none focus:ring-2 focus:ring-[#99B19C]/50 sm:text-sm"
+                  disabled={isLoading}
+                  className={`w-full py-2 rounded-full font-bold text-base shadow-md transition-all duration-300 border-2 focus:outline-none focus:ring-2 focus:ring-[#99B19C]/50 sm:text-sm ${
+                    isLoading
+                      ? "bg-gray-400 border-gray-400 text-gray-600 cursor-not-allowed"
+                      : "bg-[#6D2932] hover:bg-[#99B19C] text-[#FAF5EF] border-[#6D2932] hover:border-[#99B19C]"
+                  }`}
                 >
-                  Login
+                  {isLoading ? "Resetting..." : "Reset Password"}
                 </button>
 
                 <div className="space-y-2">
                   <p className="text-[#99B19C] text-xs sm:text-sm">
-                    <Link
-                      to="/forgot-password"
-                      className="text-[#6D2932] font-bold hover:text-[#99B19C] cursor-pointer focus:outline-none"
+                    Remember your password?
+                    <button
+                      type="button"
+                      onClick={() => navigate("/login")}
+                      className="text-[#6D2932] font-bold px-1 hover:text-[#99B19C] cursor-pointer focus:outline-none bg-transparent border-none"
                     >
-                      Forgot your password?
-                    </Link>
-                  </p>
-                  <p className="text-[#99B19C] text-xs sm:text-sm">
-                    Don't have an account?
-                    <Link
-                      to="/register"
-                      className="text-[#6D2932] font-bold px-1 hover:text-[#99B19C] cursor-pointer focus:outline-none"
-                    >
-                      Register
-                    </Link>
+                      Login
+                    </button>
                   </p>
                 </div>
               </form>
@@ -152,6 +171,7 @@ const Login = () => {
           </div>
         </div>
       </div>
+
       {/* Floating Home Button */}
       <button
         onClick={() => navigate("/")}
@@ -163,4 +183,5 @@ const Login = () => {
     </div>
   );
 };
-export default Login;
+
+export default ResetPassword;

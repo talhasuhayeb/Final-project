@@ -3,69 +3,65 @@ import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const Login = () => {
-  const [loginInfo, setLoginInfo] = useState({
+const ForgotPassword = () => {
+  const [forgotInfo, setForgotInfo] = useState({
     email: "",
-    password: "",
     role: "user", // default role
   });
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const copyLoginInfo = { ...loginInfo };
-    copyLoginInfo[name] = value;
-    setLoginInfo(copyLoginInfo);
+    setForgotInfo((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  const handleLogin = async (e) => {
+  const handleForgotPassword = async (e) => {
     e.preventDefault();
-    const { email, password, role } = loginInfo;
-    if (!email || !password) {
-      toast.error(" email & Password required", {
+    const { email, role } = forgotInfo;
+
+    if (!email) {
+      toast.error("Email is required", {
         position: "top-center",
       });
       return;
     }
+
+    setIsLoading(true);
+
     try {
-      const url = "http://localhost:8080/auth/login";
+      const url = "http://localhost:8080/auth/forgot-password";
       const response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(loginInfo),
+        body: JSON.stringify({ email, role }),
       });
+
       const result = await response.json();
-      const {
-        success,
-        message,
-        error,
-        name,
-        jwtToken,
-        role: returnedRole,
-      } = result;
+      const { success, message } = result;
+
       if (success) {
         toast.success(message, { position: "top-center" });
-        localStorage.setItem("token", jwtToken);
-        localStorage.setItem("loggedInUser", name);
-        localStorage.setItem("role", returnedRole);
         setTimeout(() => {
-          if (returnedRole === "admin") {
-            navigate("/admin-dashboard");
-          } else {
-            navigate("/dashboard");
-          }
-        }, 2000);
-      } else if (error) {
-        const details = error?.details?.[0]?.message;
-        toast.error(details || message, { position: "top-center" });
-      } else if (!success) {
+          navigate("/login");
+        }, 3000);
+      } else {
         toast.error(message, { position: "top-center" });
       }
     } catch (err) {
-      toast.error(err);
+      toast.error("Network error. Please try again.", {
+        position: "top-center",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#FAF5EF] via-[#D7D1C9] to-[#99B19C]/40 p-4">
       <div className="w-full max-w-md">
@@ -73,45 +69,35 @@ const Login = () => {
           <div className="p-8 text-center text-xs sm:text-sm">
             <div className="space-y-6">
               <h2 className="text-2xl font-extrabold uppercase text-[#6D2932] tracking-tight">
-                Login
+                Forgot Password
               </h2>
               <p className="text-[#99B19C] font-medium">
-                Please enter your email and password!
+                Enter your email address and we'll send you a link to reset your
+                password.
               </p>
 
               <form
-                onSubmit={handleLogin}
+                onSubmit={handleForgotPassword}
                 className="space-y-6"
                 autoComplete="off"
               >
                 <div className="relative">
                   <input
                     type="email"
-                    id="regEmail"
+                    id="forgotEmail"
                     name="email"
-                    value={loginInfo.email}
+                    value={forgotInfo.email}
                     onChange={handleChange}
                     className="w-full px-4 py-2 bg-transparent border-b-2 border-[#99B19C] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#99B19C] transition-all text-xs sm:text-sm"
                     placeholder="Email"
-                  />
-                </div>
-
-                <div className="relative">
-                  <input
-                    type="password"
-                    id="regPassword"
-                    name="password"
-                    value={loginInfo.password}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 bg-transparent border-b-2 border-[#99B19C] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#99B19C] transition-all text-xs sm:text-sm"
-                    placeholder="Password"
+                    required
                   />
                 </div>
 
                 <div className="relative">
                   <select
                     name="role"
-                    value={loginInfo.role}
+                    value={forgotInfo.role}
                     onChange={handleChange}
                     className="w-full px-4 py-2 bg-transparent border-b-2 border-[#99B19C] focus:outline-none focus:border-[#6D2932] text-[#6D2932] text-xs sm:text-sm"
                   >
@@ -122,18 +108,24 @@ const Login = () => {
 
                 <button
                   type="submit"
-                  className="w-full py-2 rounded-full bg-[#6D2932] hover:bg-[#99B19C] text-[#FAF5EF] font-bold text-base shadow-md transition-all duration-300 border-2 border-[#6D2932] hover:border-[#99B19C] focus:outline-none focus:ring-2 focus:ring-[#99B19C]/50 sm:text-sm"
+                  disabled={isLoading}
+                  className={`w-full py-2 rounded-full font-bold text-base shadow-md transition-all duration-300 border-2 focus:outline-none focus:ring-2 focus:ring-[#99B19C]/50 sm:text-sm ${
+                    isLoading
+                      ? "bg-gray-400 border-gray-400 text-gray-600 cursor-not-allowed"
+                      : "bg-[#6D2932] hover:bg-[#99B19C] text-[#FAF5EF] border-[#6D2932] hover:border-[#99B19C]"
+                  }`}
                 >
-                  Login
+                  {isLoading ? "Sending..." : "Send Reset Link"}
                 </button>
 
                 <div className="space-y-2">
                   <p className="text-[#99B19C] text-xs sm:text-sm">
+                    Remember your password?
                     <Link
-                      to="/forgot-password"
-                      className="text-[#6D2932] font-bold hover:text-[#99B19C] cursor-pointer focus:outline-none"
+                      to="/login"
+                      className="text-[#6D2932] font-bold px-1 hover:text-[#99B19C] cursor-pointer focus:outline-none"
                     >
-                      Forgot your password?
+                      Login
                     </Link>
                   </p>
                   <p className="text-[#99B19C] text-xs sm:text-sm">
@@ -152,6 +144,7 @@ const Login = () => {
           </div>
         </div>
       </div>
+
       {/* Floating Home Button */}
       <button
         onClick={() => navigate("/")}
@@ -163,4 +156,5 @@ const Login = () => {
     </div>
   );
 };
-export default Login;
+
+export default ForgotPassword;

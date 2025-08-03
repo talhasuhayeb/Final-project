@@ -1,7 +1,14 @@
-const { register, login } = require("../Controllers/AuthController");
+const {
+  register,
+  login,
+  forgotPassword,
+  resetPassword,
+} = require("../Controllers/AuthController");
 const {
   signupValidation,
   loginValidation,
+  forgotPasswordValidation,
+  resetPasswordValidation,
 } = require("../Middlewares/AuthValidation");
 const jwt = require("jsonwebtoken");
 const UserModel = require("../Models/User");
@@ -35,6 +42,8 @@ router.get("/me", async (req, res) => {
 
 router.post("/login", loginValidation, login);
 router.post("/register", signupValidation, register);
+router.post("/forgot-password", forgotPasswordValidation, forgotPassword);
+router.post("/reset-password/:token", resetPasswordValidation, resetPassword);
 
 // Update user's fingerprint data
 router.post("/update-fingerprint", async (req, res) => {

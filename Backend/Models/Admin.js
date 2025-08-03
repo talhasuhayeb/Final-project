@@ -20,6 +20,14 @@ const adminSchema = new Schema({
     default: "admin",
     enum: ["admin"],
   },
+  resetPasswordToken: {
+    type: String,
+    default: null,
+  },
+  resetPasswordExpires: {
+    type: Date,
+    default: null,
+  },
 });
 
 const AdminModel = mongoose.model("admins", adminSchema);

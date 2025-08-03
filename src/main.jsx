@@ -7,6 +7,8 @@ import Login from "./Pages/Login.jsx";
 import Register from "./Pages/Register.jsx";
 import Dashboard from "./Pages/Dashboard.jsx";
 import AdminDashboard from "./Pages/AdminDashboard.jsx";
+import ForgotPassword from "./Pages/ForgotPassword.jsx";
+import ResetPassword from "./Pages/ResetPassword.jsx";
 
 const router = createBrowserRouter([
   { path: "/", element: <App /> },
@@ -14,6 +16,8 @@ const router = createBrowserRouter([
   { path: "/register", element: <Register /> },
   { path: "/dashboard", element: <Dashboard /> },
   { path: "/admin-dashboard", element: <AdminDashboard /> },
+  { path: "/forgot-password", element: <ForgotPassword /> },
+  { path: "/reset-password/:token", element: <ResetPassword /> },
 ]);
 
 createRoot(document.getElementById("root")).render(
