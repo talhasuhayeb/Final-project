@@ -49,7 +49,8 @@ export default function Dashboard() {
   const [predictionResults, setPredictionResults] = useState(null);
   const [phoneNumber, setPhoneNumber] = useState(""); // Will be set from DB
   const [userEmail, setUserEmail] = useState(""); // Will be set from DB
-  const [sendEmailChecked, setSendEmailChecked] = useState(false); // Checkbox state
+  const [sendEmailChecked, setSendEmailChecked] = useState(false); // Email checkbox state
+  const [sendSMSChecked, setSendSMSChecked] = useState(false); // SMS checkbox state
   const [activeSection, setActiveSection] = useState("main"); // sidebar navigation
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState(null);
@@ -131,13 +132,6 @@ export default function Dashboard() {
       return;
     }
 
-    if (!phoneNumber || phoneNumber.length < 10) {
-      toast.warn("User phone number not found or invalid", {
-        position: "top-center",
-      });
-      return;
-    }
-
     const formData = new FormData();
     formData.append("file", selectedImageFile);
 
@@ -178,31 +172,37 @@ export default function Dashboard() {
           }
         }
 
-        // Send SMS to user
-        try {
-          const smsRes = await fetch("http://localhost:8080/send-sms", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              phoneNumber,
-              bloodGroup: result.predicted_label,
-              confidence: result.confidence_percentage,
-              timestamp: result.timestamp,
-            }),
-          });
-          const smsData = await smsRes.json();
-          if (smsRes.ok) {
-            toast.success("Prediction sent to user's phone!", {
-              position: "top-center",
+        // Send SMS to user if checkbox is checked
+        if (sendSMSChecked && phoneNumber) {
+          try {
+            const smsRes = await fetch("http://localhost:8080/send-sms", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                phoneNumber,
+                bloodGroup: result.predicted_label,
+                confidence: result.confidence_percentage,
+                timestamp: result.timestamp,
+              }),
             });
-          } else {
-            toast.error(smsData.error || "Failed to send SMS", {
-              position: "top-center",
-            });
+            const smsData = await smsRes.json();
+            if (smsRes.ok) {
+              toast.success("Prediction sent to your phone!", {
+                position: "top-center",
+              });
+            } else {
+              toast.error(smsData.error || "Failed to send SMS", {
+                position: "top-center",
+              });
+            }
+          } catch (err) {
+            console.error("Error sending SMS:", err);
+            toast.error("Error sending SMS", { position: "top-center" });
           }
-        } catch (err) {
-          console.error("Error sending SMS:", err);
-          toast.error("Error sending SMS", { position: "top-center" });
+        } else if (sendSMSChecked && !phoneNumber) {
+          toast.warn("Phone number not found. Please contact support.", {
+            position: "top-center",
+          });
         }
 
         // Send Email if checkbox is checked
@@ -410,22 +410,43 @@ export default function Dashboard() {
                   </div>
                 )}
 
-                {/* Email Checkbox */}
-                <div className="flex items-center justify-center space-x-3 w-full">
-                  <input
-                    type="checkbox"
-                    id="sendEmailCheckbox"
-                    checked={sendEmailChecked}
-                    onChange={(e) => setSendEmailChecked(e.target.checked)}
-                    className="w-4 h-4 text-[#6D2932] bg-white border-2 border-[#99B19C] rounded focus:ring-[#6D2932] focus:ring-2"
-                  />
-                  <label
-                    htmlFor="sendEmailCheckbox"
-                    className="text-[#6D2932] font-medium text-xs sm:text-sm cursor-pointer select-none"
-                  >
-                    📧 Send prediction results to my email (
-                    {userEmail || "email not found"})
-                  </label>
+                {/* Email and SMS Checkboxes */}
+                <div className="flex flex-col items-center space-y-3 w-full">
+                  {/* Email Checkbox */}
+                  <div className="flex items-center justify-center space-x-3 w-full">
+                    <input
+                      type="checkbox"
+                      id="sendEmailCheckbox"
+                      checked={sendEmailChecked}
+                      onChange={(e) => setSendEmailChecked(e.target.checked)}
+                      className="w-4 h-4 text-[#6D2932] bg-white border-2 border-[#99B19C] rounded focus:ring-[#6D2932] focus:ring-2"
+                    />
+                    <label
+                      htmlFor="sendEmailCheckbox"
+                      className="text-[#6D2932] font-medium text-xs sm:text-sm cursor-pointer select-none"
+                    >
+                      📧 Send prediction results to my email (
+                      {userEmail || "email not found"})
+                    </label>
+                  </div>
+
+                  {/* SMS Checkbox */}
+                  <div className="flex items-center justify-center space-x-3 w-full">
+                    <input
+                      type="checkbox"
+                      id="sendSMSCheckbox"
+                      checked={sendSMSChecked}
+                      onChange={(e) => setSendSMSChecked(e.target.checked)}
+                      className="w-4 h-4 text-[#6D2932] bg-white border-2 border-[#99B19C] rounded focus:ring-[#6D2932] focus:ring-2"
+                    />
+                    <label
+                      htmlFor="sendSMSCheckbox"
+                      className="text-[#6D2932] font-medium text-xs sm:text-sm cursor-pointer select-none"
+                    >
+                      📱 Send prediction results to my phone (
+                      {phoneNumber || "phone not found"})
+                    </label>
+                  </div>
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
