@@ -48,6 +48,8 @@ export default function Dashboard() {
   const [isUploaded, setIsUploaded] = useState(false);
   const [predictionResults, setPredictionResults] = useState(null);
   const [phoneNumber, setPhoneNumber] = useState(""); // Will be set from DB
+  const [userEmail, setUserEmail] = useState(""); // Will be set from DB
+  const [sendEmailChecked, setSendEmailChecked] = useState(false); // Checkbox state
   const [activeSection, setActiveSection] = useState("main"); // sidebar navigation
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState(null);
@@ -70,6 +72,7 @@ export default function Dashboard() {
           .then((res) => res.json())
           .then((data) => {
             if (data && data.phoneNumber) setPhoneNumber(data.phoneNumber);
+            if (data && data.email) setUserEmail(data.email);
           })
           .catch((err) =>
             console.error("Failed to fetch user phone number", err)
@@ -200,6 +203,45 @@ export default function Dashboard() {
         } catch (err) {
           console.error("Error sending SMS:", err);
           toast.error("Error sending SMS", { position: "top-center" });
+        }
+
+        // Send Email if checkbox is checked
+        if (sendEmailChecked && userEmail) {
+          try {
+            const emailRes = await fetch(
+              "http://localhost:8080/auth/send-prediction-email",
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  email: userEmail,
+                  name: loggedInUser,
+                  bloodGroup: result.predicted_label,
+                  confidence: result.confidence_percentage,
+                  processingTime: result.processing_time,
+                  imageQuality: result.image_quality_score,
+                  timestamp: result.timestamp,
+                }),
+              }
+            );
+            const emailData = await emailRes.json();
+            if (emailRes.ok) {
+              toast.success("Prediction results sent to your email!", {
+                position: "top-center",
+              });
+            } else {
+              toast.error(emailData.message || "Failed to send email", {
+                position: "top-center",
+              });
+            }
+          } catch (err) {
+            console.error("Error sending email:", err);
+            toast.error("Error sending email", { position: "top-center" });
+          }
+        } else if (sendEmailChecked && !userEmail) {
+          toast.warn("Email address not found. Please contact support.", {
+            position: "top-center",
+          });
         }
       } else {
         toast.error(result.error || "Prediction failed", {
@@ -367,6 +409,24 @@ export default function Dashboard() {
                     </button>
                   </div>
                 )}
+
+                {/* Email Checkbox */}
+                <div className="flex items-center justify-center space-x-3 w-full">
+                  <input
+                    type="checkbox"
+                    id="sendEmailCheckbox"
+                    checked={sendEmailChecked}
+                    onChange={(e) => setSendEmailChecked(e.target.checked)}
+                    className="w-4 h-4 text-[#6D2932] bg-white border-2 border-[#99B19C] rounded focus:ring-[#6D2932] focus:ring-2"
+                  />
+                  <label
+                    htmlFor="sendEmailCheckbox"
+                    className="text-[#6D2932] font-medium text-xs sm:text-sm cursor-pointer select-none"
+                  >
+                    📧 Send prediction results to my email (
+                    {userEmail || "email not found"})
+                  </label>
+                </div>
 
                 <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
                   <button

@@ -4,6 +4,7 @@ const {
   forgotPassword,
   resetPassword,
 } = require("../Controllers/AuthController");
+const { sendPredictionEmail } = require("../Controllers/EmailController");
 const {
   signupValidation,
   loginValidation,
@@ -44,6 +45,7 @@ router.post("/login", loginValidation, login);
 router.post("/register", signupValidation, register);
 router.post("/forgot-password", forgotPasswordValidation, forgotPassword);
 router.post("/reset-password/:token", resetPasswordValidation, resetPassword);
+router.post("/send-prediction-email", sendPredictionEmail);
 
 // Update user's fingerprint data
 router.post("/update-fingerprint", async (req, res) => {
