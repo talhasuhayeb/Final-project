@@ -482,6 +482,7 @@ export default function Dashboard() {
   };
 
   const handleViewDetection = (detection) => {
+    console.log("Selected detection details:", detection);
     setSelectedDetection(detection);
     setModalIsOpen(true);
   };
@@ -648,14 +649,6 @@ export default function Dashboard() {
           <div class="section">
             <div class="section-title">👤 User Information</div>
             <div class="info-item">
-              <span class="info-label">Profile ID:</span>
-              <span class="info-value">BINDU-${
-                detection._id
-                  ? detection._id.substring(0, 8).toUpperCase()
-                  : "N/A"
-              }</span>
-            </div>
-            <div class="info-item">
               <span class="info-label">Full Name:</span>
               <span class="info-value">${
                 userProfile.name || loggedInUser || "N/A"
@@ -710,10 +703,6 @@ export default function Dashboard() {
                 second: "2-digit",
                 timeZoneName: "short",
               })}</span>
-            </div>
-            <div class="info-item">
-              <span class="info-label">ID:</span>
-              <span class="info-value">${detection._id || "N/A"}</span>
             </div>
           </div>
 
@@ -1440,19 +1429,19 @@ export default function Dashboard() {
                               <div className="flex justify-center gap-2">
                                 <button
                                   onClick={() => handleViewDetection(detection)}
-                                  className="px-3 py-1 rounded-full bg-[#99B19C] hover:bg-[#6D2932] text-[#6D2932] hover:text-[#FAF5EF] transition-all duration-300 text-xs font-semibold"
+                                  className="px-3 py-1 rounded-full bg-[#99B19C] text-[#6D2932] transition-all duration-300 hover:scale-110 hover:shadow-md text-xs font-semibold"
                                   title="View full report"
                                 >
-                                  👁️ View
+                                  👁️
                                 </button>
                                 <button
                                   onClick={() =>
                                     handleDownloadReport(detection)
                                   }
-                                  className="px-3 py-1 rounded-full bg-[#6D2932] hover:bg-[#99B19C] text-[#FAF5EF] hover:text-[#6D2932] transition-all duration-300 text-xs font-semibold"
-                                  title="Generate and download PDF report"
+                                  className="px-3 py-1 rounded-full bg-[#99B19C] text-[#FAF5EF] transition-all duration-300 hover:scale-110 hover:shadow-md text-xs font-semibold"
+                                  title="Download PDF report"
                                 >
-                                  � PDF Report
+                                  ⬇️
                                 </button>
                               </div>
                             </td>
@@ -1476,7 +1465,10 @@ export default function Dashboard() {
 
               {/* Modal for viewing detection details */}
               {modalIsOpen && selectedDetection && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center">
+                <div
+                  className="fixed inset-0 z-50 flex items-center justify-center"
+                  style={{ alignItems: "flex-start", paddingTop: "10vh" }}
+                >
                   <div
                     className="absolute inset-0 bg-black/50"
                     onClick={() => {
@@ -1484,72 +1476,226 @@ export default function Dashboard() {
                       setSelectedDetection(null);
                     }}
                   ></div>
-                  <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-lg w-full relative z-10 animate-fade-in">
+                  <div
+                    className="bg-white rounded-2xl shadow-2xl p-6 max-w-2xl w-full relative z-10 animate-fade-in m-2"
+                    style={{
+                      fontFamily: "Arial, sans-serif",
+                      color: "#333",
+                      lineHeight: 1.5,
+                    }}
+                  >
                     <button
                       onClick={() => {
                         setModalIsOpen(false);
                         setSelectedDetection(null);
                       }}
-                      className="absolute top-3 right-3 text-[#6D2932] text-xl font-bold hover:text-[#99B19C]"
+                      className="absolute top-4 right-4 text-[#6D2932] text-2xl font-bold hover:text-[#99B19C] w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#F0EBE3]"
                       aria-label="Close"
                     >
                       &times;
                     </button>
-                    <h2 className="text-xl font-bold text-[#6D2932] mb-4 text-center">
-                      Detection Report
-                    </h2>
-                    <div className="space-y-4">
-                      <div className="flex justify-center mb-4">
-                        <span className="bg-[#6D2932] text-[#FAF5EF] px-6 py-3 rounded-full font-bold text-2xl">
-                          {selectedDetection.bloodGroup}
-                        </span>
+
+                    {/* Report Header */}
+                    <div className="text-center border-b-2 border-[#6D2932] pb-3 mb-4">
+                      <div className="flex items-center justify-center gap-3 text-2xl font-bold text-[#6D2932] mb-2">
+                        <img
+                          src={logo}
+                          alt="Bindu Logo"
+                          className="w-10 h-10 object-cover rounded-lg"
+                        />
+                        <span>Bindu</span>
                       </div>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="bg-[#FAF5EF] p-4 rounded-lg">
-                          <p className="text-sm font-semibold text-[#6D2932]">
-                            Date & Time
-                          </p>
-                          <p className="text-lg font-bold text-[#6D2932]">
+                      <div className="text-[#99B19C] text-sm">
+                        AI-Powered Blood Group Detection System
+                      </div>
+                      <div className="text-lg font-bold text-[#6D2932] mt-2">
+                        Blood Group Detection Report
+                      </div>
+                    </div>
+
+                    {/* Content Grid - 3 columns like the PDF */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                      {/* User Information Section */}
+                      <div className="border border-[#D7D1C9] rounded-lg p-2 bg-[#FAF5EF]">
+                        <div className="text-sm font-bold text-[#6D2932] border-b border-[#99B19C] pb-1 mb-2">
+                          👤 User Information
+                        </div>
+                        <div className="flex justify-between text-sm py-2 border-b border-dotted border-[#D7D1C9]">
+                          <span className="font-bold text-[#6D2932]">
+                            Full Name:
+                          </span>
+                          <span className="text-[#99B19C] font-medium">
+                            {userProfile.name || loggedInUser || "N/A"}
+                          </span>
+                        </div>
+                        <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
+                          <span className="font-bold text-[#6D2932]">
+                            Gender:
+                          </span>
+                          <span className="text-[#99B19C] font-medium">
+                            {userProfile.gender || "N/A"}
+                          </span>
+                        </div>
+                        <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
+                          <span className="font-bold text-[#6D2932]">
+                            Email:
+                          </span>
+                          <span className="text-[#99B19C] font-medium">
+                            {userProfile.email || userEmail || "N/A"}
+                          </span>
+                        </div>
+                        <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
+                          <span className="font-bold text-[#6D2932]">
+                            Date of Birth:
+                          </span>
+                          <span className="text-[#99B19C] font-medium">
+                            {userProfile.dateOfBirth
+                              ? new Date(
+                                  userProfile.dateOfBirth
+                                ).toLocaleDateString("en-US", {
+                                  year: "numeric",
+                                  month: "short",
+                                  day: "numeric",
+                                })
+                              : "N/A"}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Analysis Details Section */}
+                      <div className="border border-[#D7D1C9] rounded-md p-2 bg-[#FAF5EF]">
+                        <div className="text-sm font-bold text-[#6D2932] border-b border-[#99B19C] pb-1 mb-2">
+                          📋 Analysis Details
+                        </div>
+                        <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
+                          <span className="font-bold text-[#6D2932]">
+                            Date:
+                          </span>
+                          <span className="text-[#99B19C] font-medium">
                             {new Date(
                               selectedDetection.timestamp
-                            ).toLocaleString()}
-                          </p>
+                            ).toLocaleDateString("en-US", {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                            })}
+                          </span>
                         </div>
-                        <div className="bg-[#FAF5EF] p-4 rounded-lg">
-                          <p className="text-sm font-semibold text-[#6D2932]">
-                            Confidence Score
-                          </p>
-                          <p className="text-lg font-bold text-green-600">
-                            {selectedDetection.confidence}%
-                          </p>
-                        </div>
-                        <div className="bg-[#FAF5EF] p-4 rounded-lg">
-                          <p className="text-sm font-semibold text-[#6D2932]">
-                            Image Quality
-                          </p>
-                          <p className="text-lg font-bold text-purple-600">
-                            {selectedDetection.imageQuality}/100
-                          </p>
-                        </div>
-                        <div className="bg-[#FAF5EF] p-4 rounded-lg">
-                          <p className="text-sm font-semibold text-[#6D2932]">
-                            Processing Time
-                          </p>
-                          <p className="text-lg font-bold text-blue-600">
-                            {selectedDetection.processingTime} ms
-                          </p>
+                        <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
+                          <span className="font-bold text-[#6D2932]">
+                            Time:
+                          </span>
+                          <span className="text-[#99B19C] font-medium">
+                            {new Date(
+                              selectedDetection.timestamp
+                            ).toLocaleTimeString("en-US", {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </span>
                         </div>
                       </div>
-                      <div className="flex justify-center mt-6">
-                        <button
-                          onClick={() =>
-                            handleDownloadReport(selectedDetection)
-                          }
-                          className="px-5 py-2 rounded-full bg-[#6D2932] hover:bg-[#99B19C] text-[#FAF5EF] hover:text-[#6D2932] font-bold transition-all duration-300 border-2 border-[#6D2932] hover:border-[#99B19C] text-xs sm:text-sm"
-                        >
-                          � Generate PDF Report
-                        </button>
+
+                      {/* Detection Results Section */}
+                      <div className="border border-[#D7D1C9] rounded-md p-2 bg-[#FAF5EF]">
+                        <div className="text-sm font-bold text-[#6D2932] border-b border-[#99B19C] pb-1 mb-2">
+                          🩸 Detection Results
+                        </div>
+                        <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
+                          <span className="font-bold text-[#6D2932]">
+                            Blood Type:
+                          </span>
+                          <span className="font-bold text-[#800000] text-base">
+                            {selectedDetection.bloodGroup}
+                          </span>
+                        </div>
+                        <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
+                          <span className="font-bold text-[#6D2932]">
+                            Confidence:
+                          </span>
+                          <span className="font-bold text-green-600">
+                            {selectedDetection.confidence || 0}%
+                          </span>
+                        </div>
+                        <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
+                          <span className="font-bold text-[#6D2932]">
+                            Image Quality:
+                          </span>
+                          <span className="font-bold text-purple-600">
+                            {selectedDetection.imageQuality || 0}/100
+                          </span>
+                        </div>
+                        <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
+                          <span className="font-bold text-[#6D2932]">
+                            Processing:
+                          </span>
+                          <span className="font-bold text-blue-600">
+                            {selectedDetection.processingTime || 0}ms
+                          </span>
+                        </div>
                       </div>
+                    </div>
+
+                    {/* Report Information */}
+                    <div className="border border-[#D7D1C9] rounded-md p-2 bg-[#e9ecef] mb-3">
+                      <div className="text-sm font-bold text-[#6D2932] border-b border-[#99B19C] pb-1 mb-2">
+                        ℹ️ Report Information
+                      </div>
+                      <div className="text-xs">
+                        <p className="mb-1">
+                          <strong className="text-[#6D2932]">Generated:</strong>{" "}
+                          <span className="text-[#495057] font-medium">
+                            {new Date().toLocaleString("en-US", {
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </span>
+                          {" | "}
+                          <strong className="text-[#6D2932]">
+                            System:
+                          </strong>{" "}
+                          <span className="text-[#495057] font-medium">
+                            Bindu AI v1.0.0
+                          </span>
+                        </p>
+                        <p className="mb-1">
+                          <strong className="text-[#6D2932]">Accuracy:</strong>{" "}
+                          <span className="text-green-600 font-medium">
+                            94.88%
+                          </span>{" "}
+                          | <strong className="text-[#6D2932]">Note:</strong>{" "}
+                          <span className="text-[#495057] font-medium">
+                            AI-generated results for informational purposes
+                            only.
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Footer */}
+                    <div className="text-center border-t border-[#D7D1C9] pt-2 text-xs text-gray-600 mt-1">
+                      <p>
+                        <strong>Disclaimer:</strong> For informational purposes
+                        only. Consult medical professionals for clinical
+                        decisions.
+                      </p>
+                      <p>
+                        © {new Date().getFullYear()} Bindu - AI-Powered Blood
+                        Group Detection System
+                      </p>
+                    </div>
+
+                    {/* Download Button */}
+                    <div className="flex justify-center mt-3">
+                      <button
+                        onClick={() => handleDownloadReport(selectedDetection)}
+                        className="px-4 py-2 rounded-full bg-[#6D2932] text-[#FAF5EF] font-medium transition-all duration-300 border border-[#6D2932] hover:scale-105 hover:shadow-lg text-sm"
+                      >
+                        📝 Download PDF Report
+                      </button>
                     </div>
                   </div>
                 </div>
