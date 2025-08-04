@@ -23,6 +23,12 @@ app.use("/admin", AdminRouter);
 // Serve fingerprint images statically
 app.use("/uploads", express.static(path.join(__dirname, "Ml_server/uploads")));
 
+// Serve profile pictures statically
+app.use(
+  "/uploads/profile-pictures",
+  express.static(path.join(__dirname, "uploads/profile-pictures"))
+);
+
 app.post("/send-sms", SmsController.sendSms);
 
 app.listen(PORT, () => {

@@ -55,6 +55,18 @@ export default function Dashboard() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // User Profile States
+  const [userProfile, setUserProfile] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    gender: "",
+    dateOfBirth: "",
+    profilePicture: null,
+  });
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [profilePictureFile, setProfilePictureFile] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -72,8 +84,22 @@ export default function Dashboard() {
         })
           .then((res) => res.json())
           .then((data) => {
-            if (data && data.phoneNumber) setPhoneNumber(data.phoneNumber);
+            if (data && data.phone) setPhoneNumber(data.phone);
             if (data && data.email) setUserEmail(data.email);
+
+            // Populate user profile
+            setUserProfile({
+              name: data.name || "",
+              email: data.email || "",
+              phone: data.phone || "",
+              gender: data.gender || "",
+              dateOfBirth: data.dateOfBirth
+                ? data.dateOfBirth.split("T")[0]
+                : "",
+              profilePicture: data.profilePicture
+                ? `http://localhost:8080${data.profilePicture}`
+                : null,
+            });
           })
           .catch((err) =>
             console.error("Failed to fetch user phone number", err)
@@ -274,6 +300,152 @@ export default function Dashboard() {
     setSelectedArticle(null);
   };
 
+  // Profile handling functions
+  const handleProfileImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setProfilePictureFile(file);
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setUserProfile((prev) => ({
+          ...prev,
+          profilePicture: reader.result,
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleProfileInputChange = (e) => {
+    const { name, value } = e.target;
+    setUserProfile((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSaveProfile = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        toast.error("Authentication required", { position: "top-center" });
+        return;
+      }
+
+      // Create FormData to handle file upload
+      const formData = new FormData();
+      formData.append("name", userProfile.name);
+      formData.append("email", userProfile.email);
+      formData.append("phone", userProfile.phone);
+      formData.append("gender", userProfile.gender);
+      formData.append("dateOfBirth", userProfile.dateOfBirth);
+
+      // Add profile picture file if selected
+      if (profilePictureFile) {
+        formData.append("profilePicture", profilePictureFile);
+      }
+
+      const response = await fetch(
+        "http://localhost:8080/auth/update-profile",
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            // Don't set Content-Type header - let browser set it for FormData
+          },
+          body: formData,
+        }
+      );
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Update the main user states
+        setLoggedInUser(userProfile.name);
+        setUserEmail(userProfile.email);
+        setPhoneNumber(userProfile.phone);
+
+        // Update profile picture URL if it was updated
+        if (result.user.profilePicture) {
+          setUserProfile((prev) => ({
+            ...prev,
+            profilePicture: `http://localhost:8080${result.user.profilePicture}`,
+          }));
+        }
+
+        setIsEditingProfile(false);
+        setProfilePictureFile(null);
+        toast.success("Profile updated successfully!", {
+          position: "top-center",
+        });
+      } else {
+        toast.error(result.message || "Failed to update profile", {
+          position: "top-center",
+        });
+      }
+    } catch (err) {
+      console.error("Error updating profile:", err);
+      toast.error("Error updating profile", { position: "top-center" });
+    }
+  };
+
+  const handleRemoveProfilePicture = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        toast.error("Authentication required", { position: "top-center" });
+        return;
+      }
+
+      const response = await fetch(
+        "http://localhost:8080/auth/remove-profile-picture",
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Update the profile picture to null in the UI
+        setUserProfile((prev) => ({
+          ...prev,
+          profilePicture: null,
+        }));
+        setProfilePictureFile(null);
+
+        toast.success("Profile picture removed successfully!", {
+          position: "top-center",
+        });
+      } else {
+        toast.error(result.message || "Failed to remove profile picture", {
+          position: "top-center",
+        });
+      }
+    } catch (err) {
+      console.error("Error removing profile picture:", err);
+      toast.error("Error removing profile picture", { position: "top-center" });
+    }
+  };
+
+  const handleCancelEdit = () => {
+    // Reset to original values
+    setUserProfile({
+      name: loggedInUser,
+      email: userEmail,
+      phone: phoneNumber,
+      gender: userProfile.gender,
+      dateOfBirth: userProfile.dateOfBirth,
+      profilePicture: userProfile.profilePicture,
+    });
+    setIsEditingProfile(false);
+    setProfilePictureFile(null);
+  };
+
   return (
     <div className="min-h-screen flex flex-col justify-between bg-gradient-to-br from-[#FAF5EF] via-[#D7D1C9] to-[#99B19C]/40">
       <header className="sticky top-0 z-50">
@@ -345,7 +517,7 @@ export default function Dashboard() {
         </div>
         {/* Sliding Sidebar */}
         <div
-          className={`fixed top-1/2 left-0 h-72 w-44 bg-white/80 backdrop-blur-lg shadow-lg rounded-r-2xl border border-[#99B19C]/40 p-3 space-y-3 z-40 transition-transform duration-300 transform -translate-y-1/2 ${
+          className={`fixed top-1/2 left-0 h-80 w-44 bg-white/80 backdrop-blur-lg shadow-lg rounded-r-2xl border border-[#99B19C]/40 p-3 space-y-3 z-40 transition-transform duration-300 transform -translate-y-1/2 ${
             sidebarOpen ? "translate-x-0" : "-translate-x-full"
           }`}
           onMouseEnter={() => setSidebarOpen(true)}
@@ -358,6 +530,14 @@ export default function Dashboard() {
             }`}
           >
             Detection
+          </button>
+          <button
+            onClick={() => setActiveSection("profile")}
+            className={`w-full text-left px-4 py-2 rounded-lg font-bold text-[#6D2932] border border-[#99B19C]/40 mb-2 transition-all duration-200 hover:bg-[#99B19C]/10 ${
+              activeSection === "profile" ? "bg-[#99B19C]/20" : ""
+            }`}
+          >
+            Profile
           </button>
           <button
             onClick={() => setActiveSection("methodology")}
@@ -544,6 +724,251 @@ export default function Dashboard() {
 
                 <ToastContainer />
               </div>
+            </div>
+          )}
+          {activeSection === "profile" && (
+            <div className="w-full max-w-4xl mx-auto p-8 bg-white/80 backdrop-blur-lg shadow-2xl rounded-2xl border border-[#99B19C]/40">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-extrabold text-[#6D2932] tracking-tight">
+                  User Profile
+                </h2>
+                {!isEditingProfile ? (
+                  <button
+                    onClick={() => setIsEditingProfile(true)}
+                    className="px-4 py-2 rounded-full bg-[#99B19C] hover:bg-[#6D2932] text-[#6D2932] hover:text-[#FAF5EF] font-bold transition-all duration-300 border-2 border-[#99B19C] hover:border-[#6D2932] text-xs sm:text-sm"
+                  >
+                    ✏️ Edit Profile
+                  </button>
+                ) : (
+                  <div className="flex gap-2">
+                    <button
+                      onClick={handleSaveProfile}
+                      className="px-4 py-2 rounded-full bg-[#6D2932] hover:bg-[#99B19C] text-[#FAF5EF] hover:text-[#6D2932] font-bold transition-all duration-300 border-2 border-[#6D2932] hover:border-[#99B19C] text-xs sm:text-sm"
+                    >
+                      💾 Save
+                    </button>
+                    <button
+                      onClick={handleCancelEdit}
+                      className="px-4 py-2 rounded-full bg-gray-400 hover:bg-gray-500 text-white font-bold transition-all duration-300 border-2 border-gray-400 hover:border-gray-500 text-xs sm:text-sm"
+                    >
+                      ❌ Cancel
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* Profile Picture Section */}
+                <div className="lg:col-span-1">
+                  <div className="flex flex-col items-center space-y-4">
+                    <div className="relative">
+                      <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-[#99B19C] shadow-lg bg-gradient-to-br from-[#FAF5EF] to-[#D7D1C9]">
+                        {userProfile.profilePicture ? (
+                          <img
+                            src={userProfile.profilePicture}
+                            alt="Profile"
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-[#6D2932] text-6xl font-bold">
+                            {userProfile.name
+                              ? userProfile.name.charAt(0).toUpperCase()
+                              : "👤"}
+                          </div>
+                        )}
+                      </div>
+                      {isEditingProfile && (
+                        <>
+                          <button
+                            onClick={() =>
+                              document
+                                .getElementById("profileImageInput")
+                                .click()
+                            }
+                            className="absolute bottom-2 right-2 bg-[#6D2932] hover:bg-[#99B19C] text-white rounded-full p-2 shadow-lg transition-all duration-300"
+                          >
+                            📷
+                          </button>
+                          {userProfile.profilePicture && (
+                            <button
+                              onClick={handleRemoveProfilePicture}
+                              className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-2 shadow-lg transition-all duration-300"
+                              title="Remove profile picture"
+                            >
+                              🗑️
+                            </button>
+                          )}
+                        </>
+                      )}
+                    </div>
+
+                    {isEditingProfile && (
+                      <input
+                        type="file"
+                        id="profileImageInput"
+                        accept="image/*"
+                        onChange={handleProfileImageChange}
+                        className="hidden"
+                      />
+                    )}
+
+                    <div className="text-center">
+                      <h3 className="text-xl font-bold text-[#6D2932]">
+                        {userProfile.name || "User Name"}
+                      </h3>
+                      <p className="text-[#99B19C] text-sm">
+                        {userProfile.email || "user@email.com"}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Profile Information Section */}
+                <div className="lg:col-span-2">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Name Field */}
+                    <div className="space-y-2">
+                      <label className="block text-sm font-bold text-[#6D2932]">
+                        👤 Full Name
+                      </label>
+                      {isEditingProfile ? (
+                        <input
+                          type="text"
+                          name="name"
+                          value={userProfile.name}
+                          onChange={handleProfileInputChange}
+                          className="w-full px-4 py-2 border-2 border-[#99B19C] rounded-lg bg-white focus:border-[#6D2932] focus:outline-none text-[#6D2932] text-sm"
+                          placeholder="Enter your full name"
+                        />
+                      ) : (
+                        <div className="w-full px-4 py-2 border-2 border-[#D7D1C9] rounded-lg bg-[#FAF5EF] text-[#6D2932] text-sm">
+                          {userProfile.name || "Not specified"}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Email Field */}
+                    <div className="space-y-2">
+                      <label className="block text-sm font-bold text-[#6D2932]">
+                        📧 Email Address
+                      </label>
+                      {isEditingProfile ? (
+                        <input
+                          type="email"
+                          name="email"
+                          value={userProfile.email}
+                          onChange={handleProfileInputChange}
+                          className="w-full px-4 py-2 border-2 border-[#99B19C] rounded-lg bg-white focus:border-[#6D2932] focus:outline-none text-[#6D2932] text-sm"
+                          placeholder="Enter your email"
+                        />
+                      ) : (
+                        <div className="w-full px-4 py-2 border-2 border-[#D7D1C9] rounded-lg bg-[#FAF5EF] text-[#6D2932] text-sm">
+                          {userProfile.email || "Not specified"}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Phone Field */}
+                    <div className="space-y-2">
+                      <label className="block text-sm font-bold text-[#6D2932]">
+                        📱 Phone Number
+                      </label>
+                      {isEditingProfile ? (
+                        <input
+                          type="tel"
+                          name="phone"
+                          value={userProfile.phone}
+                          onChange={handleProfileInputChange}
+                          className="w-full px-4 py-2 border-2 border-[#99B19C] rounded-lg bg-white focus:border-[#6D2932] focus:outline-none text-[#6D2932] text-sm"
+                          placeholder="Enter your phone number"
+                        />
+                      ) : (
+                        <div className="w-full px-4 py-2 border-2 border-[#D7D1C9] rounded-lg bg-[#FAF5EF] text-[#6D2932] text-sm">
+                          {userProfile.phone || "Not specified"}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Gender Field */}
+                    <div className="space-y-2">
+                      <label className="block text-sm font-bold text-[#6D2932]">
+                        ⚧️ Gender
+                      </label>
+                      {isEditingProfile ? (
+                        <select
+                          name="gender"
+                          value={userProfile.gender}
+                          onChange={handleProfileInputChange}
+                          className="w-full px-4 py-2 border-2 border-[#99B19C] rounded-lg bg-white focus:border-[#6D2932] focus:outline-none text-[#6D2932] text-sm"
+                        >
+                          <option value="">Select Gender</option>
+                          <option value="Male">Male</option>
+                          <option value="Female">Female</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      ) : (
+                        <div className="w-full px-4 py-2 border-2 border-[#D7D1C9] rounded-lg bg-[#FAF5EF] text-[#6D2932] text-sm">
+                          {userProfile.gender || "Not specified"}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Date of Birth Field */}
+                    <div className="space-y-2 md:col-span-2">
+                      <label className="block text-sm font-bold text-[#6D2932]">
+                        🎂 Date of Birth
+                      </label>
+                      {isEditingProfile ? (
+                        <input
+                          type="date"
+                          name="dateOfBirth"
+                          value={userProfile.dateOfBirth}
+                          onChange={handleProfileInputChange}
+                          className="w-full px-4 py-2 border-2 border-[#99B19C] rounded-lg bg-white focus:border-[#6D2932] focus:outline-none text-[#6D2932] text-sm"
+                        />
+                      ) : (
+                        <div className="w-full px-4 py-2 border-2 border-[#D7D1C9] rounded-lg bg-[#FAF5EF] text-[#6D2932] text-sm">
+                          {userProfile.dateOfBirth
+                            ? new Date(
+                                userProfile.dateOfBirth
+                              ).toLocaleDateString("en-US", {
+                                year: "numeric",
+                                month: "long",
+                                day: "numeric",
+                              })
+                            : "Not specified"}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Profile Stats/Info Cards */}
+                  {!isEditingProfile && (
+                    <div className="mt-8 grid grid-cols-2 gap-4">
+                      <div className="bg-gradient-to-br from-[#6D2932] to-[#99B19C] p-4 rounded-xl text-white text-center">
+                        <div className="text-2xl font-bold">🩸</div>
+                        <div className="text-sm font-medium">Blood Type</div>
+                        <div className="text-lg font-bold">
+                          {predictionResults?.bloodGroup || "Not Detected"}
+                        </div>
+                      </div>
+                      <div className="bg-gradient-to-br from-[#99B19C] to-[#D7D1C9] p-4 rounded-xl text-[#6D2932] text-center">
+                        <div className="text-2xl font-bold">📊</div>
+                        <div className="text-sm font-medium">
+                          Last Confidence
+                        </div>
+                        <div className="text-lg font-bold">
+                          {predictionResults?.confidence
+                            ? `${predictionResults.confidence}%`
+                            : "N/A"}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <ToastContainer />
             </div>
           )}
           {activeSection === "methodology" && (

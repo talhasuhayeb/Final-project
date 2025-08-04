@@ -231,9 +231,155 @@ const resetPassword = async (req, res) => {
   }
 };
 
+// Update user profile
+const updateProfile = async (req, res) => {
+  try {
+    const userId = req.user?.id;
+    const { name, email, phone, gender, dateOfBirth, profilePicture } =
+      req.body;
+
+    if (!userId) {
+      return res.status(401).json({
+        message: "Unauthorized",
+        success: false,
+      });
+    }
+
+    // Find the user
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+        success: false,
+      });
+    }
+
+    // Check if email is being changed and if it's already taken
+    if (email && email !== user.email) {
+      const existingUser = await UserModel.findOne({ email });
+      if (existingUser && existingUser._id.toString() !== userId) {
+        return res.status(400).json({
+          message: "Email already exists",
+          success: false,
+        });
+      }
+    }
+
+    // Update profile fields
+    const updateData = {};
+    if (name !== undefined) updateData.name = name;
+    if (email !== undefined) updateData.email = email;
+    if (phone !== undefined) updateData.phone = phone;
+    if (gender !== undefined) updateData.gender = gender;
+    if (dateOfBirth !== undefined) updateData.dateOfBirth = dateOfBirth;
+
+    // Handle profile picture upload
+    if (req.file) {
+      // Delete old profile picture if it exists
+      if (user.profilePicture) {
+        const fs = require("fs");
+        const path = require("path");
+        const oldImagePath = path.join(
+          __dirname,
+          "../uploads/profile-pictures",
+          path.basename(user.profilePicture)
+        );
+        if (fs.existsSync(oldImagePath)) {
+          fs.unlinkSync(oldImagePath);
+        }
+      }
+      // Store the relative path to the new image
+      updateData.profilePicture = `/uploads/profile-pictures/${req.file.filename}`;
+    }
+
+    // Update the user
+    const updatedUser = await UserModel.findByIdAndUpdate(userId, updateData, {
+      new: true,
+      runValidators: true,
+    }).select("-password -resetPasswordToken -resetPasswordExpires");
+
+    res.status(200).json({
+      message: "Profile updated successfully",
+      success: true,
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.error("Update profile error:", error);
+    if (error.name === "ValidationError") {
+      return res.status(400).json({
+        message: "Validation error",
+        details: error.message,
+        success: false,
+      });
+    }
+    return res.status(500).json({
+      message: "Internal server error",
+      success: false,
+    });
+  }
+};
+
+// Remove user profile picture
+const removeProfilePicture = async (req, res) => {
+  try {
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return res.status(401).json({
+        message: "Unauthorized",
+        success: false,
+      });
+    }
+
+    // Find the user
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+        success: false,
+      });
+    }
+
+    // Delete the profile picture file if it exists
+    if (user.profilePicture) {
+      const fs = require("fs");
+      const path = require("path");
+      const imagePath = path.join(
+        __dirname,
+        "../uploads/profile-pictures",
+        path.basename(user.profilePicture)
+      );
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+      }
+    }
+
+    // Remove profile picture from database
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      userId,
+      { profilePicture: null },
+      { new: true, runValidators: true }
+    ).select("-password -resetPasswordToken -resetPasswordExpires");
+
+    res.status(200).json({
+      message: "Profile picture removed successfully",
+      success: true,
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.error("Remove profile picture error:", error);
+    return res.status(500).json({
+      message: "Internal server error",
+      success: false,
+    });
+  }
+};
+
 module.exports = {
   register,
   login,
   forgotPassword,
   resetPassword,
+  updateProfile,
+  removeProfilePicture,
 };

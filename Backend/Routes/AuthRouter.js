@@ -3,6 +3,8 @@ const {
   login,
   forgotPassword,
   resetPassword,
+  updateProfile,
+  removeProfilePicture,
 } = require("../Controllers/AuthController");
 const { sendPredictionEmail } = require("../Controllers/EmailController");
 const {
@@ -14,7 +16,25 @@ const {
 const jwt = require("jsonwebtoken");
 const UserModel = require("../Models/User");
 const SmsController = require("../Controllers/SmsController");
+const upload = require("../Middlewares/UploadMiddleware");
 const router = require("express").Router();
+
+// JWT verification middleware
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ message: "No token provided" });
+  }
+
+  const token = authHeader.split(" ")[1];
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = { id: decoded._id };
+    next();
+  } catch (err) {
+    return res.status(401).json({ message: "Invalid token" });
+  }
+};
 
 // Get current user info (for phone number)
 router.get("/me", async (req, res) => {
@@ -32,8 +52,10 @@ router.get("/me", async (req, res) => {
     res.json({
       name: user.name,
       email: user.email,
-      phoneNumber: user.phone,
+      phone: user.phone,
       gender: user.gender,
+      dateOfBirth: user.dateOfBirth,
+      profilePicture: user.profilePicture,
       bloodType: user.bloodType,
     });
   } catch (err) {
@@ -45,6 +67,17 @@ router.post("/login", loginValidation, login);
 router.post("/register", signupValidation, register);
 router.post("/forgot-password", forgotPasswordValidation, forgotPassword);
 router.post("/reset-password/:token", resetPasswordValidation, resetPassword);
+router.put(
+  "/update-profile",
+  authenticateToken,
+  upload.single("profilePicture"),
+  updateProfile
+);
+router.delete(
+  "/remove-profile-picture",
+  authenticateToken,
+  removeProfilePicture
+);
 router.post("/send-prediction-email", sendPredictionEmail);
 
 // Update user's fingerprint data

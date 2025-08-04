@@ -18,12 +18,20 @@ const userSchema = new Schema({
   gender: {
     type: String,
     enum: ["Male", "Female", "Other"],
-    required: true,
+    default: null,
   },
   phone: {
     type: String,
     required: true,
     match: /^[0-9]{11}$/,
+  },
+  dateOfBirth: {
+    type: Date,
+    default: null,
+  },
+  profilePicture: {
+    type: String,
+    default: null,
   },
   fingerprintImage: {
     type: String,
