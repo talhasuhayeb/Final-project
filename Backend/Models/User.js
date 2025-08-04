@@ -1,6 +1,33 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+const detectionSchema = new Schema({
+  bloodGroup: {
+    type: String,
+    required: true,
+  },
+  confidence: {
+    type: Number,
+    default: 0,
+  },
+  processingTime: {
+    type: Number,
+    default: 0,
+  },
+  imageQuality: {
+    type: Number,
+    default: 0,
+  },
+  filename: {
+    type: String,
+    required: true,
+  },
+  timestamp: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
 const userSchema = new Schema({
   name: {
     type: String,
@@ -49,6 +76,7 @@ const userSchema = new Schema({
     type: Date,
     default: null,
   },
+  detectionHistory: [detectionSchema],
 });
 
 const UserModel = mongoose.model("users", userSchema);

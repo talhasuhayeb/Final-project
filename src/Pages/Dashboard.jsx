@@ -55,6 +55,8 @@ export default function Dashboard() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [detectionHistory, setDetectionHistory] = useState([]);
+  const [selectedDetection, setSelectedDetection] = useState(null);
 
   // User Profile States
   const [userProfile, setUserProfile] = useState({
@@ -100,9 +102,31 @@ export default function Dashboard() {
                 ? `http://localhost:8080${data.profilePicture}`
                 : null,
             });
+
+            // Fetch detection history
+            return fetch("http://localhost:8080/auth/detection-history", {
+              method: "GET",
+              headers: { Authorization: `Bearer ${token}` },
+            });
+          })
+          .then((res) => {
+            if (!res.ok) {
+              console.error("Failed to fetch detection history:", res.status);
+              return [];
+            }
+            return res.json();
+          })
+          .then((historyData) => {
+            console.log("Detection history data:", historyData);
+            if (Array.isArray(historyData)) {
+              setDetectionHistory(historyData);
+            } else {
+              console.error("Detection history is not an array:", historyData);
+              setDetectionHistory([]); // Set empty array as fallback
+            }
           })
           .catch((err) =>
-            console.error("Failed to fetch user phone number", err)
+            console.error("Failed to fetch user data or detection history", err)
           );
       }
     }
@@ -170,13 +194,19 @@ export default function Dashboard() {
       const result = await response.json();
 
       if (response.ok) {
-        setPredictionResults({
+        const newPrediction = {
           bloodGroup: result.predicted_label,
           confidence: result.confidence_percentage,
           processingTime: result.processing_time,
           imageQuality: result.image_quality_score,
           timestamp: result.timestamp,
-        });
+          filename: result.filename,
+        };
+
+        setPredictionResults(newPrediction);
+
+        // Add to detection history in state
+        setDetectionHistory((prevHistory) => [newPrediction, ...prevHistory]);
 
         // Save fingerprint data to user's record
         const token = localStorage.getItem("token");
@@ -191,6 +221,10 @@ export default function Dashboard() {
               body: JSON.stringify({
                 filename: result.filename,
                 bloodType: result.predicted_label,
+                confidence: result.confidence_percentage,
+                imageQuality: result.image_quality_score,
+                processingTime: result.processing_time,
+                timestamp: result.timestamp,
               }),
             });
           } catch (err) {
@@ -298,6 +332,7 @@ export default function Dashboard() {
   const closeModal = () => {
     setModalIsOpen(false);
     setSelectedArticle(null);
+    setSelectedDetection(null);
   };
 
   // Profile handling functions
@@ -446,6 +481,317 @@ export default function Dashboard() {
     setProfilePictureFile(null);
   };
 
+  const handleViewDetection = (detection) => {
+    setSelectedDetection(detection);
+    setModalIsOpen(true);
+  };
+
+  const handleDownloadReport = async (detection) => {
+    // Always use client-side PDF generation for consistent PDF output
+    generateClientSideReport(detection);
+  };
+
+  const generateClientSideReport = (detection) => {
+    // Create HTML content for PDF generation
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Blood Group Detection Report</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            color: #333;
+            line-height: 1.4;
+            font-size: 14px;
+          }
+          .header {
+            text-align: center;
+            border-bottom: 2px solid #6D2932;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+          }
+          .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #6D2932;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+          }
+          .subtitle {
+            color: #99B19C;
+            font-size: 13px;
+            margin-bottom: 3px;
+          }
+          .report-title {
+            font-size: 18px;
+            color: #6D2932;
+            font-weight: bold;
+            margin: 8px 0;
+          }
+          .content-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+          }
+          .section {
+            padding: 12px;
+            border: 1px solid #D7D1C9;
+            border-radius: 6px;
+            background-color: #FAF5EF;
+          }
+          .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #6D2932;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #99B19C;
+            padding-bottom: 3px;
+          }
+          .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            border-bottom: 1px dotted #D7D1C9;
+            margin-bottom: 3px;
+          }
+          .info-label {
+            font-weight: bold;
+            color: #6D2932;
+            font-size: 13px;
+          }
+          .info-value {
+            color: #99B19C;
+            font-weight: 500;
+            font-size: 13px;
+          }
+          .blood-group {
+            color: #800000;
+            font-weight: bold;
+            font-size: 14px;
+          }
+          .confidence {
+            color: #28a745;
+            font-weight: bold;
+          }
+          .quality {
+            color: #6f42c1;
+            font-weight: bold;
+          }
+          .time {
+            color: #007bff;
+            font-weight: bold;
+          }
+          .report-info {
+            background-color: #e9ecef;
+            padding: 8px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-size: 12px;
+          }
+          .report-info p {
+            margin: 2px 0;
+          }
+          .footer {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 11px;
+            color: #666;
+            border-top: 1px solid #D7D1C9;
+            padding-top: 8px;
+          }
+          .footer p {
+            margin: 2px 0;
+          }
+          .results-highlight {
+            text-align: center;
+            background: linear-gradient(135deg, #6D2932, #99B19C);
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+          }
+          .results-highlight .blood-type {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+          }
+          .results-highlight .stats {
+            display: flex;
+            justify-content: space-around;
+            font-size: 12px;
+          }
+          @media print {
+            body { margin: 15px; font-size: 13px; }
+            .no-print { display: none; }
+            .header { margin-bottom: 10px; }
+            .section { margin-bottom: 8px; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div class="logo">
+            <img src="${logo}" alt="Bindu Logo" style="width: 60px; height: 60px; object-fit: cover; border-radius: 12px; vertical-align: middle;" />
+            <span style="vertical-align: middle; margin-left: 0;">Bindu</span>
+          </div>
+          <div class="subtitle">AI-Powered Blood Group Detection System</div>
+          <div class="report-title">Blood Group Detection Report</div>
+        </div>
+
+        <div class="content-wrapper">
+          <div class="section">
+            <div class="section-title">👤 User Information</div>
+            <div class="info-item">
+              <span class="info-label">Profile ID:</span>
+              <span class="info-value">BINDU-${
+                detection._id
+                  ? detection._id.substring(0, 8).toUpperCase()
+                  : "N/A"
+              }</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Full Name:</span>
+              <span class="info-value">${
+                userProfile.name || loggedInUser || "N/A"
+              }</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Gender:</span>
+              <span class="info-value">${userProfile.gender || "N/A"}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Email:</span>
+              <span class="info-value">${
+                userProfile.email || userEmail || "N/A"
+              }</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Date of Birth:</span>
+              <span class="info-value">${
+                userProfile.dateOfBirth
+                  ? new Date(userProfile.dateOfBirth).toLocaleDateString(
+                      "en-US",
+                      {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      }
+                    )
+                  : "N/A"
+              }</span>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">📋 Analysis Details</div>
+            <div class="info-item">
+              <span class="info-label">Date:</span>
+              <span class="info-value">${new Date(
+                detection.timestamp
+              ).toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              })}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Time:</span>
+              <span class="info-value">${new Date(
+                detection.timestamp
+              ).toLocaleTimeString("en-US", {
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+                timeZoneName: "short",
+              })}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">ID:</span>
+              <span class="info-value">${detection._id || "N/A"}</span>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">🩸 Detection Results</div>
+            <div class="info-item">
+              <span class="info-label">Blood Type:</span>
+              <span class="blood-group">${detection.bloodGroup}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Confidence:</span>
+              <span class="confidence">${detection.confidence || 0}%</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Image Quality:</span>
+              <span class="quality">${detection.imageQuality || 0}/100</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Processing:</span>
+              <span class="time">${detection.processingTime || 0}ms</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">ℹ️ Report Information</div>
+          <div class="report-info">
+            <p><strong>Generated:</strong> ${new Date().toLocaleString(
+              "en-US",
+              {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+                timeZoneName: "short",
+              }
+            )}</p>
+            <p><strong>System:</strong> Bindu AI v1.0.0 | <strong>Accuracy:</strong> 94.88%</p>
+            <p><strong>Note:</strong> AI-generated results for informational purposes only.</p>
+          </div>
+        </div>
+
+        <div class="footer">
+          <p><strong>Disclaimer:</strong> This report is generated by an AI system for informational purposes only. Consult medical professionals for clinical decisions.</p>
+          <p>© ${new Date().getFullYear()} Bindu - AI-Powered Blood Group Detection System</p>
+        </div>
+      </body>
+      </html>
+    `;
+
+    // Create a hidden iframe with the report content and trigger print dialog
+    const iframe = document.createElement("iframe");
+    iframe.style.position = "absolute";
+    iframe.style.width = "0";
+    iframe.style.height = "0";
+    iframe.style.border = "none";
+    iframe.style.visibility = "hidden";
+
+    document.body.appendChild(iframe);
+
+    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+    iframeDoc.open();
+    iframeDoc.write(htmlContent);
+    iframeDoc.close();
+
+    iframe.onload = function () {
+      iframe.contentWindow.focus();
+      iframe.contentWindow.print();
+
+      // Clean up after printing
+      setTimeout(() => {
+        document.body.removeChild(iframe);
+      }, 1000);
+    };
+  };
+
   return (
     <div className="min-h-screen flex flex-col justify-between bg-gradient-to-br from-[#FAF5EF] via-[#D7D1C9] to-[#99B19C]/40">
       <header className="sticky top-0 z-50">
@@ -549,11 +895,19 @@ export default function Dashboard() {
           </button>
           <button
             onClick={() => setActiveSection("bloodArticle")}
-            className={`w-full text-left px-4 py-2 rounded-lg font-bold text-[#6D2932] border border-[#99B19C]/40 transition-all duration-200 hover:bg-[#99B19C]/10 ${
+            className={`w-full text-left px-4 py-2 rounded-lg font-bold text-[#6D2932] border border-[#99B19C]/40 mb-2 transition-all duration-200 hover:bg-[#99B19C]/10 ${
               activeSection === "bloodArticle" ? "bg-[#99B19C]/20" : ""
             }`}
           >
             Blood Article
+          </button>
+          <button
+            onClick={() => setActiveSection("history")}
+            className={`w-full text-left px-4 py-2 rounded-lg font-bold text-[#6D2932] border border-[#99B19C]/40 transition-all duration-200 hover:bg-[#99B19C]/10 ${
+              activeSection === "history" ? "bg-[#99B19C]/20" : ""
+            }`}
+          >
+            History
           </button>
         </div>
         {/* ...existing code... */}
@@ -713,7 +1067,11 @@ export default function Dashboard() {
                               Prediction Timestamp
                             </td>
                             <td className="px-4 py-2 font-semibold text-[#99B19C] text-center">
-                              {predictionResults.timestamp}
+                              {predictionResults.timestamp
+                                ? new Date(
+                                    predictionResults.timestamp
+                                  ).toLocaleString()
+                                : "N/A"}
                             </td>
                           </tr>
                         </tbody>
@@ -1018,6 +1376,186 @@ export default function Dashboard() {
               <p className="text-[#6D2932] text-sm text-center"></p>
             </div>
           )}
+          {activeSection === "history" && (
+            <div className="w-full max-w-4xl mx-auto p-8 bg-white/80 backdrop-blur-lg shadow-2xl rounded-2xl border border-[#99B19C]/40">
+              <h2 className="text-2xl font-extrabold mb-6 text-center text-[#6D2932] tracking-tight">
+                Detection History
+              </h2>
+
+              {detectionHistory.length > 0 ? (
+                <div className="overflow-x-auto">
+                  <table className="min-w-full bg-white/90 border border-[#99B19C]/40 rounded-xl shadow text-xs sm:text-sm">
+                    <thead className="bg-[#99B19C] text-[#6D2932]">
+                      <tr>
+                        <th className="px-4 py-2 text-center font-semibold">
+                          Date & Time
+                        </th>
+                        <th className="px-4 py-2 text-center font-semibold">
+                          Blood Group
+                        </th>
+                        <th className="px-4 py-2 text-center font-semibold">
+                          Confidence
+                        </th>
+                        <th className="px-4 py-2 text-center font-semibold">
+                          Image Quality
+                        </th>
+                        <th className="px-4 py-2 text-center font-semibold">
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {detectionHistory.map((detection, index) => {
+                        // Ensure timestamp is a valid date
+                        let displayDate;
+                        try {
+                          displayDate = new Date(
+                            detection.timestamp
+                          ).toLocaleString();
+                        } catch (e) {
+                          console.error("Invalid date:", detection.timestamp);
+                          displayDate = "Invalid Date";
+                        }
+
+                        return (
+                          <tr
+                            key={index}
+                            className="border-b border-[#D7D1C9] hover:bg-[#FAF5EF]"
+                          >
+                            <td className="px-4 py-2 text-center">
+                              {displayDate}
+                            </td>
+                            <td className="px-4 py-2 text-center">
+                              <span className="bg-[#6D2932] text-[#FAF5EF] px-3 py-1 rounded-full font-bold">
+                                {detection.bloodGroup}
+                              </span>
+                            </td>
+                            <td className="px-4 py-2 text-center font-semibold text-green-600">
+                              {detection.confidence || 0}%
+                            </td>
+                            <td className="px-4 py-2 text-center font-semibold text-purple-600">
+                              {detection.imageQuality || 0}/100
+                            </td>
+                            <td className="px-4 py-2 text-center">
+                              <div className="flex justify-center gap-2">
+                                <button
+                                  onClick={() => handleViewDetection(detection)}
+                                  className="px-3 py-1 rounded-full bg-[#99B19C] hover:bg-[#6D2932] text-[#6D2932] hover:text-[#FAF5EF] transition-all duration-300 text-xs font-semibold"
+                                  title="View full report"
+                                >
+                                  👁️ View
+                                </button>
+                                <button
+                                  onClick={() =>
+                                    handleDownloadReport(detection)
+                                  }
+                                  className="px-3 py-1 rounded-full bg-[#6D2932] hover:bg-[#99B19C] text-[#FAF5EF] hover:text-[#6D2932] transition-all duration-300 text-xs font-semibold"
+                                  title="Generate and download PDF report"
+                                >
+                                  � PDF Report
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className="text-center py-10 text-[#6D2932]">
+                  <p className="text-lg font-medium">
+                    No detection history found.
+                  </p>
+                  <p className="text-sm mt-2">
+                    Upload and analyze fingerprints to see your detection
+                    history here.
+                  </p>
+                </div>
+              )}
+
+              {/* Modal for viewing detection details */}
+              {modalIsOpen && selectedDetection && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center">
+                  <div
+                    className="absolute inset-0 bg-black/50"
+                    onClick={() => {
+                      setModalIsOpen(false);
+                      setSelectedDetection(null);
+                    }}
+                  ></div>
+                  <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-lg w-full relative z-10 animate-fade-in">
+                    <button
+                      onClick={() => {
+                        setModalIsOpen(false);
+                        setSelectedDetection(null);
+                      }}
+                      className="absolute top-3 right-3 text-[#6D2932] text-xl font-bold hover:text-[#99B19C]"
+                      aria-label="Close"
+                    >
+                      &times;
+                    </button>
+                    <h2 className="text-xl font-bold text-[#6D2932] mb-4 text-center">
+                      Detection Report
+                    </h2>
+                    <div className="space-y-4">
+                      <div className="flex justify-center mb-4">
+                        <span className="bg-[#6D2932] text-[#FAF5EF] px-6 py-3 rounded-full font-bold text-2xl">
+                          {selectedDetection.bloodGroup}
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="bg-[#FAF5EF] p-4 rounded-lg">
+                          <p className="text-sm font-semibold text-[#6D2932]">
+                            Date & Time
+                          </p>
+                          <p className="text-lg font-bold text-[#6D2932]">
+                            {new Date(
+                              selectedDetection.timestamp
+                            ).toLocaleString()}
+                          </p>
+                        </div>
+                        <div className="bg-[#FAF5EF] p-4 rounded-lg">
+                          <p className="text-sm font-semibold text-[#6D2932]">
+                            Confidence Score
+                          </p>
+                          <p className="text-lg font-bold text-green-600">
+                            {selectedDetection.confidence}%
+                          </p>
+                        </div>
+                        <div className="bg-[#FAF5EF] p-4 rounded-lg">
+                          <p className="text-sm font-semibold text-[#6D2932]">
+                            Image Quality
+                          </p>
+                          <p className="text-lg font-bold text-purple-600">
+                            {selectedDetection.imageQuality}/100
+                          </p>
+                        </div>
+                        <div className="bg-[#FAF5EF] p-4 rounded-lg">
+                          <p className="text-sm font-semibold text-[#6D2932]">
+                            Processing Time
+                          </p>
+                          <p className="text-lg font-bold text-blue-600">
+                            {selectedDetection.processingTime} ms
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex justify-center mt-6">
+                        <button
+                          onClick={() =>
+                            handleDownloadReport(selectedDetection)
+                          }
+                          className="px-5 py-2 rounded-full bg-[#6D2932] hover:bg-[#99B19C] text-[#FAF5EF] hover:text-[#6D2932] font-bold transition-all duration-300 border-2 border-[#6D2932] hover:border-[#99B19C] text-xs sm:text-sm"
+                        >
+                          � Generate PDF Report
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
           {activeSection === "bloodArticle" && (
             <div className="p-8 bg-white/80 rounded-2xl shadow-xl border border-[#99B19C]/40">
               {/* Carousel only in Blood Article page */}
@@ -1111,7 +1649,7 @@ export default function Dashboard() {
                 ))}
               </div>
               {/* Custom Modal for full article (no external dependency) */}
-              {modalIsOpen && (
+              {modalIsOpen && selectedArticle && !selectedDetection && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center">
                   <div
                     className="absolute inset-0 bg-transparent"
