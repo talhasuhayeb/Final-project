@@ -56,6 +56,7 @@ router.get("/me", async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
     res.json({
+      _id: user._id, // Include the MongoDB _id
       name: user.name,
       email: user.email,
       phone: user.phone,

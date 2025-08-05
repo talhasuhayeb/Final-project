@@ -91,6 +91,7 @@ export default function Dashboard() {
 
             // Populate user profile
             setUserProfile({
+              _id: data._id || "", // Include the MongoDB _id
               name: data.name || "",
               email: data.email || "",
               phone: data.phone || "",
@@ -649,6 +650,15 @@ export default function Dashboard() {
           <div class="section">
             <div class="section-title">👤 User Information</div>
             <div class="info-item">
+              <span class="info-label">Profile ID:</span>
+              <span class="info-value">${
+                userProfile && (userProfile.profile_id || userProfile._id)
+                  ? userProfile.profile_id ||
+                    `${userProfile._id.toString().substring(0, 8)}`
+                  : "N/A"
+              }</span>
+            </div>
+            <div class="info-item">
               <span class="info-label">Full Name:</span>
               <span class="info-value">${
                 userProfile.name || loggedInUser || "N/A"
@@ -683,6 +693,15 @@ export default function Dashboard() {
 
           <div class="section">
             <div class="section-title">📋 Analysis Details</div>
+            <div class="info-item">
+              <span class="info-label">Analysis ID:</span>
+              <span class="info-value">${
+                detection && (detection.analysis_id || detection._id)
+                  ? detection.analysis_id ||
+                    `${detection._id.toString().substring(0, 8)}`
+                  : "N/A"
+              }</span>
+            </div>
             <div class="info-item">
               <span class="info-label">Date:</span>
               <span class="info-value">${new Date(
@@ -1467,7 +1486,7 @@ export default function Dashboard() {
               {modalIsOpen && selectedDetection && (
                 <div
                   className="fixed inset-0 z-50 flex items-center justify-center"
-                  style={{ alignItems: "flex-start", paddingTop: "10vh" }}
+                  style={{ alignItems: "flex-start", paddingTop: "2vh" }}
                 >
                   <div
                     className="absolute inset-0 bg-black/50"
@@ -1477,11 +1496,11 @@ export default function Dashboard() {
                     }}
                   ></div>
                   <div
-                    className="bg-white rounded-2xl shadow-2xl p-6 max-w-2xl w-full relative z-10 animate-fade-in m-2"
+                    className="bg-white rounded-2xl shadow-2xl p-4 max-w-2xl w-full relative z-10 animate-fade-in m-2"
                     style={{
-                      fontFamily: "Arial, sans-serif",
+                      fontFamily: "'Inter', sans-serif",
                       color: "#333",
-                      lineHeight: 1.5,
+                      lineHeight: 1.4,
                     }}
                   >
                     <button
@@ -1489,66 +1508,78 @@ export default function Dashboard() {
                         setModalIsOpen(false);
                         setSelectedDetection(null);
                       }}
-                      className="absolute top-4 right-4 text-[#6D2932] text-2xl font-bold hover:text-[#99B19C] w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#F0EBE3]"
+                      className="absolute top-3 right-3 text-[#6D2932] text-xl font-bold hover:text-[#99B19C] w-7 h-7 flex items-center justify-center rounded-full hover:bg-[#F0EBE3]"
                       aria-label="Close"
                     >
                       &times;
                     </button>
 
                     {/* Report Header */}
-                    <div className="text-center border-b-2 border-[#6D2932] pb-3 mb-4">
-                      <div className="flex items-center justify-center gap-3 text-2xl font-bold text-[#6D2932] mb-2">
+                    <div className="text-center border-b-2 border-[#6D2932] pb-2 mb-2">
+                      <div className="flex items-center justify-center gap-2 text-xl font-bold text-[#6D2932] mb-1">
                         <img
                           src={logo}
                           alt="Bindu Logo"
-                          className="w-10 h-10 object-cover rounded-lg"
+                          className="w-8 h-8 object-cover rounded-lg"
                         />
                         <span>Bindu</span>
                       </div>
-                      <div className="text-[#99B19C] text-sm">
+                      <div className="text-[#99B19C] text-xs">
                         AI-Powered Blood Group Detection System
                       </div>
-                      <div className="text-lg font-bold text-[#6D2932] mt-2">
+                      <div className="text-base font-bold text-[#6D2932] mt-1">
                         Blood Group Detection Report
                       </div>
                     </div>
 
                     {/* Content Grid - 3 columns like the PDF */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
                       {/* User Information Section */}
-                      <div className="border border-[#D7D1C9] rounded-lg p-2 bg-[#FAF5EF]">
-                        <div className="text-sm font-bold text-[#6D2932] border-b border-[#99B19C] pb-1 mb-2">
+                      <div className="border border-[#D7D1C9] rounded-lg p-3 bg-[#FAF5EF]">
+                        <div className="text-xs font-bold text-[#6D2932] border-b border-[#99B19C] pb-1 mb-1">
                           👤 User Information
                         </div>
-                        <div className="flex justify-between text-sm py-2 border-b border-dotted border-[#D7D1C9]">
-                          <span className="font-bold text-[#6D2932]">
+                        <div className="flex justify-between items-start text-xs py-1 border-b border-dotted border-[#D7D1C9]">
+                          <span className="font-bold text-[#6D2932] min-w-[70px]">
+                            Profile ID:
+                          </span>
+                          <span className="text-[#99B19C] font-medium text-xs break-words max-w-[calc(100%-80px)]">
+                            {userProfile &&
+                            (userProfile.profile_id || userProfile._id)
+                              ? userProfile.profile_id ||
+                                `${userProfile._id.toString().substring(0, 8)}`
+                              : "N/A"}
+                          </span>
+                        </div>
+                        <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
+                          <span className="font-bold text-[#6D2932] min-w-[70px]">
                             Full Name:
                           </span>
-                          <span className="text-[#99B19C] font-medium">
+                          <span className="text-[#99B19C] font-medium break-words max-w-[calc(100%-80px)]">
                             {userProfile.name || loggedInUser || "N/A"}
                           </span>
                         </div>
                         <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
-                          <span className="font-bold text-[#6D2932]">
+                          <span className="font-bold text-[#6D2932] min-w-[70px]">
                             Gender:
                           </span>
-                          <span className="text-[#99B19C] font-medium">
+                          <span className="text-[#99B19C] font-medium break-words max-w-[calc(100%-80px)]">
                             {userProfile.gender || "N/A"}
                           </span>
                         </div>
                         <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
-                          <span className="font-bold text-[#6D2932]">
+                          <span className="font-bold text-[#6D2932] min-w-[70px]">
                             Email:
                           </span>
-                          <span className="text-[#99B19C] font-medium">
+                          <span className="text-[#99B19C] font-medium break-words max-w-[calc(100%-80px)]">
                             {userProfile.email || userEmail || "N/A"}
                           </span>
                         </div>
                         <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
-                          <span className="font-bold text-[#6D2932]">
+                          <span className="font-bold text-[#6D2932] min-w-[70px]">
                             Date of Birth:
                           </span>
-                          <span className="text-[#99B19C] font-medium">
+                          <span className="text-[#99B19C] font-medium break-words max-w-[calc(100%-80px)]">
                             {userProfile.dateOfBirth
                               ? new Date(
                                   userProfile.dateOfBirth
@@ -1563,15 +1594,30 @@ export default function Dashboard() {
                       </div>
 
                       {/* Analysis Details Section */}
-                      <div className="border border-[#D7D1C9] rounded-md p-2 bg-[#FAF5EF]">
-                        <div className="text-sm font-bold text-[#6D2932] border-b border-[#99B19C] pb-1 mb-2">
+                      <div className="border border-[#D7D1C9] rounded-md p-3 bg-[#FAF5EF]">
+                        <div className="text-xs font-bold text-[#6D2932] border-b border-[#99B19C] pb-1 mb-1">
                           📋 Analysis Details
                         </div>
                         <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
-                          <span className="font-bold text-[#6D2932]">
+                          <span className="font-bold text-[#6D2932] min-w-[80px]">
+                            Analysis ID:
+                          </span>
+                          <span className="text-[#99B19C] font-medium text-sm break-words max-w-[calc(100%-100px)]">
+                            {selectedDetection &&
+                            (selectedDetection.analysis_id ||
+                              selectedDetection._id)
+                              ? selectedDetection.analysis_id ||
+                                `${selectedDetection._id
+                                  .toString()
+                                  .substring(0, 8)}`
+                              : "N/A"}
+                          </span>
+                        </div>
+                        <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
+                          <span className="font-bold text-[#6D2932] min-w-[70px]">
                             Date:
                           </span>
-                          <span className="text-[#99B19C] font-medium">
+                          <span className="text-[#99B19C] font-medium break-words max-w-[calc(100%-80px)]">
                             {new Date(
                               selectedDetection.timestamp
                             ).toLocaleDateString("en-US", {
@@ -1582,10 +1628,10 @@ export default function Dashboard() {
                           </span>
                         </div>
                         <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
-                          <span className="font-bold text-[#6D2932]">
+                          <span className="font-bold text-[#6D2932] min-w-[70px]">
                             Time:
                           </span>
-                          <span className="text-[#99B19C] font-medium">
+                          <span className="text-[#99B19C] font-medium break-words max-w-[calc(100%-80px)]">
                             {new Date(
                               selectedDetection.timestamp
                             ).toLocaleTimeString("en-US", {
@@ -1597,39 +1643,39 @@ export default function Dashboard() {
                       </div>
 
                       {/* Detection Results Section */}
-                      <div className="border border-[#D7D1C9] rounded-md p-2 bg-[#FAF5EF]">
-                        <div className="text-sm font-bold text-[#6D2932] border-b border-[#99B19C] pb-1 mb-2">
+                      <div className="border border-[#D7D1C9] rounded-md p-3 bg-[#FAF5EF]">
+                        <div className="text-xs font-bold text-[#6D2932] border-b border-[#99B19C] pb-1 mb-1">
                           🩸 Detection Results
                         </div>
                         <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
-                          <span className="font-bold text-[#6D2932]">
+                          <span className="font-bold text-[#6D2932] min-w-[80px]">
                             Blood Type:
                           </span>
-                          <span className="font-bold text-[#800000] text-base">
+                          <span className="font-bold text-[#800000] text-base break-words max-w-[calc(100%-100px)]">
                             {selectedDetection.bloodGroup}
                           </span>
                         </div>
                         <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
-                          <span className="font-bold text-[#6D2932]">
+                          <span className="font-bold text-[#6D2932] min-w-[70px]">
                             Confidence:
                           </span>
-                          <span className="font-bold text-green-600">
+                          <span className="font-bold text-green-600 text-xs break-words max-w-[calc(100%-80px)]">
                             {selectedDetection.confidence || 0}%
                           </span>
                         </div>
                         <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
-                          <span className="font-bold text-[#6D2932]">
+                          <span className="font-bold text-[#6D2932] min-w-[70px]">
                             Image Quality:
                           </span>
-                          <span className="font-bold text-purple-600">
+                          <span className="font-bold text-purple-600 text-xs break-words max-w-[calc(100%-80px)]">
                             {selectedDetection.imageQuality || 0}/100
                           </span>
                         </div>
                         <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
-                          <span className="font-bold text-[#6D2932]">
+                          <span className="font-bold text-[#6D2932] min-w-[70px]">
                             Processing:
                           </span>
-                          <span className="font-bold text-blue-600">
+                          <span className="font-bold text-blue-600 text-xs break-words max-w-[calc(100%-80px)]">
                             {selectedDetection.processingTime || 0}ms
                           </span>
                         </div>
@@ -1637,37 +1683,40 @@ export default function Dashboard() {
                     </div>
 
                     {/* Report Information */}
-                    <div className="border border-[#D7D1C9] rounded-md p-2 bg-[#e9ecef] mb-3">
-                      <div className="text-sm font-bold text-[#6D2932] border-b border-[#99B19C] pb-1 mb-2">
+                    <div className="border border-[#D7D1C9] rounded-md p-3 bg-[#e9ecef] mb-3">
+                      <div className="text-xs font-bold text-[#6D2932] border-b border-[#99B19C] pb-1 mb-1">
                         ℹ️ Report Information
                       </div>
                       <div className="text-xs">
                         <p className="mb-1">
                           <strong className="text-[#6D2932]">Generated:</strong>{" "}
-                          <span className="text-[#495057] font-medium">
-                            {new Date().toLocaleString("en-US", {
-                              year: "numeric",
+                          <span className="text-[#495057] font-medium break-words">
+                            {new Date().toLocaleDateString("en-US", {
                               month: "short",
                               day: "numeric",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            })}
+                              year: "numeric",
+                            }) +
+                              ", " +
+                              new Date().toLocaleTimeString("en-US", {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
                           </span>
                           {" | "}
                           <strong className="text-[#6D2932]">
                             System:
                           </strong>{" "}
-                          <span className="text-[#495057] font-medium">
+                          <span className="text-[#495057] font-medium break-words">
                             Bindu AI v1.0.0
                           </span>
                         </p>
-                        <p className="mb-1">
+                        <p className="mb-0.5">
                           <strong className="text-[#6D2932]">Accuracy:</strong>{" "}
-                          <span className="text-green-600 font-medium">
+                          <span className="text-green-600 font-medium break-words">
                             94.88%
                           </span>{" "}
                           | <strong className="text-[#6D2932]">Note:</strong>{" "}
-                          <span className="text-[#495057] font-medium">
+                          <span className="text-[#495057] font-medium break-words">
                             AI-generated results for informational purposes
                             only.
                           </span>
@@ -1676,7 +1725,7 @@ export default function Dashboard() {
                     </div>
 
                     {/* Footer */}
-                    <div className="text-center border-t border-[#D7D1C9] pt-2 text-xs text-gray-600 mt-1">
+                    <div className="text-center border-t border-[#D7D1C9] pt-1 text-[10px] text-gray-600 mt-1">
                       <p>
                         <strong>Disclaimer:</strong> For informational purposes
                         only. Consult medical professionals for clinical
@@ -1689,10 +1738,10 @@ export default function Dashboard() {
                     </div>
 
                     {/* Download Button */}
-                    <div className="flex justify-center mt-3">
+                    <div className="flex justify-center mt-2">
                       <button
                         onClick={() => handleDownloadReport(selectedDetection)}
-                        className="px-4 py-2 rounded-full bg-[#6D2932] text-[#FAF5EF] font-medium transition-all duration-300 border border-[#6D2932] hover:scale-105 hover:shadow-lg text-sm"
+                        className="px-3 py-1 rounded-full bg-[#6D2932] text-[#FAF5EF] font-medium transition-all duration-300 border border-[#6D2932] hover:scale-105 hover:shadow-lg text-xs"
                       >
                         📝 Download PDF Report
                       </button>

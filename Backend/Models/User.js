@@ -28,6 +28,11 @@ const detectionSchema = new Schema({
   },
 });
 
+// Add virtual property for analysis_id that returns the _id as a string
+detectionSchema.virtual("analysis_id").get(function () {
+  return this._id.toString();
+});
+
 const userSchema = new Schema({
   name: {
     type: String,
@@ -78,6 +83,15 @@ const userSchema = new Schema({
   },
   detectionHistory: [detectionSchema],
 });
+
+// Add virtual property for profile_id that returns the _id as a string
+userSchema.virtual("profile_id").get(function () {
+  return this._id.toString();
+});
+
+// Configure Mongoose to include virtuals when converting to JSON
+userSchema.set("toJSON", { virtuals: true });
+userSchema.set("toObject", { virtuals: true });
 
 const UserModel = mongoose.model("users", userSchema);
 module.exports = UserModel;
