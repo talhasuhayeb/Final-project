@@ -66,6 +66,7 @@ export default function Dashboard() {
     gender: "",
     dateOfBirth: "",
     profilePicture: null,
+    bloodType: "",
   });
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [profilePictureFile, setProfilePictureFile] = useState(null);
@@ -102,6 +103,7 @@ export default function Dashboard() {
               profilePicture: data.profilePicture
                 ? `http://localhost:8080${data.profilePicture}`
                 : null,
+              bloodType: data.bloodType || "",
             });
 
             // Fetch detection history
@@ -242,6 +244,12 @@ export default function Dashboard() {
             if (historyResponse.ok) {
               const historyData = await historyResponse.json();
               setDetectionHistory(historyData);
+
+              // Update blood type in user profile
+              setUserProfile((prev) => ({
+                ...prev,
+                bloodType: result.predicted_label,
+              }));
             }
           } catch (err) {
             console.error("Error saving fingerprint data:", err);
@@ -492,6 +500,7 @@ export default function Dashboard() {
       gender: userProfile.gender,
       dateOfBirth: userProfile.dateOfBirth,
       profilePicture: userProfile.profilePicture,
+      bloodType: userProfile.bloodType,
     });
     setIsEditingProfile(false);
     setProfilePictureFile(null);
@@ -1325,23 +1334,16 @@ export default function Dashboard() {
 
                   {/* Profile Stats/Info Cards */}
                   {!isEditingProfile && (
-                    <div className="mt-8 grid grid-cols-2 gap-4">
-                      <div className="bg-gradient-to-br from-[#6D2932] to-[#99B19C] p-4 rounded-xl text-white text-center">
+                    <div className="mt-8">
+                      <div className="bg-gradient-to-br from-[#6D2932] to-[#99B19C] p-4 rounded-xl text-white text-center max-w-xs mx-auto">
                         <div className="text-2xl font-bold">🩸</div>
-                        <div className="text-sm font-medium">Blood Type</div>
-                        <div className="text-lg font-bold">
-                          {predictionResults?.bloodGroup || "Not Detected"}
-                        </div>
-                      </div>
-                      <div className="bg-gradient-to-br from-[#99B19C] to-[#D7D1C9] p-4 rounded-xl text-[#6D2932] text-center">
-                        <div className="text-2xl font-bold">📊</div>
                         <div className="text-sm font-medium">
-                          Last Confidence
+                          Last Detected Blood Type
                         </div>
                         <div className="text-lg font-bold">
-                          {predictionResults?.confidence
-                            ? `${predictionResults.confidence}%`
-                            : "N/A"}
+                          {userProfile.bloodType ||
+                            predictionResults?.bloodGroup ||
+                            "Not Detected"}
                         </div>
                       </div>
                     </div>
