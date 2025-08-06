@@ -197,8 +197,8 @@ const AdminDashboard = () => {
       formErrors.email = "Email is invalid";
 
     if (!newUser.password.trim()) formErrors.password = "Password is required";
-    else if (newUser.password.length < 6)
-      formErrors.password = "Password must be at least 6 characters";
+    else if (newUser.password.length < 4)
+      formErrors.password = "Password must be at least 4 characters";
 
     if (!newUser.phone.trim()) formErrors.phone = "Phone is required";
     else if (!/^[0-9]{11}$/.test(newUser.phone))
@@ -414,10 +414,7 @@ const AdminDashboard = () => {
                     </th>
                     <th className="px-4 py-3 text-center font-semibold">DOB</th>
                     <th className="px-4 py-3 text-center font-semibold">
-                      Profile
-                    </th>
-                    <th className="px-4 py-3 text-center font-semibold">
-                      Blood Type
+                      Profile Picture
                     </th>
                     <th className="px-4 py-3 text-center font-semibold">
                       Role
@@ -458,25 +455,25 @@ const AdminDashboard = () => {
                           {user.profilePicture ? (
                             <div className="flex justify-center">
                               <img
-                                src={`http://localhost:8080/uploads/profile-pictures/${user.profilePicture}`}
+                                src={`http://localhost:8080${user.profilePicture}`}
                                 alt="Profile"
-                                className="w-10 h-10 rounded-full object-cover border border-[#99B19C]/40 shadow"
+                                className="w-12 h-12 rounded-xl object-cover border border-[#99B19C]/40 shadow"
+                                onError={(e) => {
+                                  console.log(
+                                    "Image failed to load:",
+                                    e.target.src
+                                  );
+                                  e.target.onerror = null;
+                                  e.target.src =
+                                    "https://ui-avatars.com/api/?name=" +
+                                    encodeURIComponent(user.name) +
+                                    "&background=99B19C&color=FAF5EF&size=100";
+                                }}
                               />
                             </div>
                           ) : (
                             <span className="text-gray-400 italic">
                               No image
-                            </span>
-                          )}
-                        </td>
-                        <td className="px-4 py-2 text-center">
-                          {user.bloodType ? (
-                            <span className="bg-[#6D2932] text-[#FAF5EF] px-2 py-1 rounded-full font-bold text-xs sm:text-sm">
-                              {user.bloodType}
-                            </span>
-                          ) : (
-                            <span className="text-gray-400 italic">
-                              Not detected
                             </span>
                           )}
                         </td>
