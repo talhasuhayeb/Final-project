@@ -66,10 +66,15 @@ const AdminDashboard = () => {
 
       const url = `http://localhost:8080/admin/detection-records?${queryParams.toString()}`;
 
+      console.log("Fetching detection records with URL:", url);
+      console.log("Applied filters:", filters);
+
       const res = await fetch(url, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
+
+      console.log("Detection records response:", data);
 
       if (data.success) {
         setDetectionRecords(data.records || []);
@@ -756,6 +761,16 @@ const AdminDashboard = () => {
                               src={`http://localhost:8080/uploads/${record.filename}`}
                               alt="Fingerprint"
                               className="w-12 h-12 object-cover rounded-xl border border-[#99B19C]/40 shadow"
+                              onError={(e) => {
+                                console.log(
+                                  "Fingerprint image failed to load:",
+                                  e.target.src
+                                );
+                                e.target.onerror = null;
+                                // Use a stock fingerprint image as fallback
+                                e.target.src =
+                                  "https://static.vecteezy.com/system/resources/previews/000/546/269/original/fingerprint-icon-vector-illustration.jpg";
+                              }}
                             />
                           </div>
                         </td>

@@ -215,15 +215,43 @@ router.get("/detection-records", requireRole("admin"), async (req, res) => {
           .json({ message: "User not found", success: false });
       }
 
-      // Return just this user's detection history
+      // Get this user's detection history and add user info
+      let userRecords = user.detectionHistory.map((record) => ({
+        ...record.toObject(),
+        userName: user.name,
+        userEmail: user.email,
+        userId: user._id,
+      }));
+
+      // Apply blood group filter if specified
+      if (bloodGroup) {
+        userRecords = userRecords.filter(
+          (record) => record.bloodGroup === bloodGroup
+        );
+      }
+
+      // Apply date filters
+      if (startDate) {
+        const start = new Date(startDate);
+        userRecords = userRecords.filter(
+          (record) => new Date(record.timestamp) >= start
+        );
+      }
+
+      if (endDate) {
+        const end = new Date(endDate);
+        end.setHours(23, 59, 59, 999); // Set to end of day
+        userRecords = userRecords.filter(
+          (record) => new Date(record.timestamp) <= end
+        );
+      }
+
+      // Sort by timestamp (newest first)
+      userRecords.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
       return res.json({
         success: true,
-        records: user.detectionHistory.map((record) => ({
-          ...record.toObject(),
-          userName: user.name,
-          userEmail: user.email,
-          userId: user._id,
-        })),
+        records: userRecords,
       });
     }
 
@@ -249,9 +277,21 @@ router.get("/detection-records", requireRole("admin"), async (req, res) => {
 
     // Filter by blood group
     if (bloodGroup) {
-      filteredRecords = filteredRecords.filter(
-        (record) => record.bloodGroup.toLowerCase() === bloodGroup.toLowerCase()
+      console.log(`Filtering by blood group: ${bloodGroup}`);
+      console.log(
+        `Available records before filter:`,
+        filteredRecords.map((r) => r.bloodGroup)
       );
+
+      filteredRecords = filteredRecords.filter((record) => {
+        const matches = record.bloodGroup === bloodGroup;
+        console.log(
+          `Record ${record._id}: ${record.bloodGroup} matches ${bloodGroup}? ${matches}`
+        );
+        return matches;
+      });
+
+      console.log(`Records after filter: ${filteredRecords.length}`);
     }
 
     // Filter by date range
