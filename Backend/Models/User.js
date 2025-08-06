@@ -73,6 +73,15 @@ const userSchema = new Schema({
     type: String,
     default: null,
   },
+  role: {
+    type: String,
+    enum: ["user", "admin"],
+    default: "user",
+  },
+  isBlocked: {
+    type: Boolean,
+    default: false,
+  },
   resetPasswordToken: {
     type: String,
     default: null,
