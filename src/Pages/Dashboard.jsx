@@ -206,28 +206,43 @@ export default function Dashboard() {
 
         setPredictionResults(newPrediction);
 
-        // Add to detection history in state
-        setDetectionHistory((prevHistory) => [newPrediction, ...prevHistory]);
-
         // Save fingerprint data to user's record
         const token = localStorage.getItem("token");
         if (token && result.filename) {
           try {
-            await fetch("http://localhost:8080/auth/update-fingerprint", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-              },
-              body: JSON.stringify({
-                filename: result.filename,
-                bloodType: result.predicted_label,
-                confidence: result.confidence_percentage,
-                imageQuality: result.image_quality_score,
-                processingTime: result.processing_time,
-                timestamp: result.timestamp,
-              }),
-            });
+            const response = await fetch(
+              "http://localhost:8080/auth/update-fingerprint",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                  filename: result.filename,
+                  bloodType: result.predicted_label,
+                  confidence: result.confidence_percentage,
+                  imageQuality: result.image_quality_score,
+                  processingTime: result.processing_time,
+                  timestamp: result.timestamp,
+                }),
+              }
+            );
+
+            // Refresh detection history to get the updated records with IDs
+            const historyResponse = await fetch(
+              "http://localhost:8080/auth/detection-history",
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+
+            if (historyResponse.ok) {
+              const historyData = await historyResponse.json();
+              setDetectionHistory(historyData);
+            }
           } catch (err) {
             console.error("Error saving fingerprint data:", err);
           }
