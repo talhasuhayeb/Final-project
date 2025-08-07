@@ -56,6 +56,16 @@ const login = async (req, res) => {
       if (!admin) {
         return res.status(403).json({ message: errorMsg, success: false });
       }
+
+      // Check if admin account is blocked
+      if (admin.isBlocked) {
+        return res.status(403).json({
+          message:
+            "Your account has been blocked. Please contact system administrator.",
+          success: false,
+        });
+      }
+
       const isMatch = await bcrypt.compare(password, admin.password);
       if (!isMatch) {
         return res.status(403).json({ message: errorMsg, success: false });
@@ -78,6 +88,16 @@ const login = async (req, res) => {
       if (!user) {
         return res.status(403).json({ message: errorMsg, success: false });
       }
+
+      // Check if user account is blocked
+      if (user.isBlocked) {
+        return res.status(403).json({
+          message:
+            "Your account has been blocked. Please contact system administrator.",
+          success: false,
+        });
+      }
+
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
         return res.status(403).json({ message: errorMsg, success: false });

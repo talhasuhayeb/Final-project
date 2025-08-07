@@ -1,7 +1,9 @@
 const jwt = require("jsonwebtoken");
+const UserModel = require("../Models/User");
+const AdminModel = require("../Models/Admin");
 
 const requireRole = (role) => {
-  return (req, res, next) => {
+  return async (req, res, next) => {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return res
@@ -16,6 +18,29 @@ const requireRole = (role) => {
           .status(403)
           .json({ message: "Forbidden: Insufficient role", success: false });
       }
+
+      // Check if user is blocked
+      let userIsBlocked = false;
+      if (decoded.role === "admin") {
+        const admin = await AdminModel.findById(decoded._id);
+        if (!admin || admin.isBlocked) {
+          userIsBlocked = true;
+        }
+      } else {
+        const user = await UserModel.findById(decoded._id);
+        if (!user || user.isBlocked) {
+          userIsBlocked = true;
+        }
+      }
+
+      if (userIsBlocked) {
+        return res.status(403).json({
+          message:
+            "Your account has been blocked. Please contact system administrator.",
+          success: false,
+        });
+      }
+
       req.user = decoded;
       next();
     } catch (err) {
