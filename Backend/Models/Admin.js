@@ -28,6 +28,10 @@ const adminSchema = new Schema({
     type: Date,
     default: null,
   },
+  isBlocked: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const AdminModel = mongoose.model("admins", adminSchema);
