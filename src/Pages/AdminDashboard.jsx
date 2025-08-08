@@ -17,6 +17,7 @@ const AdminDashboard = () => {
     bloodGroup: "",
     startDate: "",
     endDate: "",
+    search: "",
   });
   const [newUser, setNewUser] = useState({
     name: "",
@@ -30,6 +31,8 @@ const AdminDashboard = () => {
   const [errors, setErrors] = useState({});
   const [recordModalIsOpen, setRecordModalIsOpen] = useState(false);
   const [selectedDetection, setSelectedDetection] = useState(null);
+  const [searchDebounceTimer, setSearchDebounceTimer] = useState(null);
+  const [isSearching, setIsSearching] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -45,6 +48,15 @@ const AdminDashboard = () => {
     fetchDetectionRecords(token);
   }, []);
 
+  // Cleanup debounce timer on component unmount
+  useEffect(() => {
+    return () => {
+      if (searchDebounceTimer) {
+        clearTimeout(searchDebounceTimer);
+      }
+    };
+  }, [searchDebounceTimer]);
+
   const fetchUsers = async (token) => {
     try {
       const res = await fetch("http://localhost:8080/admin/users", {
@@ -59,6 +71,11 @@ const AdminDashboard = () => {
 
   const fetchDetectionRecords = async (token, filters = {}) => {
     try {
+      // Set loading state if there's a search term
+      if (filters.search) {
+        setIsSearching(true);
+      }
+
       // Build query string from filters
       const queryParams = new URLSearchParams();
       if (filters.userId) queryParams.append("userId", filters.userId);
@@ -66,6 +83,7 @@ const AdminDashboard = () => {
         queryParams.append("bloodGroup", filters.bloodGroup);
       if (filters.startDate) queryParams.append("startDate", filters.startDate);
       if (filters.endDate) queryParams.append("endDate", filters.endDate);
+      if (filters.search) queryParams.append("search", filters.search);
 
       const url = `http://localhost:8080/admin/detection-records?${queryParams.toString()}`;
 
@@ -86,6 +104,8 @@ const AdminDashboard = () => {
       }
     } catch (err) {
       toast.error("Failed to fetch detection records");
+    } finally {
+      setIsSearching(false);
     }
   };
 
@@ -259,10 +279,26 @@ const AdminDashboard = () => {
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
-    setRecordFilters((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+
+    // Update state first
+    const updatedFilters = { ...recordFilters, [name]: value };
+    setRecordFilters(updatedFilters);
+
+    // If it's a search input, implement debounced search
+    if (name === "search") {
+      // Clear previous timer
+      if (searchDebounceTimer) {
+        clearTimeout(searchDebounceTimer);
+      }
+
+      // Set new timer for debounced search
+      const newTimer = setTimeout(() => {
+        const token = localStorage.getItem("token");
+        fetchDetectionRecords(token, updatedFilters);
+      }, 500); // 500ms delay
+
+      setSearchDebounceTimer(newTimer);
+    }
   };
 
   const applyFilters = () => {
@@ -276,6 +312,7 @@ const AdminDashboard = () => {
       bloodGroup: "",
       startDate: "",
       endDate: "",
+      search: "",
     });
     const token = localStorage.getItem("token");
     fetchDetectionRecords(token, {});
@@ -969,6 +1006,12 @@ const AdminDashboard = () => {
               <h2 className="text-xl sm:text-2xl font-bold text-[#6D2932] tracking-tight">
                 Blood Group Detection Records
               </h2>
+              {recordFilters.search && (
+                <div className="text-xs text-[#99B19C] bg-[#FAF5EF] px-3 py-1 rounded-full border border-[#D7D1C9]">
+                  Search: "{recordFilters.search}" • {detectionRecords.length}{" "}
+                  result{detectionRecords.length !== 1 ? "s" : ""}
+                </div>
+              )}
             </div>
 
             {/* Filters */}
@@ -976,6 +1019,7 @@ const AdminDashboard = () => {
               <h3 className="text-sm font-semibold mb-3 text-[#6D2932]">
                 Filter Records
               </h3>
+
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div>
                   <label className="block text-xs font-medium text-[#6D2932] mb-1">
@@ -1041,7 +1085,56 @@ const AdminDashboard = () => {
                   />
                 </div>
               </div>
-              <div className="flex justify-end space-x-3 mt-4">
+
+              {/* Search bar and buttons in one line */}
+              <div className="flex items-center mt-4 space-x-3">
+                {/* Search Bar */}
+                <div className="relative flex items-center flex-grow mr-2">
+                  <input
+                    type="text"
+                    name="search"
+                    value={recordFilters.search}
+                    onChange={handleFilterChange}
+                    placeholder="Search by name, blood group, analysis ID..."
+                    className="px-3 py-1.5 pr-8 text-xs border border-[#D7D1C9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#99B19C] placeholder-gray-400 w-full"
+                  />
+                  <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
+                    {isSearching ? (
+                      <div className="animate-spin h-3 w-3 border-2 border-[#99B19C] border-t-transparent rounded-full"></div>
+                    ) : recordFilters.search ? (
+                      <button
+                        onClick={() => {
+                          const updatedFilters = {
+                            ...recordFilters,
+                            search: "",
+                          };
+                          setRecordFilters(updatedFilters);
+                          const token = localStorage.getItem("token");
+                          fetchDetectionRecords(token, updatedFilters);
+                        }}
+                        className="text-gray-400 hover:text-[#6D2932] transition-colors"
+                        title="Clear search"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-3 w-3"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M6 18L18 6M6 6l12 12"
+                          />
+                        </svg>
+                      </button>
+                    ) : null}
+                  </div>
+                </div>
+
+                {/* Buttons */}
                 <button
                   onClick={resetFilters}
                   className="px-4 py-1.5 border border-[#D7D1C9] rounded-lg text-[#6D2932] hover:bg-[#D7D1C9]/30 transition-colors text-xs"

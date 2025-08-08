@@ -292,7 +292,15 @@ router.patch("/users/:userId/role", requireRole("admin"), async (req, res) => {
 // Get detection records with optional filtering
 router.get("/detection-records", requireRole("admin"), async (req, res) => {
   try {
-    const { userId, bloodGroup, startDate, endDate } = req.query;
+    const { userId, bloodGroup, startDate, endDate, search } = req.query;
+
+    console.log("Detection records query parameters:", {
+      userId,
+      bloodGroup,
+      startDate,
+      endDate,
+      search,
+    });
 
     let query = {};
 
@@ -320,6 +328,20 @@ router.get("/detection-records", requireRole("admin"), async (req, res) => {
         userRecords = userRecords.filter(
           (record) => record.bloodGroup === bloodGroup
         );
+      }
+
+      // Apply search filter if specified
+      if (search) {
+        const searchTerm = search.toLowerCase();
+        userRecords = userRecords.filter((record) => {
+          return (
+            record.userName?.toLowerCase().includes(searchTerm) ||
+            record.userEmail?.toLowerCase().includes(searchTerm) ||
+            record.bloodGroup?.toLowerCase().includes(searchTerm) ||
+            record.analysis_id?.toLowerCase().includes(searchTerm) ||
+            record._id?.toString().toLowerCase().includes(searchTerm)
+          );
+        });
       }
 
       // Apply date filters
@@ -369,6 +391,26 @@ router.get("/detection-records", requireRole("admin"), async (req, res) => {
     // Apply filters
     let filteredRecords = allRecords;
 
+    // Apply search filter first if specified
+    if (search) {
+      const searchTerm = search.toLowerCase();
+      console.log(`Applying search filter for: ${searchTerm}`);
+
+      filteredRecords = filteredRecords.filter((record) => {
+        const matches =
+          record.userName?.toLowerCase().includes(searchTerm) ||
+          record.userEmail?.toLowerCase().includes(searchTerm) ||
+          record.bloodGroup?.toLowerCase().includes(searchTerm) ||
+          record.analysis_id?.toLowerCase().includes(searchTerm) ||
+          record._id?.toString().toLowerCase().includes(searchTerm) ||
+          record.userGender?.toLowerCase().includes(searchTerm);
+
+        return matches;
+      });
+
+      console.log(`Records after search filter: ${filteredRecords.length}`);
+    }
+
     // Filter by blood group
     if (bloodGroup) {
       console.log(`Filtering by blood group: ${bloodGroup}`);
@@ -385,7 +427,9 @@ router.get("/detection-records", requireRole("admin"), async (req, res) => {
         return matches;
       });
 
-      console.log(`Records after filter: ${filteredRecords.length}`);
+      console.log(
+        `Records after blood group filter: ${filteredRecords.length}`
+      );
     }
 
     // Filter by date range
