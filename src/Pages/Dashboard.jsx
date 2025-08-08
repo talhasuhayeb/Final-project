@@ -1465,19 +1465,50 @@ export default function Dashboard() {
                               <div className="flex justify-center gap-2">
                                 <button
                                   onClick={() => handleViewDetection(detection)}
-                                  className="px-3 py-1 rounded-full bg-[#99B19C] text-[#6D2932] transition-all duration-300 hover:scale-110 hover:shadow-md text-xs font-semibold"
+                                  className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 flex items-center justify-center shadow border-2 border-blue-500 hover:border-blue-600"
                                   title="View full report"
                                 >
-                                  👁️
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-4 w-4"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    strokeWidth={2}
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                    />
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                    />
+                                  </svg>
                                 </button>
                                 <button
                                   onClick={() =>
                                     handleDownloadReport(detection)
                                   }
-                                  className="px-3 py-1 rounded-full bg-[#99B19C] text-[#FAF5EF] transition-all duration-300 hover:scale-110 hover:shadow-md text-xs font-semibold"
+                                  className="bg-green-500 hover:bg-green-600 text-white p-2 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 flex items-center justify-center shadow border-2 border-green-500 hover:border-green-600"
                                   title="Download PDF report"
                                 >
-                                  ⬇️
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-4 w-4"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    strokeWidth={2}
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                    />
+                                  </svg>
                                 </button>
                               </div>
                             </td>
