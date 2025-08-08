@@ -310,6 +310,8 @@ router.get("/detection-records", requireRole("admin"), async (req, res) => {
         ...record.toObject(),
         userName: user.name,
         userEmail: user.email,
+        userGender: user.gender,
+        userDateOfBirth: user.dateOfBirth,
         userId: user._id,
       }));
 
@@ -357,6 +359,8 @@ router.get("/detection-records", requireRole("admin"), async (req, res) => {
         ...record.toObject(),
         userName: user.name,
         userEmail: user.email,
+        userGender: user.gender,
+        userDateOfBirth: user.dateOfBirth,
         userId: user._id,
       }));
       allRecords = [...allRecords, ...userRecords];
