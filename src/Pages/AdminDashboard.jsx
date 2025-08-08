@@ -738,6 +738,9 @@ const AdminDashboard = () => {
                 <thead className="bg-[#99B19C] text-[#6D2932]">
                   <tr>
                     <th className="px-4 py-3 text-center font-semibold">
+                      Profile ID
+                    </th>
+                    <th className="px-4 py-3 text-center font-semibold">
                       Name
                     </th>
                     <th className="px-4 py-3 text-center font-semibold">
@@ -773,6 +776,9 @@ const AdminDashboard = () => {
                           user.isBlocked ? "bg-red-50" : ""
                         }`}
                       >
+                        <td className="px-4 py-2 text-center text-[#6D2932]">
+                          {user._id ? user._id.substring(0, 8) : "N/A"}
+                        </td>
                         <td className="px-4 py-2 text-center text-[#6D2932] font-medium">
                           {user.name}
                         </td>
@@ -874,7 +880,7 @@ const AdminDashboard = () => {
                                   <path
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
-                                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                                    d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"
                                   />
                                 </svg>
                               ) : (
@@ -889,8 +895,9 @@ const AdminDashboard = () => {
                                   <path
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
-                                    d="M12 15v2m0 0v2m0-2h2m-2 0H9m3 0a3 3 0 11-6 0 3 3 0 016 0z"
+                                    d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636M5.636 18.364l12.728-12.728"
                                   />
+                                  <circle cx="12" cy="12" r="9" />
                                 </svg>
                               )}
                             </button>
@@ -923,7 +930,7 @@ const AdminDashboard = () => {
                   ) : (
                     <tr>
                       <td
-                        colSpan="11"
+                        colSpan="12"
                         className="text-center py-4 text-[#6D2932]"
                       >
                         No users found
@@ -1040,6 +1047,9 @@ const AdminDashboard = () => {
                       Date & Time
                     </th>
                     <th className="px-4 py-3 text-center font-semibold">
+                      Analysis ID
+                    </th>
+                    <th className="px-4 py-3 text-center font-semibold">
                       User
                     </th>
                     <th className="px-4 py-3 text-center font-semibold">
@@ -1072,6 +1082,12 @@ const AdminDashboard = () => {
                         <td className="px-4 py-2 text-center text-[#6D2932]">
                           {formatDate(record.timestamp)}{" "}
                           {new Date(record.timestamp).toLocaleTimeString()}
+                        </td>
+                        <td className="px-4 py-2 text-center text-[#6D2932]">
+                          {record.analysis_id ||
+                            (record._id
+                              ? record._id.toString().substring(0, 8)
+                              : "N/A")}
                         </td>
                         <td className="px-4 py-2 text-center text-[#6D2932] font-medium">
                           {record.userName}
@@ -1188,7 +1204,7 @@ const AdminDashboard = () => {
                   ) : (
                     <tr>
                       <td
-                        colSpan="8"
+                        colSpan="9"
                         className="text-center py-4 text-[#6D2932]"
                       >
                         No detection records found
