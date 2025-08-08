@@ -27,6 +27,8 @@ const AdminDashboard = () => {
     role: "user",
   });
   const [errors, setErrors] = useState({});
+  const [recordModalIsOpen, setRecordModalIsOpen] = useState(false);
+  const [selectedDetection, setSelectedDetection] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -354,6 +356,282 @@ const AdminDashboard = () => {
         position: "top-center",
       });
     }
+  };
+
+  const handleViewDetection = (detection) => {
+    console.log("Selected detection details:", detection);
+    setSelectedDetection(detection);
+    setRecordModalIsOpen(true);
+  };
+
+  const handleDownloadReport = async (detection) => {
+    generateClientSideReport(detection);
+  };
+
+  const generateClientSideReport = (detection) => {
+    // Create HTML content for PDF generation
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Blood Group Detection Report</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            color: #333;
+            line-height: 1.4;
+            font-size: 14px;
+          }
+          .header {
+            text-align: center;
+            border-bottom: 2px solid #6D2932;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+          }
+          .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #6D2932;
+            margin-bottom: 5px;
+          }
+          .subtitle {
+            color: #99B19C;
+            font-size: 13px;
+            margin-bottom: 3px;
+          }
+          .report-title {
+            font-size: 18px;
+            color: #6D2932;
+            font-weight: bold;
+            margin: 8px 0;
+          }
+          .content-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+          }
+          .section {
+            padding: 12px;
+            border: 1px solid #D7D1C9;
+            border-radius: 6px;
+            background-color: #FAF5EF;
+          }
+          .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #6D2932;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #99B19C;
+            padding-bottom: 3px;
+          }
+          .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            border-bottom: 1px dotted #D7D1C9;
+            margin-bottom: 3px;
+          }
+          .info-label {
+            font-weight: bold;
+            color: #6D2932;
+            font-size: 13px;
+          }
+          .info-value {
+            color: #99B19C;
+            font-weight: 500;
+            font-size: 13px;
+          }
+          .blood-group {
+            color: #800000;
+            font-weight: bold;
+            font-size: 22px;
+          }
+          .confidence {
+            color: #006400;
+            font-weight: bold;
+          }
+          .processing-time {
+            color: #000080;
+          }
+          .image-quality {
+            color: #4B0082;
+          }
+          .footnote {
+            font-size: 11px;
+            color: #666;
+            text-align: center;
+            margin-top: 10px;
+            padding-top: 5px;
+            border-top: 1px solid #D7D1C9;
+          }
+          .report-info {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 8px;
+            font-size: 12px;
+            margin-bottom: 12px;
+          }
+          .report-info p {
+            margin: 3px 0;
+          }
+          .image-section {
+            text-align: center;
+            padding: 12px;
+            border: 1px solid #D7D1C9;
+            border-radius: 6px;
+            margin-bottom: 15px;
+          }
+          .fingerprint-image {
+            max-height: 200px;
+            max-width: 100%;
+            object-fit: contain;
+            border-radius: 6px;
+            border: 1px solid #99B19C;
+            margin: 10px auto;
+            display: block;
+          }
+          @media print {
+            body {
+              margin: 0;
+              padding: 15px;
+            }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div class="logo">Bindu</div>
+          <div class="subtitle">AI-Powered Blood Group Detection System</div>
+          <div class="report-title">Blood Group Detection Report</div>
+        </div>
+        
+        <div class="content-wrapper">
+          <div class="section">
+            <div class="section-title">👤 User Information</div>
+            <div class="info-item">
+              <span class="info-label">User ID:</span>
+              <span class="info-value">${
+                detection.userId ? detection.userId.substring(0, 8) : "N/A"
+              }</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Name:</span>
+              <span class="info-value">${detection.userName || "N/A"}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Email:</span>
+              <span class="info-value">${detection.userEmail || "N/A"}</span>
+            </div>
+          </div>
+          
+          <div class="section">
+            <div class="section-title">📋 Analysis Details</div>
+            <div class="info-item">
+              <span class="info-label">Analysis ID:</span>
+              <span class="info-value">${
+                detection._id
+                  ? detection._id.substring(0, 8)
+                  : detection.analysis_id
+                  ? detection.analysis_id.substring(0, 8)
+                  : "N/A"
+              }</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Date:</span>
+              <span class="info-value">${new Date(
+                detection.timestamp
+              ).toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              })}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Time:</span>
+              <span class="info-value">${new Date(
+                detection.timestamp
+              ).toLocaleTimeString("en-US", {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}</span>
+            </div>
+          </div>
+          
+          <div class="section">
+            <div class="section-title">🩸 Detection Results</div>
+            <div class="info-item">
+              <span class="info-label">Blood Group:</span>
+              <span class="blood-group">${detection.bloodGroup}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Confidence:</span>
+              <span class="confidence">${detection.confidence.toFixed(
+                2
+              )}%</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Image Quality:</span>
+              <span class="image-quality">${detection.imageQuality.toFixed(
+                0
+              )}%</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Processing:</span>
+              <span class="processing-time">${detection.processingTime.toFixed(
+                2
+              )}ms</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="image-section">
+          <div class="section-title">🔎Fingerprint Image</div>
+          <img 
+            src="http://localhost:8080/uploads/${detection.filename}" 
+            alt="Fingerprint" 
+            class="fingerprint-image"
+            onerror="this.onerror=null; this.src='data:image/png;base64,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';"
+          />
+        </div>
+        
+        <div class="section-title">ℹ️ Report Information</div>
+        <div class="report-info">
+          <p><strong>Generated:</strong> ${new Date().toLocaleDateString(
+            "en-US",
+            { month: "short", day: "numeric", year: "numeric" }
+          )} at 
+            ${new Date().toLocaleTimeString("en-US", {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}</p>
+          <p><strong>System:</strong> Bindu AI v1.0.0 | <strong>Accuracy:</strong> 94.88%</p>
+          <p><strong>Note:</strong> AI-generated results for informational purposes only.</p>
+        </div>
+        
+        <div class="footnote">
+          <p><strong>Disclaimer:</strong> This report is generated by an AI system for informational purposes only. Consult medical professionals for clinical decisions.</p>
+          <p>&copy; ${new Date().getFullYear()} Bindu - AI-Powered Blood Group Detection System</p>
+        </div>
+      </body>
+      </html>
+    `;
+
+    // Create a hidden iframe with the report content and trigger print dialog
+    const iframe = document.createElement("iframe");
+    iframe.style.display = "none";
+    document.body.appendChild(iframe);
+    iframe.contentDocument.write(htmlContent);
+    iframe.contentDocument.close();
+
+    iframe.onload = function () {
+      setTimeout(function () {
+        iframe.contentWindow.print();
+        document.body.removeChild(iframe);
+      }, 500);
+    };
   };
 
   return (
@@ -819,31 +1097,78 @@ const AdminDashboard = () => {
                           </div>
                         </td>
                         <td className="px-4 py-2 text-center">
-                          <button
-                            onClick={() =>
-                              handleDeleteDetectionRecord(
-                                record._id || record.analysis_id,
-                                record.timestamp
-                              )
-                            }
-                            className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 flex items-center justify-center shadow border-2 border-red-500 hover:border-red-600 mx-auto"
-                            title="Delete detection record"
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-4 w-4"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                              strokeWidth={2}
+                          <div className="flex justify-center space-x-2">
+                            <button
+                              onClick={() => handleViewDetection(record)}
+                              className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 flex items-center justify-center shadow border-2 border-blue-500 hover:border-blue-600"
+                              title="View full report"
                             >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                              />
-                            </svg>
-                          </button>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-4 w-4"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                strokeWidth={2}
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                />
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                />
+                              </svg>
+                            </button>
+                            <button
+                              onClick={() => handleDownloadReport(record)}
+                              className="bg-green-500 hover:bg-green-600 text-white p-2 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 flex items-center justify-center shadow border-2 border-green-500 hover:border-green-600"
+                              title="Download PDF report"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-4 w-4"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                strokeWidth={2}
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                />
+                              </svg>
+                            </button>
+                            <button
+                              onClick={() =>
+                                handleDeleteDetectionRecord(
+                                  record._id || record.analysis_id,
+                                  record.timestamp
+                                )
+                              }
+                              className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 flex items-center justify-center shadow border-2 border-red-500 hover:border-red-600"
+                              title="Delete detection record"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-4 w-4"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                strokeWidth={2}
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                />
+                              </svg>
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))
@@ -863,6 +1188,264 @@ const AdminDashboard = () => {
           </section>
         )}
         <ToastContainer />
+
+        {/* Detection Record View Modal */}
+        {recordModalIsOpen && selectedDetection && (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center"
+            style={{ alignItems: "flex-start", paddingTop: "2vh" }}
+          >
+            <div
+              className="absolute inset-0 bg-black/50"
+              onClick={() => {
+                setRecordModalIsOpen(false);
+                setSelectedDetection(null);
+              }}
+            ></div>
+            <div
+              className="bg-white rounded-2xl shadow-2xl p-4 max-w-2xl w-full relative z-10 animate-fade-in m-2"
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                color: "#333",
+                lineHeight: 1.4,
+                maxHeight: "90vh",
+                overflowY: "auto",
+              }}
+            >
+              <button
+                onClick={() => {
+                  setRecordModalIsOpen(false);
+                  setSelectedDetection(null);
+                }}
+                className="absolute top-3 right-3 text-[#6D2932] text-xl font-bold hover:text-[#99B19C] w-7 h-7 flex items-center justify-center rounded-full hover:bg-[#F0EBE3]"
+                aria-label="Close"
+              >
+                &times;
+              </button>
+
+              {/* Report Header */}
+              <div className="text-center border-b-2 border-[#6D2932] pb-2 mb-2">
+                <div className="flex items-center justify-center gap-2 text-xl font-bold text-[#6D2932] mb-1">
+                  <span>Bindu</span>
+                </div>
+                <div className="text-[#99B19C] text-xs">
+                  AI-Powered Blood Group Detection System
+                </div>
+                <div className="text-base font-bold text-[#6D2932] mt-1">
+                  Blood Group Detection Report
+                </div>
+              </div>
+
+              {/* Content Grid - 3 columns like the PDF */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+                {/* User Information Section */}
+                <div className="border border-[#D7D1C9] rounded-lg p-3 bg-[#FAF5EF]">
+                  <div className="text-xs font-bold text-[#6D2932] border-b border-[#99B19C] pb-1 mb-1">
+                    👤 User Information
+                  </div>
+                  <div className="flex justify-between items-start text-xs py-1 border-b border-dotted border-[#D7D1C9]">
+                    <span className="font-bold text-[#6D2932] min-w-[70px]">
+                      User ID:
+                    </span>
+                    <span className="text-[#99B19C] font-medium text-xs break-words max-w-[calc(100%-80px)]">
+                      {selectedDetection.userId
+                        ? selectedDetection.userId.substring(0, 8)
+                        : "N/A"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
+                    <span className="font-bold text-[#6D2932] min-w-[70px]">
+                      Full Name:
+                    </span>
+                    <span className="text-[#99B19C] font-medium break-words max-w-[calc(100%-80px)]">
+                      {selectedDetection.userName || "N/A"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
+                    <span className="font-bold text-[#6D2932] min-w-[70px]">
+                      Email:
+                    </span>
+                    <span className="text-[#99B19C] font-medium break-words max-w-[calc(100%-80px)]">
+                      {selectedDetection.userEmail || "N/A"}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Analysis Details Section */}
+                <div className="border border-[#D7D1C9] rounded-md p-3 bg-[#FAF5EF]">
+                  <div className="text-xs font-bold text-[#6D2932] border-b border-[#99B19C] pb-1 mb-1">
+                    📋 Analysis Details
+                  </div>
+                  <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
+                    <span className="font-bold text-[#6D2932] min-w-[80px]">
+                      Analysis ID:
+                    </span>
+                    <span className="text-[#99B19C] font-medium text-sm break-words max-w-[calc(100%-100px)]">
+                      {selectedDetection &&
+                      (selectedDetection.analysis_id || selectedDetection._id)
+                        ? selectedDetection.analysis_id ||
+                          `${selectedDetection._id.toString().substring(0, 8)}`
+                        : "N/A"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
+                    <span className="font-bold text-[#6D2932] min-w-[70px]">
+                      Date:
+                    </span>
+                    <span className="text-[#99B19C] font-medium break-words max-w-[calc(100%-80px)]">
+                      {new Date(selectedDetection.timestamp).toLocaleDateString(
+                        "en-US",
+                        {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        }
+                      )}
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
+                    <span className="font-bold text-[#6D2932] min-w-[70px]">
+                      Time:
+                    </span>
+                    <span className="text-[#99B19C] font-medium break-words max-w-[calc(100%-80px)]">
+                      {new Date(selectedDetection.timestamp).toLocaleTimeString(
+                        "en-US",
+                        {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        }
+                      )}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Detection Results Section */}
+                <div className="border border-[#D7D1C9] rounded-md p-3 bg-[#FAF5EF]">
+                  <div className="text-xs font-bold text-[#6D2932] border-b border-[#99B19C] pb-1 mb-1">
+                    🩸 Detection Results
+                  </div>
+                  <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
+                    <span className="font-bold text-[#6D2932] min-w-[80px]">
+                      Blood Type:
+                    </span>
+                    <span className="font-bold text-[#800000] text-base break-words max-w-[calc(100%-100px)]">
+                      {selectedDetection.bloodGroup}
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
+                    <span className="font-bold text-[#6D2932] min-w-[70px]">
+                      Confidence:
+                    </span>
+                    <span className="font-bold text-green-600 text-xs break-words max-w-[calc(100%-80px)]">
+                      {selectedDetection.confidence.toFixed(2)}%
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
+                    <span className="font-bold text-[#6D2932] min-w-[70px]">
+                      Image Quality:
+                    </span>
+                    <span className="font-bold text-purple-600 text-xs break-words max-w-[calc(100%-80px)]">
+                      {selectedDetection.imageQuality.toFixed(0)}/100
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
+                    <span className="font-bold text-[#6D2932] min-w-[70px]">
+                      Processing:
+                    </span>
+                    <span className="font-bold text-blue-600 text-xs break-words max-w-[calc(100%-80px)]">
+                      {selectedDetection.processingTime.toFixed(2)}ms
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Report Information */}
+              <div className="border border-[#D7D1C9] rounded-md p-3 bg-[#e9ecef] mb-3">
+                <div className="text-xs font-bold text-[#6D2932] border-b border-[#99B19C] pb-1 mb-1">
+                  ℹ️ Report Information
+                </div>
+                <div className="text-xs">
+                  <p className="mb-1">
+                    <strong className="text-[#6D2932]">Generated:</strong>{" "}
+                    <span className="text-[#495057] font-medium break-words">
+                      {new Date().toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      }) +
+                        ", " +
+                        new Date().toLocaleTimeString("en-US", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                    </span>
+                    {" | "}
+                    <strong className="text-[#6D2932]">System:</strong>{" "}
+                    <span className="text-[#495057] font-medium break-words">
+                      Bindu AI v1.0.0
+                    </span>
+                  </p>
+                  <p className="mb-0.5">
+                    <strong className="text-[#6D2932]">Accuracy:</strong>{" "}
+                    <span className="text-green-600 font-medium break-words">
+                      94.88%
+                    </span>{" "}
+                    | <strong className="text-[#6D2932]">Note:</strong>{" "}
+                    <span className="text-[#495057] font-medium break-words">
+                      AI-generated results for informational purposes only.
+                    </span>
+                  </p>
+                </div>
+              </div>
+
+              {/* Image Section */}
+              <div className="border border-[#D7D1C9] rounded-md p-3 mb-3 text-center">
+                <div className="text-xs font-bold text-[#6D2932] border-b border-[#99B19C] pb-1 mb-3">
+                  🔎 Fingerprint Image
+                </div>
+                <div className="flex justify-center">
+                  <img
+                    src={`http://localhost:8080/uploads/${selectedDetection.filename}`}
+                    alt="Fingerprint"
+                    className="h-48 object-contain rounded-xl border border-[#99B19C]/40 shadow"
+                    onError={(e) => {
+                      console.log(
+                        "Fingerprint image failed to load:",
+                        e.target.src
+                      );
+                      e.target.onerror = null;
+                      // Use a stock fingerprint image as fallback
+                      e.target.src =
+                        "https://static.vecteezy.com/system/resources/previews/000/546/269/original/fingerprint-icon-vector-illustration.jpg";
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Footer */}
+              <div className="text-center border-t border-[#D7D1C9] pt-1 text-[10px] text-gray-600 mt-1">
+                <p>
+                  <strong>Disclaimer:</strong> For informational purposes only.
+                  Consult medical professionals for clinical decisions.
+                </p>
+                <p>
+                  © {new Date().getFullYear()} Bindu - AI-Powered Blood Group
+                  Detection System
+                </p>
+              </div>
+
+              {/* Download Button */}
+              <div className="flex justify-center mt-2">
+                <button
+                  onClick={() => handleDownloadReport(selectedDetection)}
+                  className="px-3 py-1 rounded-full bg-[#6D2932] text-[#FAF5EF] font-medium transition-all duration-300 border border-[#6D2932] hover:scale-105 hover:shadow-lg text-xs"
+                >
+                  📝 Download PDF Report
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Add User Modal */}
         {modalOpen && (
