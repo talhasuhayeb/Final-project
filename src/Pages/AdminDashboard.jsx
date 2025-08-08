@@ -315,6 +315,47 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleDeleteDetectionRecord = async (recordId, timestamp) => {
+    if (
+      !window.confirm(
+        `Are you sure you want to delete this detection record from ${formatDate(
+          timestamp
+        )}? This action cannot be undone.`
+      )
+    ) {
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        `http://localhost:8080/admin/detection-records/${recordId}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      const result = await response.json();
+
+      if (result.success) {
+        toast.success("Detection record deleted successfully", {
+          position: "top-center",
+        });
+        // Refresh the detection records list
+        fetchDetectionRecords(token, recordFilters);
+      } else {
+        toast.error(result.message || "Failed to delete detection record", {
+          position: "top-center",
+        });
+      }
+    } catch (err) {
+      toast.error("Error deleting detection record", {
+        position: "top-center",
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#FAF5EF] via-[#D7D1C9] to-[#99B19C]/40 flex flex-col p-0">
       {/* Admin Navbar */}
@@ -725,6 +766,9 @@ const AdminDashboard = () => {
                     <th className="px-4 py-3 text-center font-semibold">
                       Fingerprint
                     </th>
+                    <th className="px-4 py-3 text-center font-semibold">
+                      Actions
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -774,12 +818,39 @@ const AdminDashboard = () => {
                             />
                           </div>
                         </td>
+                        <td className="px-4 py-2 text-center">
+                          <button
+                            onClick={() =>
+                              handleDeleteDetectionRecord(
+                                record._id || record.analysis_id,
+                                record.timestamp
+                              )
+                            }
+                            className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 flex items-center justify-center shadow border-2 border-red-500 hover:border-red-600 mx-auto"
+                            title="Delete detection record"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-4 w-4"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth={2}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                              />
+                            </svg>
+                          </button>
+                        </td>
                       </tr>
                     ))
                   ) : (
                     <tr>
                       <td
-                        colSpan="7"
+                        colSpan="8"
                         className="text-center py-4 text-[#6D2932]"
                       >
                         No detection records found

@@ -562,4 +562,52 @@ router.post("/create-admin", requireRole("admin"), async (req, res) => {
   }
 });
 
+// Delete a specific detection record
+router.delete(
+  "/detection-records/:recordId",
+  requireRole("admin"),
+  async (req, res) => {
+    try {
+      const recordId = req.params.recordId;
+
+      // Find the user that has the detection record
+      const user = await UserModel.findOne({
+        "detectionHistory._id": recordId,
+      });
+
+      if (!user) {
+        return res.status(404).json({
+          message: "Detection record not found",
+          success: false,
+        });
+      }
+
+      // Pull/remove the record from the user's detectionHistory array
+      const result = await UserModel.updateOne(
+        { _id: user._id },
+        { $pull: { detectionHistory: { _id: recordId } } }
+      );
+
+      if (result.modifiedCount === 0) {
+        return res.status(500).json({
+          message: "Failed to delete detection record",
+          success: false,
+        });
+      }
+
+      return res.json({
+        message: "Detection record deleted successfully",
+        success: true,
+      });
+    } catch (err) {
+      console.error("Error deleting detection record:", err);
+      return res.status(500).json({
+        message: "Error deleting detection record",
+        success: false,
+        error: err.message,
+      });
+    }
+  }
+);
+
 module.exports = router;
