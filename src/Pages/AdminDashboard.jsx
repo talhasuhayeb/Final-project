@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import logo from "../assets/logo.png";
 // Note: You need to install date-fns using: npm install date-fns
 // For date formatting
 
@@ -503,7 +504,10 @@ const AdminDashboard = () => {
       </head>
       <body>
         <div class="header">
-          <div class="logo">Bindu</div>
+          <div class="logo">
+            <img src="${logo}" alt="Bindu Logo" style="width: 60px; height: 60px; object-fit: cover; border-radius: 12px; vertical-align: middle; margin-right: 0; display: inline-block;" />
+            <span style="vertical-align: middle;">Bindu</span>
+          </div>
           <div class="subtitle">AI-Powered Blood Group Detection System</div>
           <div class="report-title">Blood Group Detection Report</div>
         </div>
@@ -588,13 +592,22 @@ const AdminDashboard = () => {
         </div>
         
         <div class="image-section">
-          <div class="section-title">🔎Fingerprint Image</div>
-          <img 
+          <div class="section-title">🔎 Fingerprint Image</div>
+          ${
+            detection.filename
+              ? `<img 
             src="http://localhost:8080/uploads/${detection.filename}" 
             alt="Fingerprint" 
             class="fingerprint-image"
-            onerror="this.onerror=null; this.src='data:image/png;base64,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';"
+            onerror="this.onerror=null; this.style.display='none'; this.parentElement.querySelector('.no-image-message').style.display='block';"
           />
+          <div class="no-image-message" style="display: none; text-align: center; padding: 40px; color: #6D2932; font-style: italic; border: 2px dashed #D7D1C9; border-radius: 6px; background-color: #FAF5EF;">
+            No fingerprint image available
+          </div>`
+              : `<div class="no-image-message" style="text-align: center; padding: 40px; color: #6D2932; font-style: italic; border: 2px dashed #D7D1C9; border-radius: 6px; background-color: #FAF5EF;">
+            No fingerprint image available
+          </div>`
+          }
         </div>
         
         <div class="section-title">ℹ️ Report Information</div>
@@ -1209,7 +1222,7 @@ const AdminDashboard = () => {
                 color: "#333",
                 lineHeight: 1.4,
                 maxHeight: "90vh",
-                overflowY: "auto",
+                overflow: "hidden",
               }}
             >
               <button
@@ -1225,7 +1238,12 @@ const AdminDashboard = () => {
 
               {/* Report Header */}
               <div className="text-center border-b-2 border-[#6D2932] pb-2 mb-2">
-                <div className="flex items-center justify-center gap-2 text-xl font-bold text-[#6D2932] mb-1">
+                <div className="flex items-center justify-center gap-1 text-xl font-bold text-[#6D2932] mb-1">
+                  <img
+                    src={logo}
+                    alt="Bindu Logo"
+                    className="w-[50px] h-[50px] object-cover rounded-lg"
+                  />
                   <span>Bindu</span>
                 </div>
                 <div className="text-[#99B19C] text-xs">
@@ -1404,21 +1422,52 @@ const AdminDashboard = () => {
                   🔎 Fingerprint Image
                 </div>
                 <div className="flex justify-center">
-                  <img
-                    src={`http://localhost:8080/uploads/${selectedDetection.filename}`}
-                    alt="Fingerprint"
-                    className="h-48 object-contain rounded-xl border border-[#99B19C]/40 shadow"
-                    onError={(e) => {
-                      console.log(
-                        "Fingerprint image failed to load:",
-                        e.target.src
-                      );
-                      e.target.onerror = null;
-                      // Use a stock fingerprint image as fallback
-                      e.target.src =
-                        "https://static.vecteezy.com/system/resources/previews/000/546/269/original/fingerprint-icon-vector-illustration.jpg";
-                    }}
-                  />
+                  {selectedDetection.filename ? (
+                    <img
+                      src={`http://localhost:8080/uploads/${selectedDetection.filename}`}
+                      alt="Fingerprint"
+                      className="h-48 object-contain rounded-xl border border-[#99B19C]/40 shadow"
+                      onError={(e) => {
+                        console.log(
+                          "Fingerprint image failed to load:",
+                          e.target.src
+                        );
+                        e.target.style.display = "none";
+                        e.target.parentElement.innerHTML = `
+                          <div class="flex items-center justify-center h-48 w-64 border-2 border-dashed border-[#D7D1C9] rounded-xl bg-[#FAF5EF] text-[#6D2932]">
+                            <div class="text-center">
+                              <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-2 text-[#99B19C]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                              </svg>
+                              <p class="text-sm font-medium italic">No fingerprint image available</p>
+                            </div>
+                          </div>
+                        `;
+                      }}
+                    />
+                  ) : (
+                    <div className="flex items-center justify-center h-48 w-64 border-2 border-dashed border-[#D7D1C9] rounded-xl bg-[#FAF5EF] text-[#6D2932]">
+                      <div className="text-center">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-12 w-12 mx-auto mb-2 text-[#99B19C]"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                          />
+                        </svg>
+                        <p className="text-sm font-medium italic">
+                          No fingerprint image available
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
