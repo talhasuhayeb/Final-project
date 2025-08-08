@@ -516,18 +516,37 @@ const AdminDashboard = () => {
           <div class="section">
             <div class="section-title">👤 User Information</div>
             <div class="info-item">
-              <span class="info-label">User ID:</span>
+              <span class="info-label">Profile ID:</span>
               <span class="info-value">${
                 detection.userId ? detection.userId.substring(0, 8) : "N/A"
               }</span>
             </div>
             <div class="info-item">
-              <span class="info-label">Name:</span>
+              <span class="info-label">Full Name:</span>
               <span class="info-value">${detection.userName || "N/A"}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Gender:</span>
+              <span class="info-value">${detection.userGender || "N/A"}</span>
             </div>
             <div class="info-item">
               <span class="info-label">Email:</span>
               <span class="info-value">${detection.userEmail || "N/A"}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Date of Birth:</span>
+              <span class="info-value">${
+                detection.userDateOfBirth
+                  ? new Date(detection.userDateOfBirth).toLocaleDateString(
+                      "en-US",
+                      {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      }
+                    )
+                  : "N/A"
+              }</span>
             </div>
           </div>
           
@@ -1222,7 +1241,7 @@ const AdminDashboard = () => {
         {recordModalIsOpen && selectedDetection && (
           <div
             className="fixed inset-0 z-50 flex items-center justify-center"
-            style={{ alignItems: "flex-start", paddingTop: "2vh" }}
+            style={{ alignItems: "flex-start", paddingTop: "1vh" }}
           >
             <div
               className="absolute inset-0 bg-black/50"
@@ -1236,9 +1255,9 @@ const AdminDashboard = () => {
               style={{
                 fontFamily: "'Inter', sans-serif",
                 color: "#333",
-                lineHeight: 1.4,
-                maxHeight: "90vh",
-                overflow: "hidden",
+                lineHeight: 1.2,
+                maxHeight: "95vh",
+                overflow: "auto",
               }}
             >
               <button
@@ -1279,7 +1298,7 @@ const AdminDashboard = () => {
                   </div>
                   <div className="flex justify-between items-start text-xs py-1 border-b border-dotted border-[#D7D1C9]">
                     <span className="font-bold text-[#6D2932] min-w-[70px]">
-                      User ID:
+                      Profile ID:
                     </span>
                     <span className="text-[#99B19C] font-medium text-xs break-words max-w-[calc(100%-80px)]">
                       {selectedDetection.userId
@@ -1297,10 +1316,34 @@ const AdminDashboard = () => {
                   </div>
                   <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
                     <span className="font-bold text-[#6D2932] min-w-[70px]">
+                      Gender:
+                    </span>
+                    <span className="text-[#99B19C] font-medium break-words max-w-[calc(100%-80px)]">
+                      {selectedDetection.userGender || "N/A"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
+                    <span className="font-bold text-[#6D2932] min-w-[70px]">
                       Email:
                     </span>
                     <span className="text-[#99B19C] font-medium break-words max-w-[calc(100%-80px)]">
                       {selectedDetection.userEmail || "N/A"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
+                    <span className="font-bold text-[#6D2932] min-w-[70px]">
+                      Date of Birth:
+                    </span>
+                    <span className="text-[#99B19C] font-medium break-words max-w-[calc(100%-80px)]">
+                      {selectedDetection.userDateOfBirth
+                        ? new Date(
+                            selectedDetection.userDateOfBirth
+                          ).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          })
+                        : "N/A"}
                     </span>
                   </div>
                 </div>

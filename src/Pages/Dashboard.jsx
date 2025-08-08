@@ -770,6 +770,33 @@ export default function Dashboard() {
           </div>
         </div>
 
+        <div class="section" style="text-align: center; margin: 15px 0;">
+          <div class="section-title">🔎 Fingerprint Image</div>
+          <div style="display: flex; justify-content: center; margin-top: 10px;">
+            ${
+              detection.filename
+                ? `<img src="http://localhost:8080/uploads/${detection.filename}" 
+                     alt="Fingerprint" 
+                     style="max-width: 200px; max-height: 200px; object-fit: contain; 
+                            border: 1px solid #99B19C; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" 
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />`
+                : ""
+            }
+            <div style="display: ${
+              detection.filename ? "none" : "flex"
+            }; flex-direction: column; align-items: center; justify-content: center; 
+                        width: 200px; height: 150px; border: 2px dashed #D7D1C9; 
+                        border-radius: 8px; background-color: #FAF5EF; color: #6D2932;">
+              <div style="text-align: center;">
+                <svg xmlns="http://www.w3.org/2000/svg" style="height: 48px; width: 48px; margin: 0 auto 8px auto; color: #99B19C; display: block;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <p style="margin: 0; font-size: 12px; font-style: italic; font-weight: 500;">No fingerprint image available</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="section">
           <div class="section-title">ℹ️ Report Information</div>
           <div class="report-info">
@@ -1408,23 +1435,23 @@ export default function Dashboard() {
               </h2>
 
               {detectionHistory.length > 0 ? (
-                <div className="overflow-x-auto">
-                  <table className="min-w-full bg-white/90 border border-[#99B19C]/40 rounded-xl shadow text-xs sm:text-sm">
+                <div className="overflow-x-auto rounded-2xl shadow-2xl bg-white/80 backdrop-blur-lg border border-[#99B19C]/40">
+                  <table className="min-w-full text-xs sm:text-sm">
                     <thead className="bg-[#99B19C] text-[#6D2932]">
                       <tr>
-                        <th className="px-4 py-2 text-center font-semibold">
+                        <th className="px-4 py-3 text-center font-semibold">
                           Date & Time
                         </th>
-                        <th className="px-4 py-2 text-center font-semibold">
+                        <th className="px-4 py-3 text-center font-semibold">
                           Blood Group
                         </th>
-                        <th className="px-4 py-2 text-center font-semibold">
+                        <th className="px-4 py-3 text-center font-semibold">
                           Confidence
                         </th>
-                        <th className="px-4 py-2 text-center font-semibold">
-                          Image Quality
+                        <th className="px-4 py-3 text-center font-semibold">
+                          Fingerprint
                         </th>
-                        <th className="px-4 py-2 text-center font-semibold">
+                        <th className="px-4 py-3 text-center font-semibold">
                           Actions
                         </th>
                       </tr>
@@ -1458,8 +1485,43 @@ export default function Dashboard() {
                             <td className="px-4 py-2 text-center font-semibold text-green-600">
                               {detection.confidence || 0}%
                             </td>
-                            <td className="px-4 py-2 text-center font-semibold text-purple-600">
-                              {detection.imageQuality || 0}/100
+                            <td className="px-4 py-2 text-center">
+                              <div className="flex justify-center">
+                                {detection.filename ? (
+                                  <img
+                                    src={`http://localhost:8080/uploads/${detection.filename}`}
+                                    alt="Fingerprint"
+                                    className="w-12 h-12 object-cover rounded-xl border border-[#99B19C]/40 shadow"
+                                    onError={(e) => {
+                                      console.log(
+                                        "Fingerprint image failed to load:",
+                                        e.target.src
+                                      );
+                                      e.target.onerror = null;
+                                      // Use a stock fingerprint image as fallback
+                                      e.target.src =
+                                        "https://static.vecteezy.com/system/resources/previews/000/546/269/original/fingerprint-icon-vector-illustration.jpg";
+                                    }}
+                                  />
+                                ) : (
+                                  <div className="flex items-center justify-center w-12 h-12 border-2 border-dashed border-[#D7D1C9] rounded-xl bg-[#FAF5EF] text-[#6D2932]">
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      className="h-6 w-6 text-[#99B19C]"
+                                      fill="none"
+                                      viewBox="0 0 24 24"
+                                      stroke="currentColor"
+                                    >
+                                      <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
+                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                      />
+                                    </svg>
+                                  </div>
+                                )}
+                              </div>
                             </td>
                             <td className="px-4 py-2 text-center">
                               <div className="flex justify-center gap-2">
@@ -1534,7 +1596,7 @@ export default function Dashboard() {
               {modalIsOpen && selectedDetection && (
                 <div
                   className="fixed inset-0 z-50 flex items-center justify-center"
-                  style={{ alignItems: "flex-start", paddingTop: "2vh" }}
+                  style={{ alignItems: "flex-start", paddingTop: "1vh" }}
                 >
                   <div
                     className="absolute inset-0 bg-black/50"
@@ -1548,7 +1610,9 @@ export default function Dashboard() {
                     style={{
                       fontFamily: "'Inter', sans-serif",
                       color: "#333",
-                      lineHeight: 1.4,
+                      lineHeight: 1.2,
+                      maxHeight: "95vh",
+                      overflow: "auto",
                     }}
                   >
                     <button
@@ -1564,11 +1628,11 @@ export default function Dashboard() {
 
                     {/* Report Header */}
                     <div className="text-center border-b-2 border-[#6D2932] pb-2 mb-2">
-                      <div className="flex items-center justify-center gap-2 text-xl font-bold text-[#6D2932] mb-1">
+                      <div className="flex items-center justify-center gap-1 text-xl font-bold text-[#6D2932] mb-1">
                         <img
                           src={logo}
                           alt="Bindu Logo"
-                          className="w-8 h-8 object-cover rounded-lg"
+                          className="w-[50px] h-[50px] object-cover rounded-lg"
                         />
                         <span>Bindu</span>
                       </div>
@@ -1727,6 +1791,61 @@ export default function Dashboard() {
                             {selectedDetection.processingTime || 0}ms
                           </span>
                         </div>
+                      </div>
+                    </div>
+
+                    {/* Image Section */}
+                    <div className="border border-[#D7D1C9] rounded-md p-3 mb-3 text-center">
+                      <div className="text-xs font-bold text-[#6D2932] border-b border-[#99B19C] pb-1 mb-3">
+                        🔎 Fingerprint Image
+                      </div>
+                      <div className="flex justify-center">
+                        {selectedDetection.filename ? (
+                          <img
+                            src={`http://localhost:8080/uploads/${selectedDetection.filename}`}
+                            alt="Fingerprint"
+                            className="h-48 object-contain rounded-xl border border-[#99B19C]/40 shadow"
+                            onError={(e) => {
+                              console.log(
+                                "Fingerprint image failed to load:",
+                                e.target.src
+                              );
+                              e.target.style.display = "none";
+                              e.target.parentElement.innerHTML = `
+                                <div class="flex items-center justify-center h-48 w-64 border-2 border-dashed border-[#D7D1C9] rounded-xl bg-[#FAF5EF] text-[#6D2932]">
+                                  <div class="text-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-2 text-[#99B19C]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                    <p class="text-sm font-medium italic">No fingerprint image available</p>
+                                  </div>
+                                </div>
+                              `;
+                            }}
+                          />
+                        ) : (
+                          <div className="flex items-center justify-center h-48 w-64 border-2 border-dashed border-[#D7D1C9] rounded-xl bg-[#FAF5EF] text-[#6D2932]">
+                            <div className="text-center">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-12 w-12 mx-auto mb-2 text-[#99B19C]"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
+                                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                />
+                              </svg>
+                              <p className="text-sm font-medium italic">
+                                No fingerprint image available
+                              </p>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
 
