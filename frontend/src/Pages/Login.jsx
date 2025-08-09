@@ -12,9 +12,11 @@ const Login = () => {
   const navigate = useNavigate();
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const copyLoginInfo = { ...loginInfo };
-    copyLoginInfo[name] = value;
-    setLoginInfo(copyLoginInfo);
+    let newValue = value;
+    if (name === "email") {
+      newValue = value.toLowerCase();
+    }
+    setLoginInfo({ ...loginInfo, [name]: newValue });
   };
 
   const handleLogin = async (e) => {

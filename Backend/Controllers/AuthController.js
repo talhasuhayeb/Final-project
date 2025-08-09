@@ -7,7 +7,9 @@ const nodemailer = require("nodemailer");
 
 const register = async (req, res) => {
   try {
-    const { name, email, password, gender, phone, role } = req.body;
+    let { name, email, password, gender, phone, role } = req.body;
+    email = email.toLowerCase();
+    phone = phone.trim();
     if (role === "admin") {
       // Admin registration
       const admin = await AdminModel.findOne({ email });
@@ -25,10 +27,13 @@ const register = async (req, res) => {
         .json({ message: "Admin Signup Successfully", success: true });
     } else {
       // User registration
-      const user = await UserModel.findOne({ email });
+      const user = await UserModel.findOne({ $or: [{ email }, { phone }] });
       if (user) {
+        let msg = "User already exists, you can login";
+        if (user.email === email) msg = "Email already exists, you can login";
+        if (user.phone === phone) msg = "Phone number already exists";
         return res.status(409).json({
-          message: "User already exists,you can login",
+          message: msg,
           success: false,
         });
       }

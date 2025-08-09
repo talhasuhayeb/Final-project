@@ -42,6 +42,8 @@ const userSchema = new Schema({
     type: String,
     required: true,
     unique: true,
+    lowercase: true,
+    trim: true,
   },
   password: {
     type: String,
@@ -56,6 +58,8 @@ const userSchema = new Schema({
     type: String,
     required: true,
     match: /^[0-9]{11}$/,
+    unique: true,
+    trim: true,
   },
   dateOfBirth: {
     type: Date,

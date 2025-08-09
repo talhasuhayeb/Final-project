@@ -14,14 +14,22 @@ const Register = () => {
   const navigate = useNavigate();
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const copyFormData = { ...formData };
-    copyFormData[name] = value;
-    setFormData(copyFormData);
+    let newValue = value;
+    if (name === "email") {
+      newValue = value.toLowerCase();
+    }
+    setFormData({ ...formData, [name]: newValue });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { name, email, password, gender, phone } = formData;
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error("Invalid email format", { position: "top-center" });
+      return;
+    }
     if (!name || !email || !password || !gender || !phone) {
       toast.error("Please fill all fields", {
         position: "top-center",

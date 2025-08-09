@@ -78,7 +78,10 @@ export default function AddUserModal({
                 type="email"
                 value={newUser.email}
                 onChange={(e) =>
-                  setNewUser({ ...newUser, email: e.target.value })
+                  setNewUser({
+                    ...newUser,
+                    email: e.target.value.toLowerCase(),
+                  })
                 }
                 className="w-full px-3 py-2 border border-[#D7D1C9] bg-white/80 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#99B19C]"
                 required
