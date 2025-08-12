@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { motion } from "framer-motion";
 
 const Login = () => {
   const [loginInfo, setLoginInfo] = useState({
@@ -69,99 +70,137 @@ const Login = () => {
     }
   };
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#FAF5EF] via-[#D7D1C9] to-[#99B19C]/40 p-4">
-      <div className="w-full max-w-md">
-        <div className="bg-white/70 backdrop-blur-lg text-[#6D2932] rounded-2xl shadow-2xl border border-[#99B19C]/40 overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#FAF5EF] via-[#D7D1C9] to-[#E8D8C4]/40 p-4">
+      <motion.div
+        initial={{ opacity: 0, y: -120, scale: 0.96, rotate: -4 }}
+        animate={{ opacity: 1, y: 0, scale: 1, rotate: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="w-full max-w-md"
+      >
+        <div className="bg-white/70 backdrop-blur-lg text-[#6D2932] rounded-2xl shadow-2xl border border-[#E8D8C4]/40 overflow-hidden">
           <div className="p-8 text-center text-xs sm:text-sm">
             <div className="space-y-6">
-              <h2 className="text-2xl font-extrabold uppercase text-[#6D2932] tracking-tight">
+              <motion.h2
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="text-2xl font-extrabold uppercase text-[#6D2932] tracking-tight"
+              >
                 Login
-              </h2>
-              <p className="text-[#99B19C] font-medium">
+              </motion.h2>
+              <motion.p
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                className="text-[#C7B7A3] font-medium"
+              >
                 Please enter your email and password!
-              </p>
+              </motion.p>
 
-              <form
+              <motion.form
                 onSubmit={handleLogin}
                 className="space-y-6"
                 autoComplete="off"
+                initial={{ x: -60, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
               >
-                <div className="relative">
+                <motion.div whileFocus={{ scale: 1.05 }} className="relative">
                   <input
                     type="email"
                     id="regEmail"
                     name="email"
                     value={loginInfo.email}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 bg-transparent border-b-2 border-[#99B19C] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#99B19C] transition-all text-xs sm:text-sm"
+                    className="w-full px-4 py-2 bg-transparent border-b-2 border-[#C7B7A3] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#C7B7A3] transition-all text-xs sm:text-sm focus:scale-105"
                     placeholder="Email"
                   />
-                </div>
+                </motion.div>
 
-                <div className="relative">
+                <motion.div whileFocus={{ scale: 1.05 }} className="relative">
                   <input
                     type="password"
                     id="regPassword"
                     name="password"
                     value={loginInfo.password}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 bg-transparent border-b-2 border-[#99B19C] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#99B19C] transition-all text-xs sm:text-sm"
+                    className="w-full px-4 py-2 bg-transparent border-b-2 border-[#C7B7A3] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#C7B7A3] transition-all text-xs sm:text-sm focus:scale-105"
                     placeholder="Password"
                   />
-                </div>
+                </motion.div>
 
-                <div className="relative">
+                <motion.div whileFocus={{ scale: 1.05 }} className="relative">
                   <select
                     name="role"
                     value={loginInfo.role}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 bg-transparent border-b-2 border-[#99B19C] focus:outline-none focus:border-[#6D2932] text-[#6D2932] text-xs sm:text-sm"
+                    className="w-full px-4 py-2 bg-transparent border-b-2 border-[#C7B7A3] focus:outline-none focus:border-[#6D2932] text-[#6D2932] text-xs sm:text-sm focus:scale-105"
                   >
                     <option value="user">User</option>
                     <option value="admin">Admin</option>
                   </select>
-                </div>
+                </motion.div>
 
-                <button
+                <motion.button
                   type="submit"
-                  className="w-full py-2 rounded-full bg-[#6D2932] hover:bg-[#99B19C] text-[#FAF5EF] font-bold text-base shadow-md transition-all duration-300 border-2 border-[#6D2932] hover:border-[#99B19C] focus:outline-none focus:ring-2 focus:ring-[#99B19C]/50 sm:text-sm"
+                  whileTap={{ scale: 0.95 }}
+                  whileHover={{
+                    scale: 1.08,
+                    boxShadow: "0 0 24px #C7B7A3",
+                    backgroundColor: "#C7B7A3",
+                    color: "#6D2932",
+                    borderColor: "#6D2932",
+                  }}
+                  className="w-full py-2 rounded-full bg-[#6D2932] text-[#FAF5EF] font-bold text-base shadow-md transition-all duration-300 border-2 border-[#6D2932] focus:outline-none focus:ring-2 focus:ring-[#C7B7A3]/50 sm:text-sm cursor-pointer"
                 >
                   Login
-                </button>
+                </motion.button>
 
                 <div className="space-y-2">
-                  <p className="text-[#99B19C] text-xs sm:text-sm">
+                  <p className="text-[#C7B7A3] text-xs sm:text-sm">
                     <Link
                       to="/forgot-password"
-                      className="text-[#6D2932] font-bold hover:text-[#99B19C] cursor-pointer focus:outline-none"
+                      className="text-[#6D2932] font-bold hover:text-[#C7B7A3] cursor-pointer focus:outline-none"
                     >
                       Forgot your password?
                     </Link>
                   </p>
-                  <p className="text-[#99B19C] text-xs sm:text-sm">
+                  <p className="text-[#C7B7A3] text-xs sm:text-sm">
                     Don't have an account?
                     <Link
                       to="/register"
-                      className="text-[#6D2932] font-bold px-1 hover:text-[#99B19C] cursor-pointer focus:outline-none"
+                      className="text-[#6D2932] font-bold px-1 hover:text-[#C7B7A3] cursor-pointer focus:outline-none"
                     >
                       Register
                     </Link>
                   </p>
                 </div>
-              </form>
-              <ToastContainer />
+              </motion.form>
+              <ToastContainer
+                position="top-center"
+                autoClose={2500}
+                theme="light"
+              />
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
       {/* Floating Home Button */}
-      <button
+      <motion.button
         onClick={() => navigate("/")}
-        className="fixed bottom-6 right-6 z-50 px-5 py-3 rounded-full bg-[#99B19C] hover:bg-[#6D2932] text-[#FAF5EF] font-bold shadow-lg border-2 border-[#99B19C] hover:border-[#6D2932] transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#6D2932]/50 text-xs sm:text-sm"
+        whileHover={{
+          scale: 1.08,
+          boxShadow: "0 0 24px #C7B7A3",
+          backgroundColor: "#C7B7A3",
+          color: "#6D2932",
+          borderColor: "#C7B7A3",
+        }}
+        whileTap={{ scale: 0.95 }}
+        className="fixed bottom-6 right-6 z-50 px-5 py-3 rounded-full bg-[#6D2932] text-[#FAF5EF] font-bold shadow-lg border-2 border-[#6D2932] transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#C7B7A3]/50 text-xs sm:text-sm cursor-pointer"
         aria-label="Go to Home"
       >
         Home
-      </button>
+      </motion.button>
     </div>
   );
 };

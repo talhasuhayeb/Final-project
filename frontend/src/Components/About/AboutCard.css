@@ -1,0 +1,80 @@
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  width: 22em;
+  max-width: 80%;
+  padding: 2em 0;
+  background: #fff;
+  box-shadow: 0 0 6px 0 rgba(32, 32, 36, 0.12);
+  transition: all 0.35s ease;
+  border-radius: 1.5em;
+  border: 1px solid #561c24;
+  overflow: hidden;
+}
+
+.card::before,
+.card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 4px;
+  width: 100%;
+  z-index: 2;
+}
+
+.card::before {
+  background: #c7b7a3;
+  width: 0;
+  opacity: 0;
+  transition: opacity 0 ease, width 0 ease;
+  transition-delay: 0.5s;
+}
+
+.card::after {
+  background: #fff;
+  transition: width 0.5s ease;
+}
+
+.card:hover {
+  width: 24em;
+  box-shadow: 0 10px 20px 0 rgba(32, 32, 36, 0.12);
+}
+
+.card:hover::before {
+  width: 100%;
+  opacity: 1;
+  transition: opacity 0.5s ease, width 0.5s ease;
+  transition-delay: 0;
+}
+
+.card:hover::after {
+  width: 0;
+  opacity: 0;
+  transition: width 0 ease;
+}
+
+.card .logo {
+  margin: 0 0 1em;
+  width: 4em;
+  transition: all 0.35s ease;
+}
+
+.card:hover .logo {
+  margin-bottom: 0.5em;
+}
+
+.card .hover_content {
+  overflow: hidden;
+  max-height: 0;
+  transform: translateY(1em);
+  transition: all 0.55s ease;
+}
+
+.card:hover .hover_content {
+  max-height: 10em;
+  transform: none;
+}

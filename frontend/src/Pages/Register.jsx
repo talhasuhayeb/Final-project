@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { motion } from "framer-motion";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -63,131 +64,192 @@ const Register = () => {
     }
   };
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#FAF5EF] via-[#D7D1C9] to-[#99B19C]/40 p-4">
-      <div className="w-full max-w-md">
-        <div className="bg-white/70 backdrop-blur-lg text-[#6D2932] rounded-2xl shadow-2xl border border-[#99B19C]/40 overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#FAF5EF] via-[#D7D1C9] to-[#E8D8C4]/40 p-4">
+      <motion.div
+        initial={{ opacity: 0, y: -120, scale: 0.96, rotate: -4 }}
+        animate={{ opacity: 1, y: 0, scale: 1, rotate: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="w-full max-w-md"
+      >
+        <div className="bg-white/70 backdrop-blur-lg text-[#6D2932] rounded-2xl shadow-2xl border border-[#E8D8C4]/40 overflow-hidden">
           <div className="p-8 text-center text-xs sm:text-sm">
             <div className="space-y-6">
-              <h2 className="text-2xl font-extrabold uppercase text-[#6D2932] tracking-tight">
+              <motion.h2
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="text-2xl font-extrabold uppercase text-[#6D2932] tracking-tight"
+              >
                 Register
-              </h2>
-              <p className="text-[#99B19C] font-medium">Create your account</p>
-              <form
+              </motion.h2>
+              <motion.p
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                className="text-[#C7B7A3] font-medium"
+              >
+                Create your account
+              </motion.p>
+              <motion.form
                 onSubmit={handleSubmit}
                 className="space-y-6"
                 autoComplete="off"
+                initial={{ x: -60, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
               >
-                <div className="relative">
+                <motion.div whileFocus={{ scale: 1.05 }} className="relative">
                   <input
                     type="text"
                     id="regName"
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 bg-transparent border-b-2 border-[#99B19C] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#99B19C] transition-all text-xs sm:text-sm"
+                    className="w-full px-4 py-2 bg-transparent border-b-2 border-[#C7B7A3] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#C7B7A3] transition-all text-xs sm:text-sm focus:scale-105"
                     placeholder="Full Name"
                   />
-                </div>
-                <div className="relative">
+                </motion.div>
+                <motion.div whileFocus={{ scale: 1.05 }} className="relative">
                   <input
                     type="email"
                     id="regEmail"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 bg-transparent border-b-2 border-[#99B19C] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#99B19C] transition-all text-xs sm:text-sm"
+                    className="w-full px-4 py-2 bg-transparent border-b-2 border-[#C7B7A3] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#C7B7A3] transition-all text-xs sm:text-sm focus:scale-105"
                     placeholder="Email"
                   />
-                </div>
-                <div className="relative">
+                </motion.div>
+                <motion.div whileFocus={{ scale: 1.05 }} className="relative">
                   <input
                     type="password"
                     id="regPassword"
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 bg-transparent border-b-2 border-[#99B19C] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#99B19C] transition-all text-xs sm:text-sm"
+                    className="w-full px-4 py-2 bg-transparent border-b-2 border-[#C7B7A3] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#C7B7A3] transition-all text-xs sm:text-sm focus:scale-105"
                     placeholder="Password"
                   />
-                </div>
-                <div className="relative">
+                </motion.div>
+                <motion.div whileFocus={{ scale: 1.05 }} className="relative">
                   <input
                     type="tel"
                     id="regPhone"
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 bg-transparent border-b-2 border-[#99B19C] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#99B19C] transition-all text-xs sm:text-sm"
+                    className="w-full px-4 py-2 bg-transparent border-b-2 border-[#C7B7A3] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#C7B7A3] transition-all text-xs sm:text-sm focus:scale-105"
                     placeholder="Phone Number"
                   />
-                </div>
+                </motion.div>
                 <div className="relative flex flex-col items-start">
-                  <span className="text-[#99B19C] text-xs sm:text-sm mb-2">
+                  <span className="text-[#C7B7A3] text-xs sm:text-sm mb-2">
                     Gender
                   </span>
                   <div className="flex gap-6">
-                    <label className="inline-flex items-center">
+                    <motion.label
+                      whileHover={{ scale: 1.08 }}
+                      className="inline-flex items-center transition-transform duration-200"
+                    >
                       <input
                         type="radio"
                         name="gender"
                         value="Male"
                         checked={formData.gender === "Male"}
                         onChange={handleChange}
-                        className="text-[#6D2932] focus:ring-[#99B19C] text-xs sm:text-sm"
+                        className="text-[#6D2932] focus:ring-[#C7B7A3] text-xs sm:text-sm"
                       />
                       <span className="ml-2 text-[#6D2932] text-xs sm:text-sm">
                         Male
                       </span>
-                    </label>
-                    <label className="inline-flex items-center">
+                    </motion.label>
+                    <motion.label
+                      whileHover={{ scale: 1.08 }}
+                      className="inline-flex items-center transition-transform duration-200"
+                    >
                       <input
                         type="radio"
                         name="gender"
                         value="Female"
                         checked={formData.gender === "Female"}
                         onChange={handleChange}
-                        className="text-[#6D2932] focus:ring-[#99B19C] text-xs sm:text-sm"
+                        className="text-[#6D2932] focus:ring-[#C7B7A3] text-xs sm:text-sm"
                       />
                       <span className="ml-2 text-[#6D2932] text-xs sm:text-sm">
                         Female
                       </span>
-                    </label>
-                    <label className="inline-flex items-center">
+                    </motion.label>
+                    <motion.label
+                      whileHover={{ scale: 1.08 }}
+                      className="inline-flex items-center transition-transform duration-200"
+                    >
                       <input
                         type="radio"
                         name="gender"
                         value="Other"
                         checked={formData.gender === "Other"}
                         onChange={handleChange}
-                        className="text-[#6D2932] focus:ring-[#99B19C] text-xs sm:text-sm"
+                        className="text-[#6D2932] focus:ring-[#C7B7A3] text-xs sm:text-sm"
                       />
                       <span className="ml-2 text-[#6D2932] text-xs sm:text-sm">
                         Other
                       </span>
-                    </label>
+                    </motion.label>
                   </div>
                 </div>
-                <button
+                <motion.button
                   type="submit"
-                  className="w-full py-2 rounded-full bg-[#6D2932] hover:bg-[#99B19C] text-[#FAF5EF] font-bold text-base shadow-md transition-all duration-300 border-2 border-[#6D2932] hover:border-[#99B19C] focus:outline-none focus:ring-2 focus:ring-[#99B19C]/50  sm:text-sm"
+                  whileTap={{ scale: 0.95 }}
+                  whileHover={{
+                    scale: 1.08,
+                    boxShadow: "0 0 24px #C7B7A3",
+                    backgroundColor: "#C7B7A3",
+                    color: "#6D2932",
+                    borderColor: "#6D2932", // maroon border on hover
+                  }}
+                  className="w-full py-2 rounded-full bg-[#6D2932] text-[#FAF5EF] font-bold text-base shadow-md transition-all duration-300 border-2 border-[#6D2932] focus:outline-none focus:ring-2 focus:ring-[#C7B7A3]/50 sm:text-sm cursor-pointer"
                 >
                   Register
-                </button>
-                <p className="text-[#99B19C] text-xs sm:text-sm text-center mt-2">
+                </motion.button>
+                <motion.p
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                  className="text-[#C7B7A3] text-xs sm:text-sm text-center mt-2"
+                >
                   Already have an account?
                   <Link
                     to="/login"
-                    className="text-[#6D2932] font-bold px-1 hover:text-[#99B19C] cursor-pointer focus:outline-none"
+                    className="text-[#6D2932] font-bold px-1 hover:text-[#C7B7A3] cursor-pointer focus:outline-none"
                   >
                     Login
                   </Link>
-                </p>
-              </form>
-              <ToastContainer />
+                </motion.p>
+              </motion.form>
+              <ToastContainer
+                position="top-center"
+                autoClose={2500}
+                theme="light"
+              />
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
+      <motion.button
+        onClick={() => navigate("/")}
+        whileHover={{
+          scale: 1.08,
+          boxShadow: "0 0 24px #C7B7A3",
+          backgroundColor: "#C7B7A3",
+          color: "#6D2932",
+          borderColor: "#C7B7A3",
+        }}
+        whileTap={{ scale: 0.95 }}
+        className="fixed bottom-6 right-6 z-50 px-5 py-3 rounded-full bg-[#6D2932] text-[#FAF5EF] font-bold shadow-lg border-2 border-[#6D2932] transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#C7B7A3]/50 text-xs sm:text-sm cursor-pointer"
+        aria-label="Go to Home"
+      >
+        Home
+      </motion.button>
     </div>
   );
 };

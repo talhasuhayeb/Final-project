@@ -1,4 +1,14 @@
-import React from "react"; // Import React to define the component
+import React from "react";
+import { motion } from "framer-motion";
+
+const logoVariants = {
+  rest: { scale: 1, boxShadow: "0 0 0px #E8D8C4" },
+  hover: {
+    scale: 1.18,
+    boxShadow: "0 0 40px #E8D8C4",
+    transition: { type: "spring", stiffness: 300 },
+  },
+};
 
 // DashboardHeader renders the top navigation bar with logo, greeting, and actions
 export default function DashboardHeader({
@@ -9,68 +19,77 @@ export default function DashboardHeader({
 }) {
   // Return the JSX for the header/navigation bar
   return (
-    <header className="sticky top-0 z-50">
-      {" "}
-      {/* Keep header sticky and above other content */}
-      <nav className="bg-white/80 backdrop-blur-md text-[#6D2932] shadow-lg border-b border-[#D7D1C9]/60">
-        {" "}
-        {/* Styled nav bar */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {" "}
-          {/* Center content with max width */}
-          <div className="flex flex-col sm:flex-row justify-between items-center sm:h-20 py-4 gap-4">
-            {" "}
-            {/* Layout rows/columns */}
-            <div className="flex items-center space-x-3 group">
-              {" "}
-              {/* Logo and brand container */}
-              <div className="relative">
-                {" "}
-                {/* Positioning for hover overlay */}
-                <img
-                  src={logo} // Show passed logo image
-                  alt="BloodDetect logo" // Accessible alt text
-                  className="h-10 w-10 object-cover rounded-full transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg" // Logo styles
-                />
-                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#6D2932] to-[#99B19C] opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>{" "}
-                {/* Subtle hover glow */}
-              </div>
-              <div className="flex flex-col">
-                {" "}
-                {/* Brand text container */}
-                <span className="font-bold text-lg text-[#6D2932] tracking-tight group-hover:text-[#99B19C] transition-colors duration-300">
-                  {" "}
-                  {/* Brand name */}
-                  Bindu
-                </span>
-                <span className="text-xs text-[#99B19C] opacity-70 font-medium">
-                  {" "}
-                  {/* Tagline */}
-                  AI-Powered Blood Detection
-                </span>
-              </div>
-            </div>
-            <div className="flex items-center space-x-4">
-              {" "}
-              {/* Right-side actions */}
-              <span className="font-semibold text-sm sm:text-base text-[#99B19C]">
-                {" "}
-                {/* Greeting */}
-                Welcome, {loggedInUser}
+    <header
+      className="sticky top-4 left-1/2 transform -translate-x-1/2 mx-auto z-50"
+      style={{
+        maxWidth: "1100px",
+        width: "100%",
+        borderRadius: "2rem",
+        boxShadow:
+          "0 8px 32px 0 rgba(199,183,163,0.12), 0 1.5px 8px 0 rgba(232,216,196,0.08)",
+        background: "rgba(86,28,36,0.92)", // #561C24 glassy
+        backdropFilter: "blur(22px)",
+        padding: "0.5rem 0",
+      }}
+    >
+      <nav>
+        <div className="flex flex-col sm:flex-row justify-between items-center sm:h-20 py-4 gap-4 px-8">
+          <div className="flex items-center space-x-4 group">
+            <motion.img
+              src={logo}
+              alt="BloodDetect logo"
+              className="h-14 w-14 object-cover rounded-full shadow-lg cursor-pointer border-4 border-white bg-white"
+              variants={logoVariants}
+              initial="rest"
+              whileHover="hover"
+              style={{
+                background: "#fff",
+              }}
+            />
+            <div className="flex flex-col">
+              <span
+                className="font-extrabold text-2xl tracking-tight select-none"
+                style={{
+                  color: "#E8D8C4",
+                  letterSpacing: "0.04em",
+                }}
+              >
+                Bindu
               </span>
-              <button
-                onClick={onHome} // Navigate home handler
-                className="px-4 py-1.5 rounded-full bg-[#99B19C] hover:bg-[#6D2932] text-[#FAF5EF] font-bold transition-all duration-300 border-2 border-[#99B19C] hover:border-[#6D2932] focus:outline-none focus:ring-2 focus:ring-[#6D2932]/50 text-xs sm:text-sm" // Button styles
+              <span
+                className="text-xs font-medium"
+                style={{ color: "#C7B7A3", opacity: 0.7 }}
               >
-                Home {/* Home label */}
-              </button>
-              <button
-                onClick={onLogout} // Logout handler
-                className="px-4 py-1.5 rounded-full bg-[#6D2932] hover:bg-[#99B19C] text-[#FAF5EF] font-bold transition-all duration-300 border-2 border-[#6D2932] hover:border-[#99B19C] focus:outline-none focus:ring-2 focus:ring-[#99B19C]/50 text-xs sm:text-sm" // Button styles
-              >
-                Logout {/* Logout label */}
-              </button>
+                AI-Powered Blood Detection
+              </span>
             </div>
+          </div>
+          <div className="flex items-center space-x-4">
+            <span className="font-semibold text-sm sm:text-base text-[#C7B7A3]">
+              Welcome, {loggedInUser}
+            </span>
+            <button
+              onClick={onHome}
+              className="px-5 py-2 rounded-xl font-semibold text-[#C7B7A3] bg-[#E8D8C4]/10 border border-[#C7B7A3] transition shadow cursor-pointer hover:scale-105"
+              type="button"
+              style={{
+                backdropFilter: "blur(8px)",
+                border: "1.5px solid #C7B7A3",
+              }}
+            >
+              Home
+            </button>
+            <button
+              onClick={onLogout}
+              className="px-5 py-2 rounded-xl font-semibold text-[#561C24] bg-gradient-to-r from-[#C7B7A3] to-[#E8D8C4] transition shadow cursor-pointer hover:scale-105"
+              type="button"
+              style={{
+                border: "1.5px solid #C7B7A3",
+                boxShadow: "0 2px 12px #C7B7A322",
+              }}
+            >
+              Logout
+            </button>
           </div>
         </div>
       </nav>
