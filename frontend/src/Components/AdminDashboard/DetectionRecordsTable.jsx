@@ -15,7 +15,7 @@ export default function DetectionRecordsTable({
       <table className="min-w-full text-xs sm:text-sm">
         {" "}
         {/* Table */}
-        <thead className="bg-[#99B19C] text-[#6D2932]">
+        <thead className="bg-[#C7B7A3] text-[#6D2932]">
           {" "}
           {/* Header */}
           <tr>

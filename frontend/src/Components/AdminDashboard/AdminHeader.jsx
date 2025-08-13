@@ -1,58 +1,87 @@
-import React from "react"; // Import React for JSX
+import React from "react";
 
-// AdminHeader renders the top admin navbar with title and actions
+// AdminHeader styled like DashboardHeader, with logo on the left
 export default function AdminHeader({
   title,
   subtitle,
   adminName,
   onHome,
   onLogout,
+  logo, // pass logo prop
 }) {
   return (
-    <nav className="bg-white/80 backdrop-blur-md border-b border-[#D7D1C9]/60 shadow-lg px-4 sm:px-8 py-4 sticky top-0 z-10">
-      {" "}
-      {/* Navbar container */}
-      <div className="max-w-7xl mx-auto flex justify-between items-center">
-        {" "}
-        {/* Centered content */}
-        <div className="flex items-center space-x-3 group">
-          {" "}
-          {/* Left: title + subtitle */}
-          <span className="font-bold text-xl sm:text-2xl text-[#6D2932] tracking-tight group-hover:text-[#99B19C] transition-colors duration-300">
-            {" "}
-            {/* Title */}
-            {title}
-          </span>
-          {subtitle && (
-            <span className="text-xs text-[#99B19C] opacity-70 font-medium hidden sm:inline-block">
-              {" "}
-              {/* Subtitle */}
-              {subtitle}
+    <header
+      className="mx-auto z-50 my-8 sticky top-0"
+      style={{
+        maxWidth: "1100px",
+        width: "100%",
+        borderRadius: "2rem",
+        boxShadow:
+          "0 8px 32px 0 rgba(199,183,163,0.12), 0 1.5px 8px 0 rgba(232,216,196,0.08)",
+        background: "rgba(86,28,36,0.92)", // #561C24 glassy
+        backdropFilter: "blur(22px)",
+        padding: "0.5rem 0",
+      }}
+    >
+      <nav>
+        <div className="flex flex-col sm:flex-row justify-between items-center sm:h-20 py-4 gap-4 px-8">
+          <div className="flex items-center space-x-4 group">
+            {/* Website logo */}
+            <img
+              src={logo}
+              alt="Website logo"
+              className="h-14 w-14 object-cover rounded-full shadow-lg cursor-pointer border-4 border-white bg-white"
+              style={{ background: "#fff" }}
+            />
+            <div className="flex flex-col">
+              <span
+                className="font-extrabold text-2xl tracking-tight select-none"
+                style={{
+                  color: "#E8D8C4",
+                  letterSpacing: "0.04em",
+                }}
+              >
+                {title}
+              </span>
+              {subtitle && (
+                <span
+                  className="text-xs font-medium"
+                  style={{ color: "#C7B7A3", opacity: 0.7 }}
+                >
+                  {subtitle}
+                </span>
+              )}
+            </div>
+          </div>
+          <div className="flex items-center space-x-4">
+            <span className="font-semibold text-sm sm:text-base text-[#C7B7A3]">
+              Welcome, {adminName}
             </span>
-          )}
+            <button
+              onClick={onHome}
+              className="px-5 py-2 rounded-xl font-semibold text-[#C7B7A3] bg-[#E8D8C4]/10 border border-[#C7B7A3] transition shadow cursor-pointer hover:scale-105"
+              type="button"
+              style={{
+                backdropFilter: "blur(8px)",
+                border: "1.5px solid #C7B7A3",
+              }}
+            >
+              Home
+            </button>
+            <button
+              onClick={onLogout}
+              className="px-5 py-2 rounded-xl font-semibold text-[#561C24] bg-gradient-to-r from-[#C7B7A3] to-[#E8D8C4] transition shadow cursor-pointer hover:scale-105"
+              type="button"
+              style={{
+                border: "1.5px solid #C7B7A3",
+                boxShadow: "0 2px 12px #C7B7A322",
+              }}
+            >
+              Logout
+            </button>
+          </div>
         </div>
-        <div className="flex items-center space-x-4">
-          {" "}
-          {/* Right: actions */}
-          <span className="font-semibold text-xs sm:text-sm text-[#99B19C]">
-            {" "}
-            {/* Greeting */}
-            Welcome, {adminName}
-          </span>
-          <button
-            onClick={onHome} // Go to home
-            className="px-4 py-1.5 rounded-full bg-[#99B19C] hover:bg-[#6D2932] text-[#FAF5EF] font-bold transition-all duration-300 border-2 border-[#99B19C] hover:border-[#6D2932] focus:outline-none focus:ring-2 focus:ring-[#6D2932]/50 text-xs sm:text-sm" // Styles
-          >
-            Home
-          </button>
-          <button
-            onClick={onLogout} // Logout
-            className="px-4 py-1.5 rounded-full bg-[#6D2932] hover:bg-[#99B19C] text-[#FAF5EF] font-bold transition-all duration-300 border-2 border-[#6D2932] hover:border-[#99B19C] focus:outline-none focus:ring-2 focus:ring-[#99B19C]/50 text-xs sm:text-sm" // Styles
-          >
-            Logout
-          </button>
-        </div>
-      </div>
-    </nav>
+      </nav>
+    </header>
   );
 }

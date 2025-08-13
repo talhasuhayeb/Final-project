@@ -15,7 +15,7 @@ export default function UsersTable({
       <table className="min-w-full text-xs sm:text-sm">
         {" "}
         {/* Table */}
-        <thead className="bg-[#99B19C] text-[#6D2932]">
+        <thead className="bg-[#C7B7A3] text-[#6D2932]">
           {" "}
           {/* Header */}
           <tr>
@@ -85,7 +85,7 @@ export default function UsersTable({
                           e.target.onerror = null;
                           e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(
                             user.name
-                          )}&background=99B19C&color=FAF5EF&size=100`;
+                          )}&background=C7B7A3&color=561C24&size=100`;
                         }}
                       />
                     </div>
