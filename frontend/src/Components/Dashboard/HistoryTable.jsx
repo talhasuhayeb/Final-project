@@ -1,4 +1,5 @@
-import React from "react"; // Import React for JSX
+import React from "react";
+import { createPortal } from "react-dom";
 
 // HistoryTable renders detection history with actions and a detail modal region
 export default function HistoryTable({
@@ -14,6 +15,8 @@ export default function HistoryTable({
   handleViewDetection, // View handler (sets selectedDetection + opens modal)
   handleDownloadReport, // Download handler (pdf/html)
 }) {
+  const [imageError, setImageError] = React.useState(false);
+
   return (
     <div className="w-full max-w-4xl mx-auto p-8 bg-white/80 backdrop-blur-lg shadow-2xl rounded-2xl border border-[#99B19C]/40">
       {" "}
@@ -225,44 +228,32 @@ export default function HistoryTable({
         </div>
       )}
       {/* Modal for viewing detection details */}
-      {modalIsOpen &&
-        selectedDetection && ( // Render modal when open and selection present
+      {createPortal(
+        modalIsOpen && selectedDetection ? (
           <div
-            className="fixed inset-0 z-50 flex items-center justify-center"
-            style={{ alignItems: "flex-start", paddingTop: "1vh" }}
+            className="fixed inset-0 z-[99999] flex items-center justify-center"
+            style={{
+              background: "rgba(0,0,0,0.5)",
+            }}
           >
-            {" "}
-            {/* Backdrop */}
-            <div
-              className="absolute inset-0 bg-black/50"
-              onClick={() => {
-                setModalIsOpen(false);
-                setSelectedDetection(null);
-              }}
-            ></div>{" "}
-            {/* Click outside to close */}
+            {/* Modal content */}
             <div
               className="bg-white rounded-2xl shadow-2xl p-4 max-w-2xl w-full relative z-10 animate-fade-in m-2"
               style={{
                 fontFamily: "'Inter', sans-serif",
                 color: "#333",
                 lineHeight: 1.2,
-                maxHeight: "95vh",
-                overflow: "auto",
               }}
             >
-              {" "}
-              {/* Modal body */}
               <button
                 onClick={() => {
                   setModalIsOpen(false);
                   setSelectedDetection(null);
+                  setImageError(false);
                 }}
                 className="absolute top-3 right-3 text-[#6D2932] text-xl font-bold hover:text-[#99B19C] w-7 h-7 flex items-center justify-center rounded-full hover:bg-[#F0EBE3]"
                 aria-label="Close"
               >
-                {" "}
-                {/* X button */}
                 &times;
               </button>
               {/* Report Header */}
@@ -507,38 +498,16 @@ export default function HistoryTable({
                 <div className="flex justify-center">
                   {" "}
                   {/* Center content */}
-                  {selectedDetection.filename ? ( // Image exists
+                  {selectedDetection.filename && !imageError ? (
                     <img
-                      src={`http://localhost:8080/uploads/${selectedDetection.filename}`} // Image URL
-                      alt="Fingerprint" // Alt text
-                      className="h-48 object-contain rounded-xl border border-[#99B19C]/40 shadow" // Styling
-                      onError={(e) => {
-                        // Error fallback
-                        console.log(
-                          "Fingerprint image failed to load:",
-                          e.target.src
-                        ); // Log
-                        e.target.style.display = "none"; // Hide broken image
-                        e.target.parentElement.innerHTML = `
-                        <div class="flex items-center justify-center h-48 w-64 border-2 border-dashed border-[#D7D1C9] rounded-xl bg-[#FAF5EF] text-[#6D2932]">
-                          <div class="text-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-2 text-[#99B19C]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                            <p class="text-sm font-medium italic">No fingerprint image available</p>
-                          </div>
-                        </div>
-                      `; // Replace with placeholder block
-                      }}
+                      src={`http://localhost:8080/uploads/${selectedDetection.filename}`}
+                      alt="Fingerprint"
+                      className="h-48 object-contain rounded-xl border border-[#99B19C]/40 shadow"
+                      onError={() => setImageError(true)}
                     />
                   ) : (
-                    // No image
                     <div className="flex items-center justify-center h-48 w-64 border-2 border-dashed border-[#D7D1C9] rounded-xl bg-[#FAF5EF] text-[#6D2932]">
-                      {" "}
-                      {/* Placeholder */}
                       <div className="text-center">
-                        {" "}
-                        {/* Centered content */}
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           className="h-12 w-12 mx-auto mb-2 text-[#99B19C]"
@@ -546,20 +515,16 @@ export default function HistoryTable({
                           viewBox="0 0 24 24"
                           stroke="currentColor"
                         >
-                          {" "}
-                          {/* Icon */}
                           <path
                             strokeLinecap="round"
                             strokeLinejoin="round"
                             strokeWidth="2"
                             d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                          />{" "}
-                          {/* Path */}
+                          />
                         </svg>
                         <p className="text-sm font-medium italic">
                           No fingerprint image available
-                        </p>{" "}
-                        {/* Label */}
+                        </p>
                       </div>
                     </div>
                   )}
@@ -654,7 +619,9 @@ export default function HistoryTable({
               </div>
             </div>
           </div>
-        )}
+        ) : null,
+        document.getElementById("modal-root")
+      )}
     </div>
   );
 }

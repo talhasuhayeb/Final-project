@@ -20,7 +20,7 @@ export default function DashboardHeader({
   // Return the JSX for the header/navigation bar
   return (
     <header
-      className="sticky top-4 left-1/2 transform -translate-x-1/2 mx-auto z-50"
+      className="mx-auto z-50 my-8 sticky top-0"
       style={{
         maxWidth: "1100px",
         width: "100%",

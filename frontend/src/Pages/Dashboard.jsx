@@ -860,15 +860,14 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-between bg-gradient-to-br from-[#FAF5EF] via-[#D7D1C9] to-[#99B19C]/40">
-      {/* Header replaced with DashboardHeader component */}
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#FAF5EF] via-[#D7D1C9] to-[#99B19C]/40">
       <DashboardHeader
         logo={logo}
         loggedInUser={loggedInUser}
         onHome={() => navigate("/")}
         onLogout={handleLogout}
       />
-      <main className="flex-grow py-8 px-4 flex flex-col">
+      <main className="flex-grow flex flex-col items-center justify-center px-4 py-8">
         {/* Sidebar Trigger Icon (kept) */}
         <div
           className="fixed top-1/2 left-0 z-50 transform -translate-y-1/2 cursor-pointer w-6 h-6"
@@ -901,7 +900,7 @@ export default function Dashboard() {
           onLeave={() => setSidebarOpen(false)}
         />
         {/* Main Content */}
-        <div className="flex-1 ml-0 md:ml-64">
+        <div className="flex-1 w-full flex flex-col items-center justify-center">
           {activeSection === "main" && (
             <DetectionPanel
               selectedImage={selectedImage}
