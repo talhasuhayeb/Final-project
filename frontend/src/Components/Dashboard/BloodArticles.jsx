@@ -123,43 +123,50 @@ export default function BloodArticles({
       {/* Custom Modal for full article (no external dependency) */}
       {modalIsOpen && selectedArticle && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-          {" "}
           {/* Modal backdrop */}
           <div
             className="absolute inset-0 bg-transparent"
             onClick={closeModal}
-          ></div>{" "}
-          {/* Click outside to close */}
+          ></div>
+          {/* Modal body */}
           <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-lg w-full relative z-10 animate-fade-in">
-            {" "}
-            {/* Modal body */}
             <button
-              onClick={closeModal} // Close button
-              className="absolute top-3 right-3 text-[#6D2932] text-xl font-bold hover:text-[#99B19C]" // X style
-              aria-label="Close" // Accessibility label
+              onClick={closeModal}
+              className="absolute top-3 right-3 text-[#6D2932] text-xl font-bold hover:text-[#99B19C]"
+              aria-label="Close"
             >
-              &times; {/* X */}
+              &times;
             </button>
-            {selectedArticle && ( // Only render when we have data
+            {selectedArticle && (
               <>
-                <img
-                  src={selectedArticle.image} // Modal image
-                  alt={selectedArticle.title} // Alt text
-                  className="w-64 h-64 object-contain rounded-xl mb-6 mx-auto shadow-lg" // Image styling
-                />
+                {/* Show YouTube video if youtubeId exists, else show image */}
+                <div className="w-full flex justify-center mb-6">
+                  {selectedArticle.youtubeId ? (
+                    <iframe
+                      width="320"
+                      height="180"
+                      src={`https://www.youtube.com/embed/${selectedArticle.youtubeId}`}
+                      title="YouTube video"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      className="rounded-xl shadow-lg"
+                    ></iframe>
+                  ) : (
+                    <img
+                      src={selectedArticle.image}
+                      alt={selectedArticle.title}
+                      className="w-64 h-64 object-contain rounded-xl shadow-lg"
+                    />
+                  )}
+                </div>
                 <h2 className="text-xl font-bold text-[#6D2932] mb-2 text-center">
-                  {" "}
-                  {/* Modal title */}
                   {selectedArticle.title}
                 </h2>
                 <p className="text-[#6D2932] text-sm mb-4 text-center">
-                  {" "}
-                  {/* Modal summary */}
                   {selectedArticle.summary}
                 </p>
                 <div className="text-[#6D2932] text-xs text-left whitespace-pre-line">
-                  {" "}
-                  {/* Modal content */}
                   {selectedArticle.content}
                 </div>
               </>

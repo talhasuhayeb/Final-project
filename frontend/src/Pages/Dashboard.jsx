@@ -7,6 +7,8 @@ import { ToastContainer, toast } from "react-toastify";
 import heroPic3 from "../../src/assets/distribution.png";
 import modelAccuracy from "../../src/assets/modelAccuracy.png";
 import confusionMatrix from "../../src/assets/confusionMatrix.png";
+import article1 from "../../src/assets/article1.jpg";
+import article2 from "../../src/assets/article2.jpg";
 // New subcomponents
 import DashboardHeader from "../Components/Dashboard/DashboardHeader";
 import Sidebar from "../Components/Dashboard/Sidebar";
@@ -20,21 +22,23 @@ import HistoryTable from "../Components/Dashboard/HistoryTable";
 const trendingArticles = [
   {
     id: 1,
-    title: "Breakthrough in Blood Group Detection",
-    image: heroPic3,
+    title: "Scientists have discovered a new blood type in a woman ",
+    image: article1,
     summary:
-      "Researchers have developed a new AI-powered method to detect blood groups from fingerprints, improving speed and accuracy.",
+      "After years of study, scientists have discovered a new blood type in a woman from Guadeloupe. They're now searching for more people with the characteristic.",
     content:
-      "In a recent study, scientists introduced a novel approach using deep learning to analyze fingerprint images for blood group detection. This method leverages advanced neural networks, resulting in faster and more reliable results compared to traditional techniques. The technology is expected to revolutionize medical diagnostics and blood donation processes.",
+      "Scientists have discovered a new blood group that has so far only been identified in one woman, from the French overseas region of Guadeloupe.The 68-year-old is the only known person in the world to have this blood group, which has been named 'Gwada negative,' after a local name for her home islands. The researchers behind the discovery announced their work in a presentation at the International Society of Blood Transfusions Congress in Milan, which concluded June 4.",
+    youtubeId: "wpHpL9YFqXc",
   },
   {
     id: 2,
-    title: "Why Blood Group Distribution Matters",
-    image: modelAccuracy,
+    title:
+      "Blood group not found anywhere else in the world discovered at Rotary Bangalore",
+    image: article2,
     summary:
-      "Understanding blood group distribution helps hospitals manage supplies and respond to emergencies more effectively.",
+      "The new blood group has been officially named ‘CRIB’, where CR represents Cromer and IB stands for India, Bengaluru.",
     content:
-      "Blood group distribution data is crucial for healthcare providers. It enables better planning for blood transfusions and emergency responses. By analyzing local and global trends, hospitals can ensure that rare blood types are available when needed, saving lives and improving patient outcomes.",
+      "A historic milestone in transfusion medicine has been achieved at the Rotary Bangalore TTK Blood Centre, wherein a new blood group, previously unidentified anywhere in the world, has been discovered in a 38-year-old South Indian woman.The International Blood Group Reference Laboratory (IBGRL) at Bristol in the U.K., which detected the unknown blood group antigen after 10 months of extensive research and molecular testing, has found this new antigen to be part of the Cromer (CR) blood group system. In recognition of its origin, the group has been officially named ‘CRIB’, with CR representing Cromer and IB standing for India, Bengaluru.",
   },
   {
     id: 3,
