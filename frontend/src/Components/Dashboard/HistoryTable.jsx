@@ -33,7 +33,7 @@ export default function HistoryTable({
           <table className="min-w-full text-xs sm:text-sm">
             {" "}
             {/* Table */}
-            <thead className="bg-[#99B19C] text-[#6D2932]">
+            <thead className="bg-[#C7B7A3] text-[#6D2932]">
               {" "}
               {/* Header */}
               <tr>
@@ -231,14 +231,19 @@ export default function HistoryTable({
       {createPortal(
         modalIsOpen && selectedDetection ? (
           <div
-            className="fixed inset-0 z-[99999] flex items-center justify-center"
+            className="fixed inset-0 z-[99999] flex items-center justify-center px-2"
             style={{
               background: "rgba(0,0,0,0.5)",
             }}
           >
             {/* Modal content */}
             <div
-              className="bg-white rounded-2xl shadow-2xl p-4 max-w-2xl w-full relative z-10 animate-fade-in m-2"
+              className="
+                bg-white rounded-2xl shadow-2xl p-2 sm:p-4 max-w-2xl w-full
+                relative z-10 animate-fade-in m-2
+                flex flex-col
+                max-h-[95vh] overflow-y-auto
+              "
               style={{
                 fontFamily: "'Inter', sans-serif",
                 color: "#333",
@@ -258,50 +263,33 @@ export default function HistoryTable({
               </button>
               {/* Report Header */}
               <div className="text-center border-b-2 border-[#6D2932] pb-2 mb-2">
-                {" "}
-                {/* Header */}
-                <div className="flex items-center justify-center gap-1 text-xl font-bold text-[#6D2932] mb-1">
-                  {" "}
-                  {/* Logo + title */}
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-1 text-xl font-bold text-[#6D2932] mb-1">
                   <img
                     src={logo}
                     alt="Bindu Logo"
-                    className="w-[50px] h-[50px] object-cover rounded-lg"
-                  />{" "}
-                  {/* Logo */}
-                  <span>Bindu</span> {/* Brand name */}
+                    className="w-[40px] h-[40px] sm:w-[50px] sm:h-[50px] object-cover rounded-lg"
+                  />
+                  <span>Bindu</span>
                 </div>
                 <div className="text-[#99B19C] text-xs">
                   AI-Powered Blood Group Detection System
-                </div>{" "}
-                {/* Tagline */}
+                </div>
                 <div className="text-base font-bold text-[#6D2932] mt-1">
                   Blood Group Detection Report
-                </div>{" "}
-                {/* Report title */}
+                </div>
               </div>
-              {/* Content Grid - 3 columns like the PDF */}
+              {/* Content Grid - Responsive */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
-                {" "}
-                {/* Grid */}
                 {/* User Information Section */}
                 <div className="border border-[#D7D1C9] rounded-lg p-3 bg-[#FAF5EF]">
-                  {" "}
-                  {/* User info card */}
                   <div className="text-xs font-bold text-[#6D2932] border-b border-[#99B19C] pb-1 mb-1">
                     👤 User Information
-                  </div>{" "}
-                  {/* Title */}
+                  </div>
                   <div className="flex justify-between items-start text-xs py-1 border-b border-dotted border-[#D7D1C9]">
-                    {" "}
-                    {/* Row */}
                     <span className="font-bold text-[#6D2932] min-w-[70px]">
                       Profile ID:
-                    </span>{" "}
-                    {/* Label */}
+                    </span>
                     <span className="text-[#99B19C] font-medium text-xs break-words max-w-[calc(100%-80px)]">
-                      {" "}
-                      {/* Value */}
                       {userProfile &&
                       (userProfile.profile_id || userProfile._id)
                         ? userProfile.profile_id ||
@@ -310,54 +298,34 @@ export default function HistoryTable({
                     </span>
                   </div>
                   <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
-                    {" "}
-                    {/* Row */}
                     <span className="font-bold text-[#6D2932] min-w-[70px]">
                       Full Name:
-                    </span>{" "}
-                    {/* Label */}
+                    </span>
                     <span className="text-[#99B19C] font-medium break-words max-w-[calc(100%-80px)]">
-                      {" "}
-                      {/* Value */}
                       {userProfile.name || loggedInUser || "N/A"}
                     </span>
                   </div>
                   <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
-                    {" "}
-                    {/* Row */}
                     <span className="font-bold text-[#6D2932] min-w-[70px]">
                       Gender:
-                    </span>{" "}
-                    {/* Label */}
+                    </span>
                     <span className="text-[#99B19C] font-medium break-words max-w-[calc(100%-80px)]">
-                      {" "}
-                      {/* Value */}
                       {userProfile.gender || "N/A"}
                     </span>
                   </div>
                   <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
-                    {" "}
-                    {/* Row */}
                     <span className="font-bold text-[#6D2932] min-w-[70px]">
                       Email:
-                    </span>{" "}
-                    {/* Label */}
+                    </span>
                     <span className="text-[#99B19C] font-medium break-words max-w-[calc(100%-80px)]">
-                      {" "}
-                      {/* Value */}
                       {userProfile.email || userEmail || "N/A"}
                     </span>
                   </div>
                   <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
-                    {" "}
-                    {/* Row */}
                     <span className="font-bold text-[#6D2932] min-w-[70px]">
                       Date of Birth:
-                    </span>{" "}
-                    {/* Label */}
+                    </span>
                     <span className="text-[#99B19C] font-medium break-words max-w-[calc(100%-80px)]">
-                      {" "}
-                      {/* Value */}
                       {userProfile.dateOfBirth
                         ? new Date(userProfile.dateOfBirth).toLocaleDateString(
                             "en-US",
@@ -369,22 +337,14 @@ export default function HistoryTable({
                 </div>
                 {/* Analysis Details Section */}
                 <div className="border border-[#D7D1C9] rounded-md p-3 bg-[#FAF5EF]">
-                  {" "}
-                  {/* Analysis card */}
                   <div className="text-xs font-bold text-[#6D2932] border-b border-[#99B19C] pb-1 mb-1">
                     📋 Analysis Details
-                  </div>{" "}
-                  {/* Title */}
+                  </div>
                   <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
-                    {" "}
-                    {/* Row */}
                     <span className="font-bold text-[#6D2932] min-w-[80px]">
                       Analysis ID:
-                    </span>{" "}
-                    {/* Label */}
+                    </span>
                     <span className="text-[#99B19C] font-medium text-sm break-words max-w-[calc(100%-100px)]">
-                      {" "}
-                      {/* Value */}
                       {selectedDetection &&
                       (selectedDetection.analysis_id || selectedDetection._id)
                         ? selectedDetection.analysis_id ||
@@ -393,15 +353,10 @@ export default function HistoryTable({
                     </span>
                   </div>
                   <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
-                    {" "}
-                    {/* Row */}
                     <span className="font-bold text-[#6D2932] min-w-[70px]">
                       Date:
-                    </span>{" "}
-                    {/* Label */}
+                    </span>
                     <span className="text-[#99B19C] font-medium break-words max-w-[calc(100%-80px)]">
-                      {" "}
-                      {/* Value */}
                       {new Date(selectedDetection.timestamp).toLocaleDateString(
                         "en-US",
                         { month: "short", day: "numeric", year: "numeric" }
@@ -409,15 +364,10 @@ export default function HistoryTable({
                     </span>
                   </div>
                   <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
-                    {" "}
-                    {/* Row */}
                     <span className="font-bold text-[#6D2932] min-w-[70px]">
                       Time:
-                    </span>{" "}
-                    {/* Label */}
+                    </span>
                     <span className="text-[#99B19C] font-medium break-words max-w-[calc(100%-80px)]">
-                      {" "}
-                      {/* Value */}
                       {new Date(selectedDetection.timestamp).toLocaleTimeString(
                         "en-US",
                         { hour: "2-digit", minute: "2-digit" }
@@ -427,61 +377,38 @@ export default function HistoryTable({
                 </div>
                 {/* Detection Results Section */}
                 <div className="border border-[#D7D1C9] rounded-md p-3 bg-[#FAF5EF]">
-                  {" "}
-                  {/* Results card */}
                   <div className="text-xs font-bold text-[#6D2932] border-b border-[#99B19C] pb-1 mb-1">
                     🩸 Detection Results
-                  </div>{" "}
-                  {/* Title */}
+                  </div>
                   <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
-                    {" "}
-                    {/* Row */}
                     <span className="font-bold text-[#6D2932] min-w-[80px]">
                       Blood Type:
-                    </span>{" "}
-                    {/* Label */}
+                    </span>
                     <span className="font-bold text-[#800000] text-base break-words max-w-[calc(100%-100px)]">
-                      {" "}
-                      {/* Value */}
                       {selectedDetection.bloodGroup}
                     </span>
                   </div>
                   <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
-                    {" "}
-                    {/* Row */}
                     <span className="font-bold text-[#6D2932] min-w-[70px]">
                       Confidence:
-                    </span>{" "}
-                    {/* Label */}
+                    </span>
                     <span className="font-bold text-green-600 text-xs break-words max-w-[calc(100%-80px)]">
-                      {" "}
-                      {/* Value */}
                       {selectedDetection.confidence || 0}%
                     </span>
                   </div>
                   <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
-                    {" "}
-                    {/* Row */}
                     <span className="font-bold text-[#6D2932] min-w-[70px]">
                       Image Quality:
-                    </span>{" "}
-                    {/* Label */}
+                    </span>
                     <span className="font-bold text-purple-600 text-xs break-words max-w-[calc(100%-80px)]">
-                      {" "}
-                      {/* Value */}
                       {selectedDetection.imageQuality || 0}/100
                     </span>
                   </div>
                   <div className="flex justify-between text-xs py-1 border-b border-dotted border-[#D7D1C9]">
-                    {" "}
-                    {/* Row */}
                     <span className="font-bold text-[#6D2932] min-w-[70px]">
                       Processing:
-                    </span>{" "}
-                    {/* Label */}
+                    </span>
                     <span className="font-bold text-blue-600 text-xs break-words max-w-[calc(100%-80px)]">
-                      {" "}
-                      {/* Value */}
                       {selectedDetection.processingTime || 0}ms
                     </span>
                   </div>
@@ -489,24 +416,19 @@ export default function HistoryTable({
               </div>
               {/* Image Section */}
               <div className="border border-[#D7D1C9] rounded-md p-3 mb-3 text-center">
-                {" "}
-                {/* Image card */}
                 <div className="text-xs font-bold text-[#6D2932] border-b border-[#99B19C] pb-1 mb-3">
                   🔎 Fingerprint Image
-                </div>{" "}
-                {/* Title */}
+                </div>
                 <div className="flex justify-center">
-                  {" "}
-                  {/* Center content */}
                   {selectedDetection.filename && !imageError ? (
                     <img
                       src={`http://localhost:8080/uploads/${selectedDetection.filename}`}
                       alt="Fingerprint"
-                      className="h-48 object-contain rounded-xl border border-[#99B19C]/40 shadow"
+                      className="h-40 sm:h-48 object-contain rounded-xl border border-[#99B19C]/40 shadow max-w-full"
                       onError={() => setImageError(true)}
                     />
                   ) : (
-                    <div className="flex items-center justify-center h-48 w-64 border-2 border-dashed border-[#D7D1C9] rounded-xl bg-[#FAF5EF] text-[#6D2932]">
+                    <div className="flex items-center justify-center h-40 sm:h-48 w-48 sm:w-64 border-2 border-dashed border-[#D7D1C9] rounded-xl bg-[#FAF5EF] text-[#6D2932]">
                       <div className="text-center">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -532,23 +454,13 @@ export default function HistoryTable({
               </div>
               {/* Report Information */}
               <div className="border border-[#D7D1C9] rounded-md p-3 bg-[#e9ecef] mb-3">
-                {" "}
-                {/* Info card */}
                 <div className="text-xs font-bold text-[#6D2932] border-b border-[#99B19C] pb-1 mb-1">
                   ℹ️ Report Information
-                </div>{" "}
-                {/* Title */}
+                </div>
                 <div className="text-xs">
-                  {" "}
-                  {/* Text */}
                   <p className="mb-1">
-                    {" "}
-                    {/* Line */}
-                    <strong className="text-[#6D2932]">Generated:</strong>{" "}
-                    {/* Label */}
+                    <strong className="text-[#6D2932]">Generated:</strong>
                     <span className="text-[#495057] font-medium break-words">
-                      {" "}
-                      {/* Value */}
                       {new Date().toLocaleDateString("en-US", {
                         month: "short",
                         day: "numeric",
@@ -561,29 +473,19 @@ export default function HistoryTable({
                         })}
                     </span>
                     {" | "}
-                    <strong className="text-[#6D2932]">System:</strong>{" "}
-                    {/* Label */}
+                    <strong className="text-[#6D2932]">System:</strong>
                     <span className="text-[#495057] font-medium break-words">
-                      {" "}
-                      {/* Value */}
                       Bindu AI v1.0.0
                     </span>
                   </p>
                   <p className="mb-0.5">
-                    {" "}
-                    {/* Line */}
-                    <strong className="text-[#6D2932]">Accuracy:</strong>{" "}
-                    {/* Label */}
+                    <strong className="text-[#6D2932]">Accuracy:</strong>
                     <span className="text-green-600 font-medium break-words">
-                      {" "}
-                      {/* Value */}
                       94.88%
-                    </span>{" "}
-                    | <strong className="text-[#6D2932]">Note:</strong>{" "}
-                    {/* Separator + Label */}
+                    </span>
+                    {" | "}
+                    <strong className="text-[#6D2932]">Note:</strong>
                     <span className="text-[#495057] font-medium break-words">
-                      {" "}
-                      {/* Value */}
                       AI-generated results for informational purposes only.
                     </span>
                   </p>
@@ -591,29 +493,21 @@ export default function HistoryTable({
               </div>
               {/* Footer */}
               <div className="text-center border-t border-[#D7D1C9] pt-1 text-[10px] text-gray-600 mt-1">
-                {" "}
-                {/* Footer */}
                 <p>
                   <strong>Disclaimer:</strong> For informational purposes only.
                   Consult medical professionals for clinical decisions.
-                </p>{" "}
-                {/* Disclaimer */}
+                </p>
                 <p>
                   © {new Date().getFullYear()} Bindu - AI-Powered Blood Group
                   Detection System
-                </p>{" "}
-                {/* Copyright */}
+                </p>
               </div>
               {/* Download Button */}
               <div className="flex justify-center mt-2">
-                {" "}
-                {/* Button wrapper */}
                 <button
                   onClick={() => handleDownloadReport(selectedDetection)}
                   className="px-3 py-1 rounded-full bg-[#6D2932] text-[#FAF5EF] font-medium transition-all duration-300 border border-[#6D2932] hover:scale-105 hover:shadow-lg text-xs"
                 >
-                  {" "}
-                  {/* Button */}
                   📝 Download PDF Report
                 </button>
               </div>

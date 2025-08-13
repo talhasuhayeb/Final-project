@@ -106,7 +106,7 @@ export default function DetectionPanel({
             className={`px-5 py-2 rounded-full font-bold transition-all duration-300 border-2 focus:outline-none focus:ring-2 focus:ring-[#99B19C]/50 text-xs sm:text-sm ${
               !selectedImageFile || isUploaded
                 ? "bg-gray-300 text-gray-400 border-gray-300 cursor-not-allowed"
-                : "bg-[#99B19C] text-[#6D2932] border-[#99B19C] hover:bg-[#6D2932] hover:text-[#FAF5EF] hover:border-[#6D2932]"
+                : "bg-[#C7B7A3] text-[#6D2932] border-[#C7B7A3] hover:bg-[#6D2932] hover:text-[#FAF5EF] hover:border-[#6D2932]"
             }`} // Conditional styling
           >
             {isUploaded ? "Uploaded ✓" : "Upload"} {/* Dynamic label */}
@@ -117,7 +117,7 @@ export default function DetectionPanel({
             className={`px-5 py-2 rounded-full font-bold transition-all duration-300 border-2 focus:outline-none focus:ring-2 focus:ring-[#99B19C]/50 text-xs sm:text-sm ${
               !isUploaded
                 ? "bg-gray-300 text-gray-400 border-gray-300 cursor-not-allowed"
-                : "bg-[#6D2932] text-[#FAF5EF] border-[#6D2932] hover:bg-[#99B19C] hover:text-[#6D2932] hover:border-[#99B19C]"
+                : "bg-[#C7B7A3] text-[#6D2932] border-[#C7B7A3] hover:bg-[#6D2932] hover:text-[#FAF5EF] hover:border-[#6D2932]"
             }`} // Conditional styling
           >
             Detect {/* Detect label */}
@@ -139,7 +139,7 @@ export default function DetectionPanel({
               <table className="min-w-full bg-white/90 border border-[#99B19C]/40 rounded-xl shadow text-xs sm:text-sm">
                 {" "}
                 {/* Results table */}
-                <thead className="bg-[#99B19C] text-[#6D2932]">
+                <thead className="bg-[#C7B7A3] text-[#6D2932]">
                   {" "}
                   {/* Header row */}
                   <tr>
