@@ -24,8 +24,8 @@ export default function BloodArticles({
           <img
             src={trendingArticles[carouselIndex].image} // Current slide image
             alt={trendingArticles[carouselIndex].title} // Alt text
-            className="absolute top-0 left-0 w-full h-full object-contain transition-all duration-500 bg-white" // Image styling
-            style={{ objectFit: "contain" }} // Force contain
+            className="absolute top-0 left-0 w-full h-full object-cover transition-all duration-500 bg-white" // Image styling
+            style={{ objectFit: "cover" }} // Force contain
           />
           <div
             className="absolute bottom-0 left-0 w-full p-8 flex flex-col items-start" // Caption area
@@ -81,38 +81,31 @@ export default function BloodArticles({
         {/* Articles grid */}
         {trendingArticles.map((article) => (
           <div
-            key={article.id} // Card key
-            className="bg-white/90 rounded-xl shadow-lg border border-[#99B19C]/30 flex flex-col hover:shadow-2xl transition-shadow duration-300 overflow-hidden" // Card styling
-            style={{ minHeight: "350px", position: "relative" }} // Minimum height
+            key={article.id}
+            className="bg-white/90 rounded-xl shadow-lg border border-[#99B19C]/30 flex flex-col hover:shadow-2xl transition-shadow duration-300 overflow-hidden"
+            style={{ minHeight: "350px", position: "relative" }}
           >
+            {/* Make image fill the card top */}
             <div
               style={{ position: "relative", width: "100%", height: "200px" }}
             >
-              {" "}
-              {/* Image wrapper */}
               <img
-                src={article.image} // Card image
-                alt={article.title} // Alt text
-                className="absolute top-0 left-0 w-full h-full object-contain bg-white rounded-t-xl" // Fit image
-                style={{ objectFit: "contain" }} // Ensure contain
+                src={article.image}
+                alt={article.title}
+                className="w-full h-full object-cover bg-white rounded-t-xl"
+                style={{ objectFit: "cover" }} // Changed from contain to cover
               />
             </div>
             <div className="p-4 flex-1 flex flex-col items-center justify-between">
-              {" "}
-              {/* Text/body */}
               <h3 className="text-lg font-bold text-[#6D2932] mb-2 text-center">
-                {" "}
-                {/* Card title */}
                 {article.title}
               </h3>
               <p className="text-[#6D2932] text-xs mb-3 text-center">
-                {" "}
-                {/* Card summary */}
                 {article.summary}
               </p>
               <button
-                className="text-[#99B19C] font-semibold underline hover:text-[#6D2932] transition-colors duration-200 text-xs" // See more button
-                onClick={() => openModal(article)} // Open modal with this article
+                className="text-[#99B19C] font-semibold underline hover:text-[#6D2932] transition-colors duration-200 text-xs"
+                onClick={() => openModal(article)}
               >
                 See More
               </button>
@@ -122,14 +115,14 @@ export default function BloodArticles({
       </div>
       {/* Custom Modal for full article (no external dependency) */}
       {modalIsOpen && selectedArticle && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-2">
           {/* Modal backdrop */}
           <div
             className="absolute inset-0 bg-transparent"
             onClick={closeModal}
           ></div>
           {/* Modal body */}
-          <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-lg w-full relative z-10 animate-fade-in">
+          <div className="bg-white rounded-2xl shadow-2xl p-4 sm:p-8 max-w-lg w-full relative z-10 animate-fade-in overflow-y-auto max-h-[95vh]">
             <button
               onClick={closeModal}
               className="absolute top-3 right-3 text-[#6D2932] text-xl font-bold hover:text-[#99B19C]"
@@ -142,21 +135,23 @@ export default function BloodArticles({
                 {/* Show YouTube video if youtubeId exists, else show image */}
                 <div className="w-full flex justify-center mb-6">
                   {selectedArticle.youtubeId ? (
-                    <iframe
-                      width="320"
-                      height="180"
-                      src={`https://www.youtube.com/embed/${selectedArticle.youtubeId}`}
-                      title="YouTube video"
-                      frameBorder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                      className="rounded-xl shadow-lg"
-                    ></iframe>
+                    <div className="w-full aspect-video max-w-[480px]">
+                      <iframe
+                        width="100%"
+                        height="100%"
+                        src={`https://www.youtube.com/embed/${selectedArticle.youtubeId}`}
+                        title="YouTube video"
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        className="rounded-xl shadow-lg w-full h-full"
+                      ></iframe>
+                    </div>
                   ) : (
                     <img
                       src={selectedArticle.image}
                       alt={selectedArticle.title}
-                      className="w-64 h-64 object-contain rounded-xl shadow-lg"
+                      className="w-full max-h-64 object-contain rounded-xl shadow-lg"
                     />
                   )}
                 </div>

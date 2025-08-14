@@ -9,6 +9,7 @@ import modelAccuracy from "../../src/assets/modelAccuracy.png";
 import confusionMatrix from "../../src/assets/confusionMatrix.png";
 import article1 from "../../src/assets/article1.jpg";
 import article2 from "../../src/assets/article2.jpg";
+import article3 from "../../src/assets/article3.jpg";
 // New subcomponents
 import DashboardHeader from "../Components/Dashboard/DashboardHeader";
 import Sidebar from "../Components/Dashboard/Sidebar";
@@ -42,12 +43,12 @@ const trendingArticles = [
   },
   {
     id: 3,
-    title: "Confusion Matrix Explained",
-    image: confusionMatrix,
+    title: "Australian whose blood saved 2.4 million babies dies",
+    image: article3,
     summary:
-      "Learn how confusion matrices help evaluate the accuracy and reliability of AI models in medical diagnostics.",
+      "One of the world's most prolific blood donors - whose plasma saved the lives of more than two million babies - has died.",
     content:
-      "A confusion matrix is a tool used to assess the performance of classification models. In medical diagnostics, it shows how often predictions match actual results, highlighting strengths and weaknesses. Understanding confusion matrices helps researchers improve model accuracy and reliability for real-world applications.",
+      "James Harrison died in his sleep at a nursing home in New South Wales, Australia on 17 February, his family said on Monday. He was 88.Known in Australia as the man with the golden arm, Harrison's blood contained a rare antibody, Anti-D, which is used to make medication given to pregnant mothers whose blood is at risk of attacking their unborn babies.He started donating his blood plasma when he was 18 and continued doing so every two weeks until he was 81.In 2005, he had the world record for most blood plasma donated - a title he held until 2022 when he was overtaken by a man in the US.",
   },
 ];
 
