@@ -4,6 +4,7 @@ import Footer from "../Components/Footer/Footer";
 import { useNavigate } from "react-router-dom";
 import logo from "../../src/assets/logo.png";
 import { ToastContainer, toast } from "react-toastify";
+import { fetchWithBlockCheck } from "../utils";
 import heroPic3 from "../../src/assets/distribution.png";
 import modelAccuracy from "../../src/assets/modelAccuracy.png";
 import confusionMatrix from "../../src/assets/confusionMatrix.png";
@@ -94,10 +95,14 @@ export default function Dashboard() {
       // Fetch user phone number from backend
       const token = localStorage.getItem("token");
       if (token) {
-        fetch("http://localhost:8080/auth/me", {
-          method: "GET",
-          headers: { Authorization: `Bearer ${token}` },
-        })
+        fetchWithBlockCheck(
+          "http://localhost:8080/auth/me",
+          {
+            method: "GET",
+            headers: { Authorization: `Bearer ${token}` },
+          },
+          navigate
+        )
           .then((res) => res.json())
           .then((data) => {
             if (data && data.phone) setPhoneNumber(data.phone);
@@ -120,10 +125,14 @@ export default function Dashboard() {
             });
 
             // Fetch detection history
-            return fetch("http://localhost:8080/auth/detection-history", {
-              method: "GET",
-              headers: { Authorization: `Bearer ${token}` },
-            });
+            return fetchWithBlockCheck(
+              "http://localhost:8080/auth/detection-history",
+              {
+                method: "GET",
+                headers: { Authorization: `Bearer ${token}` },
+              },
+              navigate
+            );
           })
           .then((res) => {
             if (!res.ok) {
@@ -205,7 +214,7 @@ export default function Dashboard() {
       const response = await fetch("http://localhost:5000/predict", {
         method: "POST",
         body: formData,
-      });
+      }); // ML server, not auth-protected
 
       const result = await response.json();
 
@@ -225,7 +234,7 @@ export default function Dashboard() {
         const token = localStorage.getItem("token");
         if (token && result.filename) {
           try {
-            const response = await fetch(
+            const response = await fetchWithBlockCheck(
               "http://localhost:8080/auth/update-fingerprint",
               {
                 method: "POST",
@@ -241,17 +250,19 @@ export default function Dashboard() {
                   processingTime: result.processing_time,
                   timestamp: result.timestamp,
                 }),
-              }
+              },
+              navigate
             );
 
             // Refresh detection history to get the updated records with IDs
-            const historyResponse = await fetch(
+            const historyResponse = await fetchWithBlockCheck(
               "http://localhost:8080/auth/detection-history",
               {
                 headers: {
                   Authorization: `Bearer ${token}`,
                 },
-              }
+              },
+              navigate
             );
 
             if (historyResponse.ok) {
@@ -272,16 +283,20 @@ export default function Dashboard() {
         // Send SMS to user if checkbox is checked
         if (sendSMSChecked && phoneNumber) {
           try {
-            const smsRes = await fetch("http://localhost:8080/send-sms", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                phoneNumber,
-                bloodGroup: result.predicted_label,
-                confidence: result.confidence_percentage,
-                timestamp: result.timestamp,
-              }),
-            });
+            const smsRes = await fetchWithBlockCheck(
+              "http://localhost:8080/send-sms",
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  phoneNumber,
+                  bloodGroup: result.predicted_label,
+                  confidence: result.confidence_percentage,
+                  timestamp: result.timestamp,
+                }),
+              },
+              navigate
+            );
             const smsData = await smsRes.json();
             if (smsRes.ok) {
               toast.success("Prediction sent to your phone!", {
@@ -305,7 +320,7 @@ export default function Dashboard() {
         // Send Email if checkbox is checked
         if (sendEmailChecked && userEmail) {
           try {
-            const emailRes = await fetch(
+            const emailRes = await fetchWithBlockCheck(
               "http://localhost:8080/auth/send-prediction-email",
               {
                 method: "POST",
@@ -319,7 +334,8 @@ export default function Dashboard() {
                   imageQuality: result.image_quality_score,
                   timestamp: result.timestamp,
                 }),
-              }
+              },
+              navigate
             );
             const emailData = await emailRes.json();
             if (emailRes.ok) {

@@ -25,3 +25,4 @@ dist-ssr
 .env
 
 Backend/Ml_server/model.h5
+.vercel

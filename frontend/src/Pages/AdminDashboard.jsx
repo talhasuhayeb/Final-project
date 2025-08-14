@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import { fetchWithBlockCheck } from "../utils";
 import "react-toastify/dist/ReactToastify.css";
 import logo from "../assets/logo.png";
 // Import new subcomponents
@@ -65,9 +66,11 @@ const AdminDashboard = () => {
 
   const fetchUsers = async (token) => {
     try {
-      const res = await fetch("http://localhost:8080/admin/users", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetchWithBlockCheck(
+        "http://localhost:8080/admin/users",
+        { headers: { Authorization: `Bearer ${token}` } },
+        navigate
+      );
       const data = await res.json();
       setUsers(data.users || []);
     } catch (err) {
@@ -96,9 +99,11 @@ const AdminDashboard = () => {
       console.log("Fetching detection records with URL:", url);
       console.log("Applied filters:", filters);
 
-      const res = await fetch(url, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetchWithBlockCheck(
+        url,
+        { headers: { Authorization: `Bearer ${token}` } },
+        navigate
+      );
       const data = await res.json();
 
       console.log("Detection records response:", data);
@@ -149,7 +154,7 @@ const AdminDashboard = () => {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(
+      const response = await fetchWithBlockCheck(
         `http://localhost:8080/admin/users/${userId}/block`,
         {
           method: "PATCH",
@@ -157,7 +162,8 @@ const AdminDashboard = () => {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-        }
+        },
+        navigate
       );
 
       const result = await response.json();
