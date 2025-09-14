@@ -2,25 +2,47 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 
-// Create uploads directory if it doesn't exist
-const uploadsDir = path.join(__dirname, "../uploads/profile-pictures");
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
+// Create uploads directories if they don't exist
+const profileUploadsDir = path.join(__dirname, "../uploads/profile-pictures");
+const fingerprintUploadsDir = path.join(__dirname, "../uploads/fingerprints");
+
+if (!fs.existsSync(profileUploadsDir)) {
+  fs.mkdirSync(profileUploadsDir, { recursive: true });
+}
+
+if (!fs.existsSync(fingerprintUploadsDir)) {
+  fs.mkdirSync(fingerprintUploadsDir, { recursive: true });
 }
 
 // Configure storage
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, uploadsDir);
+    // Check route to determine destination folder
+    if (req.originalUrl.includes("upload-fingerprint")) {
+      cb(null, fingerprintUploadsDir);
+    } else {
+      cb(null, profileUploadsDir);
+    }
   },
   filename: function (req, file, cb) {
     // Create unique filename with timestamp and user ID
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
     const userId = req.user?.id || "unknown";
-    cb(
-      null,
-      `profile-${userId}-${uniqueSuffix}${path.extname(file.originalname)}`
-    );
+
+    // If fingerprint upload
+    if (req.originalUrl.includes("upload-fingerprint")) {
+      cb(
+        null,
+        `fingerprint-${userId}-${uniqueSuffix}${path.extname(
+          file.originalname
+        )}`
+      );
+    } else {
+      cb(
+        null,
+        `profile-${userId}-${uniqueSuffix}${path.extname(file.originalname)}`
+      );
+    }
   },
 });
 

@@ -87,6 +87,57 @@ router.delete(
 );
 router.post("/send-prediction-email", sendPredictionEmail);
 
+// Handle fingerprint image upload from frontend
+router.post(
+  "/upload-fingerprint",
+  authenticateToken,
+  upload.single("file"),
+  async (req, res) => {
+    try {
+      const userId = req.user.id;
+
+      // If no file was uploaded
+      if (!req.file) {
+        return res.status(400).json({
+          message: "No file uploaded",
+          success: false,
+        });
+      }
+
+      // Get the file path
+      const filePath = req.file.path;
+      const filename = req.file.filename;
+
+      // Update user with new fingerprint image info
+      const user = await UserModel.findById(userId);
+      if (!user) {
+        return res.status(404).json({
+          message: "User not found",
+          success: false,
+        });
+      }
+
+      // Store the new fingerprint image path
+      user.fingerprintImage = filename;
+      await user.save();
+
+      res.json({
+        message: "Fingerprint image uploaded successfully",
+        success: true,
+        filename,
+        filePath,
+      });
+    } catch (err) {
+      console.error("Error uploading fingerprint:", err);
+      res.status(500).json({
+        message: "Error uploading fingerprint",
+        success: false,
+        error: err.message,
+      });
+    }
+  }
+);
+
 // Update user's fingerprint data
 router.post("/update-fingerprint", authenticateToken, async (req, res) => {
   try {

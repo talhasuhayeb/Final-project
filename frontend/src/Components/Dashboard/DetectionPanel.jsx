@@ -18,6 +18,7 @@ export default function DetectionPanel({
   onRemoveImage,
   onUpload,
   onDetect,
+  onCaptureByScanner,
 }) {
   const sectionVariants = {
     hidden: { opacity: 0, y: 30 },
@@ -46,27 +47,43 @@ export default function DetectionPanel({
         variants={sectionVariants}
         className="w-full"
       >
-        <input
-          type="file"
-          accept="image/*"
-          onChange={onImageChange}
-          className="file-input file-input-bordered w-full border border-[#99B19C] rounded-lg bg-white/70 text-[#6D2932] focus:border-[#6D2932] focus:outline-none"
-        />
-        {selectedImage && (
-          <div className="flex flex-col items-center gap-2">
-            <img
-              src={selectedImage}
-              alt="Preview"
-              className="max-w-full h-40 rounded-xl shadow object-contain border border-[#99B19C]/40"
+        <div className="flex flex-col gap-3">
+          <div className="flex gap-2">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={onImageChange}
+              className="file-input file-input-bordered flex-1 border border-[#99B19C] rounded-lg bg-white/70 text-[#6D2932] focus:border-[#6D2932] focus:outline-none"
             />
             <button
-              onClick={onRemoveImage}
-              className="px-4 py-1.5 rounded-full bg-red-500 hover:bg-red-600 text-white font-bold transition-all duration-300 shadow border-2 border-red-500 hover:border-red-600 text-xs"
+              onClick={onCaptureByScanner}
+              className="px-4 py-1.5 rounded-lg bg-[#6D2932] hover:bg-[#8B3A40] text-white font-bold transition-all duration-300 shadow border-2 border-[#6D2932] hover:border-[#8B3A40] whitespace-nowrap"
             >
-              Remove Image
+              Capture by Scanner
             </button>
           </div>
-        )}
+          {selectedImage && (
+            <div className="flex flex-col items-center gap-2">
+              <img
+                src={selectedImage}
+                alt="Preview"
+                className="max-w-full h-40 rounded-xl shadow object-contain border border-[#99B19C]/40"
+                onError={(e) => {
+                  console.error("Image failed to load:", e);
+                  e.target.onerror = null;
+                  e.target.src =
+                    "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2RDI5MzIiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1pbWFnZS1vZmYiPjxsaW5lIHgxPSIyIiB5MT0iMiIgeDI9IjIyIiB5Mj0iMjIiLz48cGF0aCBkPSJNMTAuNCA2SDIwYTIgMiAwIDAgMSAyIDJ2MTBhMiAyIDAgMCAxLTEgMS43MyIvPjxwYXRoIGQ9Ik00IDMuNzJBMiAyIDAgMCAwIDIgNnYxMGEyIDIgMCAwIDAgMiAyaDEyLjYiLz48cGF0aCBkPSJNMTggMTRhMiAyIDAgMSAxLTQgMCAyIDIgMCAwIDEgNCAwWiIvPjwvc3ZnPg==";
+                }}
+              />
+              <button
+                onClick={onRemoveImage}
+                className="px-4 py-1.5 rounded-full bg-red-500 hover:bg-red-600 text-white font-bold transition-all duration-300 shadow border-2 border-red-500 hover:border-red-600 text-xs"
+              >
+                Remove Image
+              </button>
+            </div>
+          )}
+        </div>
       </motion.div>
       <motion.div
         custom={2}

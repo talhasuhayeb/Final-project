@@ -8,6 +8,7 @@ const path = require("path");
 const AuthRouter = require("./Routes/AuthRouter");
 const AdminRouter = require("./Routes/AdminRouter");
 const SmsController = require("./Controllers/SmsController");
+const ScannerController = require("./Controllers/ScannerController");
 
 const PORT = process.env.PORT || 8080;
 
@@ -30,6 +31,17 @@ app.use(
 );
 
 app.post("/send-sms", SmsController.sendSms);
+
+// Scanner routes
+app.post("/create-temp-folder", ScannerController.createTempFolder);
+app.post("/launch-scanner", ScannerController.launchFingerScanner);
+app.post("/watch-fingerprint", ScannerController.watchForFingerprint);
+
+// Serve fingerprint uploads statically
+app.use(
+  "/uploads/fingerprints",
+  express.static(path.join(__dirname, "uploads/fingerprints"))
+);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

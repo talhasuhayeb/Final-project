@@ -179,15 +179,61 @@ export default function Dashboard() {
     }
   };
 
-  const handleUpload = () => {
+  const handleUpload = async () => {
     if (!selectedImageFile) {
       toast.warn("Please select an image first", { position: "top-center" });
       return;
     }
-    setIsUploaded(true);
-    toast.success("Image uploaded successfully! You can now detect.", {
-      position: "top-center",
-    });
+
+    toast.info("Uploading fingerprint image...", { position: "top-center" });
+
+    // Create a FormData object to send the file
+    const formData = new FormData();
+    formData.append("file", selectedImageFile);
+
+    try {
+      // First, upload to the backend to store the file
+      const token = localStorage.getItem("token");
+      if (!token) {
+        toast.error("Authentication required", { position: "top-center" });
+        return;
+      }
+
+      const uploadResponse = await fetchWithBlockCheck(
+        "http://localhost:8080/auth/upload-fingerprint",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        },
+        navigate
+      );
+
+      if (!uploadResponse.ok) {
+        const errorData = await uploadResponse.json();
+        toast.error(errorData.message || "Failed to upload image", {
+          position: "top-center",
+        });
+        return;
+      }
+
+      const uploadData = await uploadResponse.json();
+
+      setIsUploaded(true);
+      toast.success(
+        "Fingerprint image uploaded successfully! You can now detect.",
+        {
+          position: "top-center",
+        }
+      );
+    } catch (err) {
+      console.error("Error uploading fingerprint:", err);
+      toast.error("Error uploading fingerprint image", {
+        position: "top-center",
+      });
+    }
   };
 
   const handleRemoveImage = () => {
@@ -201,11 +247,156 @@ export default function Dashboard() {
     toast.info("Image removed", { position: "top-center" });
   };
 
+  // Function to launch ZKTeco SDK
+  const handleCaptureByScanner = async () => {
+    try {
+      // Path to ZKTeco SDK executable
+      const zkSdkPath =
+        "C:\\Users\\tamim\\Downloads\\Compressed\\zkfinger_sdk_v10.0-windows-lite-zk9500\\ZKFinger SDK V10.0-Windows-Lite\\ActiveX\\samples\\C#\\bin\\x86\\Debug\\demo.exe";
+
+      toast.info("Preparing to launch fingerprint scanner...", {
+        position: "top-center",
+      });
+
+      // Create a temporary folder for scanner images
+      try {
+        await fetch("http://localhost:8080/create-temp-folder", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ folderPath: "scanner_temp" }),
+        });
+      } catch (err) {
+        console.error("Failed to create temp folder:", err);
+      }
+
+      // Start watching for new fingerprint images
+      const token = localStorage.getItem("token");
+      if (!token) {
+        toast.error("You must be logged in to use this feature", {
+          position: "top-center",
+        });
+        return;
+      }
+
+      // Launch the fingerprint scanner SDK through the backend
+      const launchResponse = await fetch(
+        "http://localhost:8080/launch-scanner",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ sdkPath: zkSdkPath }),
+        }
+      );
+
+      if (!launchResponse.ok) {
+        const errorData = await launchResponse.json();
+        toast.error(errorData.message || "Failed to launch scanner", {
+          position: "top-center",
+        });
+        return;
+      }
+
+      toast.success(
+        "Fingerprint scanner application launched. Please follow these steps:",
+        {
+          position: "top-center",
+          autoClose: 8000,
+        }
+      );
+
+      // Show instructions to the user
+      toast.info(
+        "1. In the scanner app, click on 'Connect Sensor' to capture your fingerprint",
+        {
+          position: "top-center",
+          autoClose: 8000,
+        }
+      );
+
+      toast.info(
+        "2. Click 'Save Image' in the scanner app to save the fingerprint",
+        {
+          position: "top-center",
+          autoClose: 8000,
+        }
+      );
+
+      // Start the watcher for the fingerprint file
+      try {
+        const watchResponse = await fetchWithBlockCheck(
+          "http://localhost:8080/watch-fingerprint",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ userId: userProfile._id }),
+          },
+          navigate
+        );
+
+        if (!watchResponse.ok) {
+          const errorData = await watchResponse.json();
+          toast.error(errorData.message || "Failed to process fingerprint", {
+            position: "top-center",
+          });
+          return;
+        }
+
+        const result = await watchResponse.json();
+
+        if (result.success) {
+          // Use the base64 image for preview if available, otherwise use the URL
+          if (result.base64Image) {
+            setSelectedImage(result.base64Image);
+          } else {
+            const fullImageUrl = `http://localhost:8080${result.filePath}`;
+            setSelectedImage(fullImageUrl);
+          }
+
+          // Create a file object from the returned path
+          try {
+            const fullImageUrl = `http://localhost:8080${result.filePath}`;
+            const response = await fetch(fullImageUrl);
+            const blob = await response.blob();
+            const file = new File([blob], result.fileName, {
+              type: "image/bmp",
+            });
+            setSelectedImageFile(file);
+            setIsUploaded(true);
+
+            toast.success("Fingerprint captured and saved successfully!", {
+              position: "top-center",
+            });
+          } catch (err) {
+            console.error("Error creating file from response:", err);
+          }
+        }
+      } catch (err) {
+        console.error("Error watching for fingerprint:", err);
+        toast.error("Error processing fingerprint. Please try again.", {
+          position: "top-center",
+        });
+      }
+    } catch (err) {
+      console.error("Failed to launch scanner:", err);
+      toast.error("Failed to launch fingerprint scanner. Please try again.", {
+        position: "top-center",
+      });
+    }
+  };
+
   const handleDetect = async () => {
     if (!isUploaded || !selectedImageFile) {
       toast.warn("Please upload an image first", { position: "top-center" });
       return;
     }
+
+    // Display loading toast
+    const loadingToast = toast.loading("Processing fingerprint...", {
+      position: "top-center",
+    });
 
     const formData = new FormData();
     formData.append("file", selectedImageFile);
@@ -218,6 +409,9 @@ export default function Dashboard() {
 
       const result = await response.json();
 
+      // Dismiss loading toast
+      toast.dismiss(loadingToast);
+
       if (response.ok) {
         const newPrediction = {
           bloodGroup: result.predicted_label,
@@ -229,6 +423,10 @@ export default function Dashboard() {
         };
 
         setPredictionResults(newPrediction);
+
+        toast.success(`Blood Group detected: ${result.predicted_label}`, {
+          position: "top-center",
+        });
 
         // Save fingerprint data to user's record
         const token = localStorage.getItem("token");
@@ -362,6 +560,9 @@ export default function Dashboard() {
         });
       }
     } catch (err) {
+      // Dismiss loading toast in case of error
+      toast.dismiss(loadingToast);
+
       console.error(err);
       toast.error("Error connecting to the model server", {
         position: "top-center",
@@ -938,6 +1139,7 @@ export default function Dashboard() {
               onRemoveImage={handleRemoveImage}
               onUpload={handleUpload}
               onDetect={handleDetect}
+              onCaptureByScanner={handleCaptureByScanner}
             />
           )}
 
