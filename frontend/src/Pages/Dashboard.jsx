@@ -250,6 +250,12 @@ export default function Dashboard() {
   // Function to launch ZKTeco SDK
   const handleCaptureByScanner = async () => {
     try {
+      // Clear any previous image selection
+      setSelectedImage(null);
+      setSelectedImageFile(null);
+      setIsUploaded(false);
+      setPredictionResults(null);
+
       // Path to ZKTeco SDK executable
       const zkSdkPath =
         "C:\\Users\\tamim\\Downloads\\Compressed\\zkfinger_sdk_v10.0-windows-lite-zk9500\\ZKFinger SDK V10.0-Windows-Lite\\ActiveX\\samples\\C#\\bin\\x86\\Debug\\demo.exe";
@@ -314,7 +320,7 @@ export default function Dashboard() {
       );
 
       toast.info(
-        "2. Click 'Save Image' in the scanner app to save the fingerprint",
+        "2. Click 'Save Image' in the scanner app to save the fingerprint (wait for confirmation)",
         {
           position: "top-center",
           autoClose: 8000,

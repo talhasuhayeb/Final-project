@@ -58,6 +58,17 @@ const launchFingerScanner = async (req, res) => {
       });
     }
 
+    // Delete any existing Fingerprint.bmp file to ensure we don't use old data
+    const fingerprintPath = path.join(__dirname, "..", "Fingerprint.bmp");
+    if (fs.existsSync(fingerprintPath)) {
+      try {
+        fs.unlinkSync(fingerprintPath);
+        console.log("Deleted existing Fingerprint.bmp file");
+      } catch (err) {
+        console.error("Error deleting existing Fingerprint.bmp file:", err);
+      }
+    }
+
     // Launch the SDK
     exec(`"${sdkPath}"`, (error, stdout, stderr) => {
       if (error) {
@@ -113,6 +124,19 @@ const watchForFingerprint = async (req, res) => {
 
     const sourceFolder = path.join(__dirname, "..");
     const sourceFile = path.join(sourceFolder, "Fingerprint.bmp");
+
+    // Delete any existing Fingerprint.bmp file to ensure we don't use old data
+    if (fs.existsSync(sourceFile)) {
+      try {
+        fs.unlinkSync(sourceFile);
+        console.log(
+          "Deleted existing Fingerprint.bmp file before watching for new one"
+        );
+      } catch (err) {
+        console.error("Error deleting existing Fingerprint.bmp file:", err);
+      }
+    }
+
     const destFolder = path.join(sourceFolder, "uploads", "fingerprints");
 
     // Create destination directory if it doesn't exist
@@ -145,8 +169,20 @@ const watchForFingerprint = async (req, res) => {
     watcher.on("add", (filePath) => {
       clearTimeout(timeout);
 
-      // Copy and rename the file
-      fs.copyFile(filePath, destPath, (err) => {
+      // First rename the Fingerprint.bmp file to include analysisId
+      const tempFileName = `Fingerprint-${analysisId}.bmp`;
+      const tempFilePath = path.join(sourceFolder, tempFileName);
+
+      try {
+        // First rename the original file to prevent confusion
+        fs.renameSync(filePath, tempFilePath);
+        console.log(`Renamed source file to ${tempFileName}`);
+      } catch (renameErr) {
+        console.error("Error renaming source fingerprint file:", renameErr);
+      }
+
+      // Copy and rename the file to final destination
+      fs.copyFile(tempFilePath, destPath, (err) => {
         if (err) {
           console.error("Error copying fingerprint file:", err);
           return res.status(500).json({
@@ -162,6 +198,18 @@ const watchForFingerprint = async (req, res) => {
           .save()
           .then(() => {
             watcher.close();
+
+            // Clean up the temporary renamed file
+            const tempFileName = `Fingerprint-${analysisId}.bmp`;
+            const tempFilePath = path.join(sourceFolder, tempFileName);
+            try {
+              if (fs.existsSync(tempFilePath)) {
+                fs.unlinkSync(tempFilePath);
+                console.log(`Deleted temporary file ${tempFileName}`);
+              }
+            } catch (cleanupErr) {
+              console.error("Error cleaning up temporary file:", cleanupErr);
+            }
 
             // Read the file as a base64 string to send to the client for consistent display
             fs.readFile(destPath, (readErr, data) => {
