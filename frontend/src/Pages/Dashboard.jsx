@@ -101,7 +101,7 @@ export default function Dashboard() {
             method: "GET",
             headers: { Authorization: `Bearer ${token}` },
           },
-          navigate
+          navigate,
         )
           .then((res) => res.json())
           .then((data) => {
@@ -131,7 +131,7 @@ export default function Dashboard() {
                 method: "GET",
                 headers: { Authorization: `Bearer ${token}` },
               },
-              navigate
+              navigate,
             );
           })
           .then((res) => {
@@ -151,7 +151,10 @@ export default function Dashboard() {
             }
           })
           .catch((err) =>
-            console.error("Failed to fetch user data or detection history", err)
+            console.error(
+              "Failed to fetch user data or detection history",
+              err,
+            ),
           );
       }
     }
@@ -208,7 +211,7 @@ export default function Dashboard() {
           },
           body: formData,
         },
-        navigate
+        navigate,
       );
 
       if (!uploadResponse.ok) {
@@ -226,7 +229,7 @@ export default function Dashboard() {
         "Fingerprint image uploaded successfully! You can now detect.",
         {
           position: "top-center",
-        }
+        },
       );
     } catch (err) {
       console.error("Error uploading fingerprint:", err);
@@ -258,7 +261,7 @@ export default function Dashboard() {
 
       // Path to ZKTeco SDK executable
       const zkSdkPath =
-        "C:\\Users\\tamim\\Downloads\\Compressed\\zkfinger_sdk_v10.0-windows-lite-zk9500\\ZKFinger SDK V10.0-Windows-Lite\\ActiveX\\samples\\C#\\bin\\x86\\Debug\\demo.exe";
+        "C:\\Users\\Arko\\Documents\\GitHub\\ZKFinger Standard SDK 5.3.0.33\\ActiveX\\samples\\C#\\bin\\x86\\Debug\\demo.exe";
 
       toast.info("Preparing to launch fingerprint scanner...", {
         position: "top-center",
@@ -291,7 +294,7 @@ export default function Dashboard() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ sdkPath: zkSdkPath }),
-        }
+        },
       );
 
       if (!launchResponse.ok) {
@@ -307,7 +310,7 @@ export default function Dashboard() {
         {
           position: "top-center",
           autoClose: 8000,
-        }
+        },
       );
 
       // Show instructions to the user
@@ -316,7 +319,7 @@ export default function Dashboard() {
         {
           position: "top-center",
           autoClose: 8000,
-        }
+        },
       );
 
       toast.info(
@@ -324,7 +327,7 @@ export default function Dashboard() {
         {
           position: "top-center",
           autoClose: 8000,
-        }
+        },
       );
 
       // Start the watcher for the fingerprint file
@@ -339,7 +342,7 @@ export default function Dashboard() {
             },
             body: JSON.stringify({ userId: userProfile._id }),
           },
-          navigate
+          navigate,
         );
 
         if (!watchResponse.ok) {
@@ -455,7 +458,7 @@ export default function Dashboard() {
                   timestamp: result.timestamp,
                 }),
               },
-              navigate
+              navigate,
             );
 
             // Refresh detection history to get the updated records with IDs
@@ -466,7 +469,7 @@ export default function Dashboard() {
                   Authorization: `Bearer ${token}`,
                 },
               },
-              navigate
+              navigate,
             );
 
             if (historyResponse.ok) {
@@ -499,7 +502,7 @@ export default function Dashboard() {
                   timestamp: result.timestamp,
                 }),
               },
-              navigate
+              navigate,
             );
             const smsData = await smsRes.json();
             if (smsRes.ok) {
@@ -539,7 +542,7 @@ export default function Dashboard() {
                   timestamp: result.timestamp,
                 }),
               },
-              navigate
+              navigate,
             );
             const emailData = await emailRes.json();
             if (emailRes.ok) {
@@ -650,7 +653,7 @@ export default function Dashboard() {
             // Don't set Content-Type header - let browser set it for FormData
           },
           body: formData,
-        }
+        },
       );
 
       const result = await response.json();
@@ -700,7 +703,7 @@ export default function Dashboard() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       const result = await response.json();
@@ -944,7 +947,7 @@ export default function Dashboard() {
                         year: "numeric",
                         month: "long",
                         day: "numeric",
-                      }
+                      },
                     )
                   : "N/A"
               }</span>
@@ -965,7 +968,7 @@ export default function Dashboard() {
             <div class="info-item">
               <span class="info-label">Date:</span>
               <span class="info-value">${new Date(
-                detection.timestamp
+                detection.timestamp,
               ).toLocaleDateString("en-US", {
                 month: "short",
                 day: "numeric",
@@ -975,7 +978,7 @@ export default function Dashboard() {
             <div class="info-item">
               <span class="info-label">Time:</span>
               <span class="info-value">${new Date(
-                detection.timestamp
+                detection.timestamp,
               ).toLocaleTimeString("en-US", {
                 hour: "2-digit",
                 minute: "2-digit",
@@ -1046,7 +1049,7 @@ export default function Dashboard() {
                 minute: "2-digit",
                 second: "2-digit",
                 timeZoneName: "short",
-              }
+              },
             )}</p>
             <p><strong>System:</strong> Bindu AI v1.0.0 | <strong>Accuracy:</strong> 94.88%</p>
             <p><strong>Note:</strong> AI-generated results for informational purposes only.</p>
