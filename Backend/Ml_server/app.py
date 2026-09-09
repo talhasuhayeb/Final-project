@@ -14,7 +14,7 @@ import base64
 
 app = Flask(__name__)
 CORS(app, origins=["http://localhost:5173"])
-MODEL_PATH = "/app/model/model.h5"
+MODEL_PATH = "/app/model.h5"
 
 print("MODEL PATH:", os.path.abspath(MODEL_PATH))
 print("MODEL EXISTS:", os.path.exists(MODEL_PATH))
