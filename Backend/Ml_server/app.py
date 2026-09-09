@@ -14,8 +14,19 @@ import base64
 
 app = Flask(__name__)
 CORS(app, origins=["http://localhost:5173"])
+MODEL_PATH = "model.h5"
 
-model = tf.keras.models.load_model('model.h5')
+print("MODEL PATH:", os.path.abspath(MODEL_PATH))
+print("MODEL EXISTS:", os.path.exists(MODEL_PATH))
+
+if os.path.exists(MODEL_PATH):
+    print("MODEL SIZE:", os.path.getsize(MODEL_PATH))
+
+    with open(MODEL_PATH, "rb") as f:
+        print("MODEL HEADER:", f.read(8))
+
+model = tf.keras.models.load_model(MODEL_PATH)
+#model = tf.keras.models.load_model('model.h5')
 print("Model loaded successfully")
 model.summary()
 
