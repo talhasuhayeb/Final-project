@@ -419,21 +419,60 @@ export default function Dashboard() {
     }
 
     // Display loading toast
-    const loadingToast = toast.loading("Processing fingerprint...", {
+    const loadingToast = toast.loading("Waking up ML server...", {
       position: "top-center",
     });
 
-    // Notify user if server takes a few seconds (typical for Render free-tier cold starts)
-    const coldStartTimer = setTimeout(() => {
-      toast.update(loadingToast, {
-        render: "Contacting model server... (Render free-tier cold start may take 30-60s)",
-        type: "info",
-        isLoading: true,
-      });
-    }, 4500);
+    // --- Step 1: Wake-up ping to handle Render free-tier cold starts ---
+    // Ping the health endpoint first so the server spins up before we send the file
+    try {
+      const wakeController = new AbortController();
+      const wakeTimeout = setTimeout(() => wakeController.abort(), 180000); // 3 min for wake-up
+
+      // Progressive feedback during cold start
+      const wakeTimer1 = setTimeout(() => {
+        toast.update(loadingToast, {
+          render: "ML server is starting up... (Render free-tier cold start, please wait ~60s)",
+          type: "info",
+          isLoading: true,
+        });
+      }, 5000);
+
+      const wakeTimer2 = setTimeout(() => {
+        toast.update(loadingToast, {
+          render: "Still waking up... loading TensorFlow model (~30-90s remaining)",
+          type: "info",
+          isLoading: true,
+        });
+      }, 30000);
+
+      const wakeTimer3 = setTimeout(() => {
+        toast.update(loadingToast, {
+          render: "Almost there... model is warming up, hang tight!",
+          type: "info",
+          isLoading: true,
+        });
+      }, 60000);
+
+      await fetch(`${ML_API_URL}/`, { signal: wakeController.signal });
+      clearTimeout(wakeTimeout);
+      clearTimeout(wakeTimer1);
+      clearTimeout(wakeTimer2);
+      clearTimeout(wakeTimer3);
+    } catch (wakeErr) {
+      // If the wake-up ping itself timed out or failed, warn but still try the predict call
+      console.warn("Wake-up ping failed (will still attempt prediction):", wakeErr);
+    }
+
+    // --- Step 2: Send the actual prediction request ---
+    toast.update(loadingToast, {
+      render: "Server is ready! Analyzing fingerprint...",
+      type: "info",
+      isLoading: true,
+    });
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 120000); // 2 minute timeout
+    const timeoutId = setTimeout(() => controller.abort(), 240000); // 4 minute timeout for prediction
 
     const formData = new FormData();
     formData.append("file", selectedImageFile);
@@ -445,7 +484,6 @@ export default function Dashboard() {
         signal: controller.signal,
       }); // ML server, not auth-protected
 
-      clearTimeout(coldStartTimer);
       clearTimeout(timeoutId);
 
       if (!response.ok) {
@@ -610,15 +648,14 @@ export default function Dashboard() {
         }
       }
     } catch (err) {
-      clearTimeout(coldStartTimer);
       clearTimeout(timeoutId);
       toast.dismiss(loadingToast);
 
       console.error("Detection error:", err);
       if (err.name === "AbortError") {
         toast.error(
-          "Request timed out. The ML server on Render took too long to respond (possible free-tier cold start timeout).",
-          { position: "top-center", autoClose: 7000 }
+          "Request timed out after 4 minutes. The ML server may still be starting. Please wait a moment and try again.",
+          { position: "top-center", autoClose: 9000 }
         );
       } else {
         toast.error(
