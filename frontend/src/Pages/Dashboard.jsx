@@ -15,6 +15,8 @@ import article3 from "../../src/assets/article3.jpg";
 import DashboardHeader from "../Components/Dashboard/DashboardHeader";
 import Sidebar from "../Components/Dashboard/Sidebar";
 import DetectionPanel from "../Components/Dashboard/DetectionPanel";
+
+const ML_API_URL = import.meta.env.VITE_ML_API_URL || "http://localhost:5000";
 import ProfilePanel from "../Components/Dashboard/ProfilePanel";
 import MethodologySection from "../Components/Dashboard/MethodologySection";
 import BloodArticles from "../Components/Dashboard/BloodArticles";
@@ -411,7 +413,7 @@ export default function Dashboard() {
     formData.append("file", selectedImageFile);
 
     try {
-      const response = await fetch("http://localhost:5000/predict", {
+      const response = await fetch(`${ML_API_URL}/predict`, {
         method: "POST",
         body: formData,
       }); // ML server, not auth-protected
