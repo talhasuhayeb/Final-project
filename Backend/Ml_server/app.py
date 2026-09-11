@@ -1,54 +1,76 @@
 import os
-# Configure TensorFlow to run strictly on CPU and suppress CUDA/GPU warnings & errors on Render
-os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
-os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
+# Suppress unnecessary warnings
 os.environ["PYTHONUNBUFFERED"] = "1"
 
 from flask import Flask, request, jsonify
 import numpy as np
-import tensorflow as tf
 import cv2
-import ssl
 import time
 from datetime import datetime
 from werkzeug.utils import secure_filename
-from tensorflow.keras.preprocessing.image import load_img, img_to_array
+from PIL import Image
 from flask_cors import CORS
+
+# Use lightweight LiteRT/TFLite interpreter instead of full tensorflow
+try:
+    from ai_edge_litert.interpreter import Interpreter as LiteInterpreter
+    print("Using ai-edge-litert (LiteRT)", flush=True)
+    _USE_LITERT = True
+except ImportError:
+    try:
+        import tflite_runtime.interpreter as tflite_mod
+        LiteInterpreter = tflite_mod.Interpreter
+        print("Using tflite-runtime", flush=True)
+        _USE_LITERT = True
+    except ImportError:
+        # Fallback: use tf.lite if neither litert nor tflite_runtime available (e.g. local dev)
+        import tensorflow as tf
+        LiteInterpreter = tf.lite.Interpreter
+        print("Using tensorflow.lite fallback", flush=True)
+        _USE_LITERT = True
+
 
 app = Flask(__name__)
 
 # Allow cross-origin requests from any origin (e.g. deployed frontend or local dev)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-ssl._create_default_https_context = ssl._create_unverified_context
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = os.path.join(BASE_DIR, "uploads")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-MODEL_PATH = os.path.join(BASE_DIR, "model.h5")
+MODEL_PATH = os.path.join(BASE_DIR, "model.tflite")
 
 print("MODEL PATH:", MODEL_PATH, flush=True)
 print("MODEL EXISTS:", os.path.exists(MODEL_PATH), flush=True)
 
-_model = None
+_interpreter = None
+_input_details = None
+_output_details = None
 
-def get_model():
-    """Load and warm up model safely inside the process to avoid fork deadlocks."""
-    global _model
-    if _model is None:
-        print("Loading model from disk...", flush=True)
-        _model = tf.keras.models.load_model(MODEL_PATH)
-        print("Warming up model graph...", flush=True)
+def get_interpreter():
+    """Load TFLite interpreter and warm it up."""
+    global _interpreter, _input_details, _output_details
+    if _interpreter is None:
+        print("Loading TFLite model from disk...", flush=True)
+        _interpreter = LiteInterpreter(model_path=MODEL_PATH)
+        _interpreter.allocate_tensors()
+        _input_details = _interpreter.get_input_details()
+        _output_details = _interpreter.get_output_details()
+        print(f"  Input shape: {_input_details[0]['shape']}", flush=True)
+        print(f"  Output shape: {_output_details[0]['shape']}", flush=True)
+
+        # Warm up with a dummy inference
+        print("Warming up model...", flush=True)
         dummy = np.zeros((1, 64, 64, 3), dtype=np.float32)
-        # Fast direct execution avoids model.predict() thread/iterator deadlocks in WSGI
-        _ = _model(dummy, training=False)
+        _interpreter.set_tensor(_input_details[0]['index'], dummy)
+        _interpreter.invoke()
         print("Model loaded and warmed up successfully!", flush=True)
-    return _model
+    return _interpreter, _input_details, _output_details
 
 # Pre-warm model on startup so port opens with model ready
 try:
-    get_model()
+    get_interpreter()
 except Exception as e:
     print(f"Warning: Initial model load failed: {e}", flush=True)
 
@@ -58,8 +80,8 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def preprocess_image(image_path):
-    img = load_img(image_path, target_size=(64, 64))
-    img_array = img_to_array(img)
+    img = Image.open(image_path).resize((64, 64))
+    img_array = np.array(img, dtype=np.float32)
     img_array = np.expand_dims(img_array, axis=0)
     return img_array
 
@@ -87,7 +109,7 @@ def calculate_image_quality(image_path):
 def home():
     return jsonify({
         'status': 'success',
-        'message': 'Blood Detection ML Server is running'
+        'message': 'Blood Detection ML Server is running (TFLite)'
     })
 
 
@@ -125,8 +147,10 @@ def predict():
         img = preprocess_image(file_path)
         print("Image preprocessed, running model inference...", flush=True)
 
-        model = get_model()
-        raw_predictions = model(img, training=False).numpy()
+        interpreter, input_details, output_details = get_interpreter()
+        interpreter.set_tensor(input_details[0]['index'], img)
+        interpreter.invoke()
+        raw_predictions = interpreter.get_tensor(output_details[0]['index'])
         print("Inference completed successfully!", flush=True)
 
         predicted_class = int(np.argmax(raw_predictions[0]))
@@ -179,4 +203,3 @@ if __name__ == '__main__':
         port=int(os.environ.get('PORT', 5000)),
         debug=False
     )
-
