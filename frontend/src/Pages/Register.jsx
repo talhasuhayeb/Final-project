@@ -38,7 +38,7 @@ const Register = () => {
       return;
     }
     try {
-      const url = "http://localhost:8080/auth/register";
+      const url = "https://bindu-backend.onrender.com/auth/register";
       const response = await fetch(url, {
         method: "POST",
         headers: {

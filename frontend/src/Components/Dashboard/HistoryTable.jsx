@@ -106,14 +106,14 @@ export default function HistoryTable({
                         {/* Center image */}
                         {detection.filename ? ( // If we have a filename
                           <img
-                            src={`http://localhost:8080/uploads/${detection.filename}`} // Static served image
+                            src={`https://bindu-backend.onrender.com/uploads/${detection.filename}`} // Static served image
                             alt="Fingerprint" // Alt text
                             className="w-12 h-12 object-cover rounded-xl border border-[#99B19C]/40 shadow" // Thumb style
                             onError={(e) => {
                               // Fallback on error
                               console.log(
                                 "Fingerprint image failed to load:",
-                                e.target.src
+                                e.target.src,
                               ); // Log
                               e.target.onerror = null; // Prevent loop
                               e.target.src =
@@ -329,7 +329,7 @@ export default function HistoryTable({
                       {userProfile.dateOfBirth
                         ? new Date(userProfile.dateOfBirth).toLocaleDateString(
                             "en-US",
-                            { year: "numeric", month: "short", day: "2-digit" }
+                            { year: "numeric", month: "short", day: "2-digit" },
                           )
                         : "N/A"}
                     </span>
@@ -359,7 +359,7 @@ export default function HistoryTable({
                     <span className="text-[#99B19C] font-medium break-words max-w-[calc(100%-80px)]">
                       {new Date(selectedDetection.timestamp).toLocaleDateString(
                         "en-US",
-                        { month: "short", day: "numeric", year: "numeric" }
+                        { month: "short", day: "numeric", year: "numeric" },
                       )}
                     </span>
                   </div>
@@ -370,7 +370,7 @@ export default function HistoryTable({
                     <span className="text-[#99B19C] font-medium break-words max-w-[calc(100%-80px)]">
                       {new Date(selectedDetection.timestamp).toLocaleTimeString(
                         "en-US",
-                        { hour: "2-digit", minute: "2-digit" }
+                        { hour: "2-digit", minute: "2-digit" },
                       )}
                     </span>
                   </div>
@@ -422,7 +422,7 @@ export default function HistoryTable({
                 <div className="flex justify-center">
                   {selectedDetection.filename && !imageError ? (
                     <img
-                      src={`http://localhost:8080/uploads/${selectedDetection.filename}`}
+                      src={`https://bindu-backend.onrender.com/uploads/${selectedDetection.filename}`}
                       alt="Fingerprint"
                       className="h-40 sm:h-48 object-contain rounded-xl border border-[#99B19C]/40 shadow max-w-full"
                       onError={() => setImageError(true)}
@@ -514,7 +514,7 @@ export default function HistoryTable({
             </div>
           </div>
         ) : null,
-        document.getElementById("modal-root")
+        document.getElementById("modal-root"),
       )}
     </div>
   );

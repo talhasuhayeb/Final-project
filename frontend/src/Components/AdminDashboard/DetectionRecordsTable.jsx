@@ -85,7 +85,7 @@ export default function DetectionRecordsTable({
                     {" "}
                     {/* Center image */}
                     <img
-                      src={`http://localhost:8080/uploads/${record.filename}`}
+                      src={`https://bindu-backend.onrender.com/uploads/${record.filename}`}
                       alt="Fingerprint"
                       className="w-12 h-12 object-cover rounded-xl border border-[#99B19C]/40 shadow"
                       onError={(e) => {
@@ -150,7 +150,7 @@ export default function DetectionRecordsTable({
                       onClick={() =>
                         handleDeleteDetectionRecord(
                           record._id || record.analysis_id,
-                          record.timestamp
+                          record.timestamp,
                         )
                       } // Delete record
                       className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 flex items-center justify-center shadow border-2 border-red-500 hover:border-red-600"

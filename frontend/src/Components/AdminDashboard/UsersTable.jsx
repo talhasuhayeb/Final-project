@@ -77,14 +77,14 @@ export default function UsersTable({
                       {" "}
                       {/* Center image */}
                       <img
-                        src={`http://localhost:8080${user.profilePicture}`}
+                        src={`https://bindu-backend.onrender.com${user.profilePicture}`}
                         alt="Profile"
                         className="w-12 h-12 rounded-xl object-cover border border-[#99B19C]/40 shadow"
                         onError={(e) => {
                           // Fallback to avatar service
                           e.target.onerror = null;
                           e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                            user.name
+                            user.name,
                           )}&background=C7B7A3&color=561C24&size=100`;
                         }}
                       />
@@ -128,7 +128,7 @@ export default function UsersTable({
                         handleToggleBlockUser(
                           user._id,
                           user.name,
-                          user.isBlocked
+                          user.isBlocked,
                         )
                       } // Block/Unblock
                       className={`p-2 rounded-full text-white text-xs sm:text-sm font-bold transition-all duration-300 flex items-center justify-center shadow ${

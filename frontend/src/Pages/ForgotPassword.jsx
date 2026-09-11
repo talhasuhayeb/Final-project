@@ -33,7 +33,7 @@ const ForgotPassword = () => {
     setIsLoading(true);
 
     try {
-      const url = "http://localhost:8080/auth/forgot-password";
+      const url = "https://bindu-backend.onrender.com/auth/forgot-password";
       const response = await fetch(url, {
         method: "POST",
         headers: {
