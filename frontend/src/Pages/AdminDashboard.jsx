@@ -67,9 +67,9 @@ const AdminDashboard = () => {
   const fetchUsers = async (token) => {
     try {
       const res = await fetchWithBlockCheck(
-        "http://localhost:8080/admin/users",
+        "https://bindu-backend.onrender.com/admin/users",
         { headers: { Authorization: `Bearer ${token}` } },
-        navigate
+        navigate,
       );
       const data = await res.json();
       setUsers(data.users || []);
@@ -94,7 +94,7 @@ const AdminDashboard = () => {
       if (filters.endDate) queryParams.append("endDate", filters.endDate);
       if (filters.search) queryParams.append("search", filters.search);
 
-      const url = `http://localhost:8080/admin/detection-records?${queryParams.toString()}`;
+      const url = `https://bindu-backend.onrender.com/admin/detection-records?${queryParams.toString()}`;
 
       console.log("Fetching detection records with URL:", url);
       console.log("Applied filters:", filters);
@@ -102,7 +102,7 @@ const AdminDashboard = () => {
       const res = await fetchWithBlockCheck(
         url,
         { headers: { Authorization: `Bearer ${token}` } },
-        navigate
+        navigate,
       );
       const data = await res.json();
 
@@ -155,7 +155,7 @@ const AdminDashboard = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await fetchWithBlockCheck(
-        `http://localhost:8080/admin/users/${userId}/block`,
+        `https://bindu-backend.onrender.com/admin/users/${userId}/block`,
         {
           method: "PATCH",
           headers: {
@@ -163,7 +163,7 @@ const AdminDashboard = () => {
             "Content-Type": "application/json",
           },
         },
-        navigate
+        navigate,
       );
 
       const result = await response.json();
@@ -187,7 +187,7 @@ const AdminDashboard = () => {
   const handleChangeRole = async (userId, userName, newRole) => {
     if (
       !window.confirm(
-        `Are you sure you want to change "${userName}"'s role to ${newRole}?`
+        `Are you sure you want to change "${userName}"'s role to ${newRole}?`,
       )
     ) {
       return;
@@ -196,7 +196,7 @@ const AdminDashboard = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        `http://localhost:8080/admin/users/${userId}/role`,
+        `https://bindu-backend.onrender.com/admin/users/${userId}/role`,
         {
           method: "PATCH",
           headers: {
@@ -204,7 +204,7 @@ const AdminDashboard = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ role: newRole }),
-        }
+        },
       );
 
       const result = await response.json();
@@ -214,7 +214,7 @@ const AdminDashboard = () => {
           `Changed "${userName}"'s role to ${newRole} successfully`,
           {
             position: "top-center",
-          }
+          },
         );
         // Refresh the users list
         fetchUsers(token);
@@ -255,14 +255,17 @@ const AdminDashboard = () => {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:8080/admin/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      const response = await fetch(
+        "https://bindu-backend.onrender.com/admin/users",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(newUser),
         },
-        body: JSON.stringify(newUser),
-      });
+      );
 
       const result = await response.json();
 
@@ -333,7 +336,7 @@ const AdminDashboard = () => {
   const handleDeleteUser = async (userId, userName) => {
     if (
       !window.confirm(
-        `Are you sure you want to delete user "${userName}"? This action cannot be undone.`
+        `Are you sure you want to delete user "${userName}"? This action cannot be undone.`,
       )
     ) {
       return;
@@ -342,11 +345,11 @@ const AdminDashboard = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        `http://localhost:8080/admin/users/${userId}`,
+        `https://bindu-backend.onrender.com/admin/users/${userId}`,
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },
-        }
+        },
       );
 
       const result = await response.json();
@@ -371,8 +374,8 @@ const AdminDashboard = () => {
     if (
       !window.confirm(
         `Are you sure you want to delete this detection record from ${formatDate(
-          timestamp
-        )}? This action cannot be undone.`
+          timestamp,
+        )}? This action cannot be undone.`,
       )
     ) {
       return;
@@ -381,11 +384,11 @@ const AdminDashboard = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        `http://localhost:8080/admin/detection-records/${recordId}`,
+        `https://bindu-backend.onrender.com/admin/detection-records/${recordId}`,
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },
-        }
+        },
       );
 
       const result = await response.json();
@@ -592,7 +595,7 @@ const AdminDashboard = () => {
                         year: "numeric",
                         month: "short",
                         day: "numeric",
-                      }
+                      },
                     )
                   : "N/A"
               }</span>
@@ -607,14 +610,14 @@ const AdminDashboard = () => {
                 detection._id
                   ? detection._id.substring(0, 8)
                   : detection.analysis_id
-                  ? detection.analysis_id.substring(0, 8)
-                  : "N/A"
+                    ? detection.analysis_id.substring(0, 8)
+                    : "N/A"
               }</span>
             </div>
             <div class="info-item">
               <span class="info-label">Date:</span>
               <span class="info-value">${new Date(
-                detection.timestamp
+                detection.timestamp,
               ).toLocaleDateString("en-US", {
                 month: "short",
                 day: "numeric",
@@ -624,7 +627,7 @@ const AdminDashboard = () => {
             <div class="info-item">
               <span class="info-label">Time:</span>
               <span class="info-value">${new Date(
-                detection.timestamp
+                detection.timestamp,
               ).toLocaleTimeString("en-US", {
                 hour: "2-digit",
                 minute: "2-digit",
@@ -641,19 +644,19 @@ const AdminDashboard = () => {
             <div class="info-item">
               <span class="info-label">Confidence:</span>
               <span class="confidence">${detection.confidence.toFixed(
-                2
+                2,
               )}%</span>
             </div>
             <div class="info-item">
               <span class="info-label">Image Quality:</span>
               <span class="image-quality">${detection.imageQuality.toFixed(
-                0
+                0,
               )}%</span>
             </div>
             <div class="info-item">
               <span class="info-label">Processing:</span>
               <span class="processing-time">${detection.processingTime.toFixed(
-                2
+                2,
               )}ms</span>
             </div>
           </div>
@@ -664,7 +667,7 @@ const AdminDashboard = () => {
           ${
             detection.filename
               ? `<img 
-            src="http://localhost:8080/uploads/${detection.filename}" 
+            src="https://bindu-backend.onrender.com/uploads/${detection.filename}"
             alt="Fingerprint" 
             class="fingerprint-image"
             onerror="this.onerror=null; this.style.display='none'; this.parentElement.querySelector('.no-image-message').style.display='block';"
@@ -682,7 +685,7 @@ const AdminDashboard = () => {
         <div class="report-info">
           <p><strong>Generated:</strong> ${new Date().toLocaleDateString(
             "en-US",
-            { month: "short", day: "numeric", year: "numeric" }
+            { month: "short", day: "numeric", year: "numeric" },
           )} at 
             ${new Date().toLocaleTimeString("en-US", {
               hour: "2-digit",

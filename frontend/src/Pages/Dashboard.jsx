@@ -96,7 +96,7 @@ export default function Dashboard() {
       const token = localStorage.getItem("token");
       if (token) {
         fetchWithBlockCheck(
-          "http://localhost:8080/auth/me",
+          "https://bindu-backend.onrender.com/auth/me",
           {
             method: "GET",
             headers: { Authorization: `Bearer ${token}` },
@@ -119,14 +119,14 @@ export default function Dashboard() {
                 ? data.dateOfBirth.split("T")[0]
                 : "",
               profilePicture: data.profilePicture
-                ? `http://localhost:8080${data.profilePicture}`
+                ? `https://bindu-backend.onrender.com${data.profilePicture}`
                 : null,
               bloodType: data.bloodType || "",
             });
 
             // Fetch detection history
             return fetchWithBlockCheck(
-              "http://localhost:8080/auth/detection-history",
+              "https://bindu-backend.onrender.com/auth/detection-history",
               {
                 method: "GET",
                 headers: { Authorization: `Bearer ${token}` },
@@ -203,7 +203,7 @@ export default function Dashboard() {
       }
 
       const uploadResponse = await fetchWithBlockCheck(
-        "http://localhost:8080/auth/upload-fingerprint",
+        "https://bindu-backend.onrender.com/auth/upload-fingerprint",
         {
           method: "POST",
           headers: {
@@ -269,7 +269,7 @@ export default function Dashboard() {
 
       // Create a temporary folder for scanner images
       try {
-        await fetch("http://localhost:8080/create-temp-folder", {
+        await fetch("https://bindu-backend.onrender.com/create-temp-folder", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ folderPath: "scanner_temp" }),
@@ -289,7 +289,7 @@ export default function Dashboard() {
 
       // Launch the fingerprint scanner SDK through the backend
       const launchResponse = await fetch(
-        "http://localhost:8080/launch-scanner",
+        "https://bindu-backend.onrender.com/launch-scanner",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -333,7 +333,7 @@ export default function Dashboard() {
       // Start the watcher for the fingerprint file
       try {
         const watchResponse = await fetchWithBlockCheck(
-          "http://localhost:8080/watch-fingerprint",
+          "https://bindu-backend.onrender.com/watch-fingerprint",
           {
             method: "POST",
             headers: {
@@ -360,13 +360,13 @@ export default function Dashboard() {
           if (result.base64Image) {
             setSelectedImage(result.base64Image);
           } else {
-            const fullImageUrl = `http://localhost:8080${result.filePath}`;
+            const fullImageUrl = `https://bindu-backend.onrender.com${result.filePath}`;
             setSelectedImage(fullImageUrl);
           }
 
           // Create a file object from the returned path
           try {
-            const fullImageUrl = `http://localhost:8080${result.filePath}`;
+            const fullImageUrl = `https://bindu-backend.onrender.com${result.filePath}`;
             const response = await fetch(fullImageUrl);
             const blob = await response.blob();
             const file = new File([blob], result.fileName, {
@@ -442,7 +442,7 @@ export default function Dashboard() {
         if (token && result.filename) {
           try {
             const response = await fetchWithBlockCheck(
-              "http://localhost:8080/auth/update-fingerprint",
+              "https://bindu-backend.onrender.com/auth/update-fingerprint",
               {
                 method: "POST",
                 headers: {
@@ -463,7 +463,7 @@ export default function Dashboard() {
 
             // Refresh detection history to get the updated records with IDs
             const historyResponse = await fetchWithBlockCheck(
-              "http://localhost:8080/auth/detection-history",
+              "https://bindu-backend.onrender.com/auth/detection-history",
               {
                 headers: {
                   Authorization: `Bearer ${token}`,
@@ -491,7 +491,7 @@ export default function Dashboard() {
         if (sendSMSChecked && phoneNumber) {
           try {
             const smsRes = await fetchWithBlockCheck(
-              "http://localhost:8080/send-sms",
+              "https://bindu-backend.onrender.com/send-sms",
               {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -528,7 +528,7 @@ export default function Dashboard() {
         if (sendEmailChecked && userEmail) {
           try {
             const emailRes = await fetchWithBlockCheck(
-              "http://localhost:8080/auth/send-prediction-email",
+              "https://bindu-backend.onrender.com/auth/send-prediction-email",
               {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -645,7 +645,7 @@ export default function Dashboard() {
       }
 
       const response = await fetch(
-        "http://localhost:8080/auth/update-profile",
+        "https://bindu-backend.onrender.com/auth/update-profile",
         {
           method: "PUT",
           headers: {
@@ -668,7 +668,7 @@ export default function Dashboard() {
         if (result.user.profilePicture) {
           setUserProfile((prev) => ({
             ...prev,
-            profilePicture: `http://localhost:8080${result.user.profilePicture}`,
+            profilePicture: `https://bindu-backend.onrender.com${result.user.profilePicture}`,
           }));
         }
 
@@ -697,7 +697,7 @@ export default function Dashboard() {
       }
 
       const response = await fetch(
-        "http://localhost:8080/auth/remove-profile-picture",
+        "https://bindu-backend.onrender.com/auth/remove-profile-picture",
         {
           method: "DELETE",
           headers: {
@@ -1014,7 +1014,7 @@ export default function Dashboard() {
           <div style="display: flex; justify-content: center; margin-top: 10px;">
             ${
               detection.filename
-                ? `<img src="http://localhost:8080/uploads/${detection.filename}" 
+                ? `<img src="https://bindu-backend.onrender.com/uploads/${detection.filename}"
                      alt="Fingerprint" 
                      style="max-width: 200px; max-height: 200px; object-fit: contain; 
                             border: 1px solid #99B19C; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" 

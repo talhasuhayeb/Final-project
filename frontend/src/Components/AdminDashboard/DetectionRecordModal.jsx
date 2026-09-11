@@ -158,7 +158,7 @@ export default function DetectionRecordModal({
               <span className="text-[#99B19C] font-medium break-words max-w-[calc(100%-80px)]">
                 {new Date(selectedDetection.timestamp).toLocaleTimeString(
                   "en-US",
-                  { hour: "2-digit", minute: "2-digit" }
+                  { hour: "2-digit", minute: "2-digit" },
                 )}
               </span>
             </div>
@@ -257,7 +257,7 @@ export default function DetectionRecordModal({
           <div className="flex justify-center">
             {selectedDetection.filename ? (
               <img
-                src={`http://localhost:8080/uploads/${selectedDetection.filename}`}
+                src={`https://bindu-backend.onrender.com/uploads/${selectedDetection.filename}`}
                 alt="Fingerprint"
                 className="h-48 object-contain rounded-xl border border-[#99B19C]/40 shadow"
                 onError={(e) => {

@@ -56,7 +56,7 @@ const ResetPassword = () => {
     setIsLoading(true);
 
     try {
-      const url = `http://localhost:8080/auth/reset-password/${token}`;
+      const url = `https://bindu-backend.onrender.com/auth/reset-password/${token}`;
       const response = await fetch(url, {
         method: "POST",
         headers: {
