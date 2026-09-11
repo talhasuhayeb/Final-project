@@ -9,6 +9,7 @@ export default defineConfig({
     allowedHosts: [
       "final-project-production-d01c.up.railway.app",
       "*.up.railway.app",
+      "bindu-011l.onrender.com",
     ],
   },
 });
