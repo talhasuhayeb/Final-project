@@ -1,8 +1,13 @@
+import os
+# Configure TensorFlow to run strictly on CPU and suppress CUDA driver warnings on Render
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
+os.environ["PYTHONUNBUFFERED"] = "1"
+
 from flask import Flask, request, jsonify
 import numpy as np
 import tensorflow as tf
 import cv2
-import os
 import ssl
 import time
 from datetime import datetime
@@ -12,7 +17,8 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 
-CORS(app, origins=os.getenv("FRONTEND_URL", "*"))
+# Allow cross-origin requests from any origin (e.g. deployed frontend or local dev)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
@@ -22,17 +28,17 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 MODEL_PATH = os.path.join(BASE_DIR, "model.h5")
 
-print("MODEL PATH:", MODEL_PATH)
-print("MODEL EXISTS:", os.path.exists(MODEL_PATH))
+print("MODEL PATH:", MODEL_PATH, flush=True)
+print("MODEL EXISTS:", os.path.exists(MODEL_PATH), flush=True)
 
 if os.path.exists(MODEL_PATH):
-    print("MODEL SIZE:", os.path.getsize(MODEL_PATH))
+    print("MODEL SIZE:", os.path.getsize(MODEL_PATH), flush=True)
     with open(MODEL_PATH, "rb") as f:
-        print("MODEL HEADER:", f.read(8))
+        print("MODEL HEADER:", f.read(8), flush=True)
 
+print("Loading model...", flush=True)
 model = tf.keras.models.load_model(MODEL_PATH)
-
-print("Model loaded successfully")
+print("Model loaded successfully!", flush=True)
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'bmp'}
 

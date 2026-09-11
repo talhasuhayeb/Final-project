@@ -404,10 +404,35 @@ export default function Dashboard() {
       return;
     }
 
+    // Check for mixed content when running on HTTPS
+    if (
+      typeof window !== "undefined" &&
+      window.location.protocol === "https:" &&
+      ML_API_URL.startsWith("http://")
+    ) {
+      toast.error(
+        "Cannot call HTTP model server from an HTTPS site. Please set VITE_ML_API_URL to your secure HTTPS Render ML URL.",
+        { position: "top-center", autoClose: 9000 }
+      );
+      return;
+    }
+
     // Display loading toast
     const loadingToast = toast.loading("Processing fingerprint...", {
       position: "top-center",
     });
+
+    // Notify user if server takes a few seconds (typical for Render free-tier cold starts)
+    const coldStartTimer = setTimeout(() => {
+      toast.update(loadingToast, {
+        render: "Contacting model server... (Render free-tier cold start may take 30-60s)",
+        type: "info",
+        isLoading: true,
+      });
+    }, 4500);
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 120000); // 2 minute timeout
 
     const formData = new FormData();
     formData.append("file", selectedImageFile);
@@ -416,7 +441,24 @@ export default function Dashboard() {
       const response = await fetch(`${ML_API_URL}/predict`, {
         method: "POST",
         body: formData,
+        signal: controller.signal,
       }); // ML server, not auth-protected
+
+      clearTimeout(coldStartTimer);
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        let errorMsg = "Prediction failed";
+        try {
+          const errData = await response.json();
+          errorMsg = errData.error || errorMsg;
+        } catch (_) {
+          errorMsg = `Model server error (${response.status}: ${response.statusText})`;
+        }
+        toast.dismiss(loadingToast);
+        toast.error(errorMsg, { position: "top-center" });
+        return;
+      }
 
       const result = await response.json();
 
@@ -565,19 +607,24 @@ export default function Dashboard() {
             position: "top-center",
           });
         }
-      } else {
-        toast.error(result.error || "Prediction failed", {
-          position: "top-center",
-        });
       }
     } catch (err) {
-      // Dismiss loading toast in case of error
+      clearTimeout(coldStartTimer);
+      clearTimeout(timeoutId);
       toast.dismiss(loadingToast);
 
-      console.error(err);
-      toast.error("Error connecting to the model server", {
-        position: "top-center",
-      });
+      console.error("Detection error:", err);
+      if (err.name === "AbortError") {
+        toast.error(
+          "Request timed out. The ML server on Render took too long to respond (possible free-tier cold start timeout).",
+          { position: "top-center", autoClose: 7000 }
+        );
+      } else {
+        toast.error(
+          `Cannot connect to ML server at ${ML_API_URL}. Check VITE_ML_API_URL and ensure service is active.`,
+          { position: "top-center", autoClose: 7000 }
+        );
+      }
     }
   };
 
