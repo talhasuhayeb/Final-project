@@ -1,7 +1,7 @@
 import os
-# Configure TensorFlow to run strictly on CPU and suppress CUDA driver warnings on Render
+# Configure TensorFlow to run strictly on CPU and suppress CUDA/GPU warnings & errors on Render
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
-os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 os.environ["PYTHONUNBUFFERED"] = "1"
 
 from flask import Flask, request, jsonify
@@ -31,14 +31,26 @@ MODEL_PATH = os.path.join(BASE_DIR, "model.h5")
 print("MODEL PATH:", MODEL_PATH, flush=True)
 print("MODEL EXISTS:", os.path.exists(MODEL_PATH), flush=True)
 
-if os.path.exists(MODEL_PATH):
-    print("MODEL SIZE:", os.path.getsize(MODEL_PATH), flush=True)
-    with open(MODEL_PATH, "rb") as f:
-        print("MODEL HEADER:", f.read(8), flush=True)
+_model = None
 
-print("Loading model...", flush=True)
-model = tf.keras.models.load_model(MODEL_PATH)
-print("Model loaded successfully!", flush=True)
+def get_model():
+    """Load and warm up model safely inside the process to avoid fork deadlocks."""
+    global _model
+    if _model is None:
+        print("Loading model from disk...", flush=True)
+        _model = tf.keras.models.load_model(MODEL_PATH)
+        print("Warming up model graph...", flush=True)
+        dummy = np.zeros((1, 64, 64, 3), dtype=np.float32)
+        # Fast direct execution avoids model.predict() thread/iterator deadlocks in WSGI
+        _ = _model(dummy, training=False)
+        print("Model loaded and warmed up successfully!", flush=True)
+    return _model
+
+# Pre-warm model on startup so port opens with model ready
+try:
+    get_model()
+except Exception as e:
+    print(f"Warning: Initial model load failed: {e}", flush=True)
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'bmp'}
 
@@ -81,18 +93,21 @@ def home():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-
     start_time = time.time()
+    print("--> Received /predict request", flush=True)
 
     if 'file' not in request.files:
+        print("Error: No image uploaded in request", flush=True)
         return jsonify({'error': 'No image uploaded'}), 400
 
     file = request.files['file']
 
     if file.filename == '':
+        print("Error: No selected file", flush=True)
         return jsonify({'error': 'No selected file'}), 400
 
     if not allowed_file(file.filename):
+        print(f"Error: Invalid file type {file.filename}", flush=True)
         return jsonify({
             'error': 'Invalid file type. Allowed types are png, jpg, jpeg, bmp'
         }), 400
@@ -102,15 +117,20 @@ def predict():
 
     try:
         file.save(file_path)
+        print(f"File saved to {file_path}", flush=True)
 
         quality_score = calculate_image_quality(file_path)
+        print(f"Image quality score: {quality_score}", flush=True)
 
         img = preprocess_image(file_path)
-        predictions = model.predict(img, verbose=0)
+        print("Image preprocessed, running model inference...", flush=True)
 
-        predicted_class = int(np.argmax(predictions[0]))
+        model = get_model()
+        raw_predictions = model(img, training=False).numpy()
+        print("Inference completed successfully!", flush=True)
 
-        print("Predicted class is:", predicted_class)
+        predicted_class = int(np.argmax(raw_predictions[0]))
+        print("Predicted class is:", predicted_class, flush=True)
 
         class_names = [
             'A+', 'A-', 'AB+', 'AB-',
@@ -118,8 +138,7 @@ def predict():
         ]
 
         predicted_label = class_names[predicted_class]
-
-        confidence = float(np.max(predictions[0]))
+        confidence = float(np.max(raw_predictions[0]))
 
         processing_time = round(
             (time.time() - start_time) * 1000, 2
@@ -128,6 +147,8 @@ def predict():
         timestamp = datetime.now().strftime(
             "%Y-%m-%d %H:%M:%S"
         )
+
+        print(f"Prediction result: {predicted_label} ({round(confidence * 100, 2)}%) in {processing_time}ms", flush=True)
 
         return jsonify({
             'predicted_class': predicted_class,
@@ -141,11 +162,15 @@ def predict():
         })
 
     except Exception as e:
+        print(f"Prediction error: {str(e)}", flush=True)
         return jsonify({'error': str(e)}), 500
 
     finally:
         if os.path.exists(file_path):
-            os.remove(file_path)
+            try:
+                os.remove(file_path)
+            except Exception:
+                pass
 
 
 if __name__ == '__main__':
@@ -154,3 +179,4 @@ if __name__ == '__main__':
         port=int(os.environ.get('PORT', 5000)),
         debug=False
     )
+

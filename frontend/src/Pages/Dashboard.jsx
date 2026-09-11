@@ -16,7 +16,8 @@ import DashboardHeader from "../Components/Dashboard/DashboardHeader";
 import Sidebar from "../Components/Dashboard/Sidebar";
 import DetectionPanel from "../Components/Dashboard/DetectionPanel";
 
-const ML_API_URL = import.meta.env.VITE_ML_API_URL || "http://localhost:5000";
+const ML_API_URL =
+  import.meta.env.VITE_ML_API_URL || "https://bindu-ml.onrender.com";
 import ProfilePanel from "../Components/Dashboard/ProfilePanel";
 import MethodologySection from "../Components/Dashboard/MethodologySection";
 import BloodArticles from "../Components/Dashboard/BloodArticles";
