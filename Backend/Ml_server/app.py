@@ -80,7 +80,7 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def preprocess_image(image_path):
-    img = Image.open(image_path).resize((64, 64))
+    img = Image.open(image_path).convert('RGB').resize((64, 64))
     img_array = np.array(img, dtype=np.float32)
     img_array = np.expand_dims(img_array, axis=0)
     return img_array
