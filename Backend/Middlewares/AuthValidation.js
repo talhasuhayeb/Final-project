@@ -24,6 +24,7 @@ const signupValidation = (req, res, next) => {
         "string.pattern.base": "Phone number must be exactly 11 digits.",
       }),
     role: Joi.string().valid("user", "admin").default("user"),
+    dateOfBirth: Joi.date().optional().allow("", null),
   });
 
   const { error } = schema.validate(req.body);
