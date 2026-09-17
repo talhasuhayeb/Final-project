@@ -21,7 +21,6 @@ const {
 } = require("../Middlewares/AuthValidation");
 const jwt = require("jsonwebtoken");
 const UserModel = require("../Models/User");
-const SmsController = require("../Controllers/SmsController");
 const upload = require("../Middlewares/UploadMiddleware");
 const router = require("express").Router();
 

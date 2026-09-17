@@ -7,7 +7,6 @@ const cors = require("cors");
 const path = require("path");
 const AuthRouter = require("./Routes/AuthRouter");
 const AdminRouter = require("./Routes/AdminRouter");
-const SmsController = require("./Controllers/SmsController");
 const ScannerController = require("./Controllers/ScannerController");
 
 const PORT = process.env.PORT || 8080;
@@ -32,8 +31,6 @@ app.use(
 
 // Serve assets (logo, etc.) statically
 app.use("/assets", express.static(path.join(__dirname, "assets")));
-
-app.post("/send-sms", SmsController.sendSms);
 
 // Scanner routes
 app.post("/create-temp-folder", ScannerController.createTempFolder);

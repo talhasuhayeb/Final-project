@@ -67,7 +67,6 @@ export default function Dashboard() {
   const [phoneNumber, setPhoneNumber] = useState(""); // Will be set from DB
   const [userEmail, setUserEmail] = useState(""); // Will be set from DB
   const [sendEmailChecked, setSendEmailChecked] = useState(false); // Email checkbox state
-  const [sendSMSChecked, setSendSMSChecked] = useState(false); // SMS checkbox state
   const [activeSection, setActiveSection] = useState("main"); // sidebar navigation
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState(null);
@@ -582,43 +581,6 @@ export default function Dashboard() {
           } catch (err) {
             console.error("Error saving fingerprint data:", err);
           }
-        }
-
-        // Send SMS to user if checkbox is checked
-        if (sendSMSChecked && phoneNumber) {
-          try {
-            const smsRes = await fetchWithBlockCheck(
-              "https://bindu-backend.onrender.com/send-sms",
-              {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  phoneNumber,
-                  bloodGroup: result.predicted_label,
-                  confidence: result.confidence_percentage,
-                  timestamp: result.timestamp,
-                }),
-              },
-              navigate,
-            );
-            const smsData = await smsRes.json();
-            if (smsRes.ok) {
-              toast.success("Prediction sent to your phone!", {
-                position: "top-center",
-              });
-            } else {
-              toast.error(smsData.error || "Failed to send SMS", {
-                position: "top-center",
-              });
-            }
-          } catch (err) {
-            console.error("Error sending SMS:", err);
-            toast.error("Error sending SMS", { position: "top-center" });
-          }
-        } else if (sendSMSChecked && !phoneNumber) {
-          toast.warn("Phone number not found. Please contact support.", {
-            position: "top-center",
-          });
         }
 
         // Send Email if checkbox is checked
@@ -1239,8 +1201,6 @@ export default function Dashboard() {
               selectedImageFile={selectedImageFile}
               sendEmailChecked={sendEmailChecked}
               setSendEmailChecked={setSendEmailChecked}
-              sendSMSChecked={sendSMSChecked}
-              setSendSMSChecked={setSendSMSChecked}
               userEmail={userEmail}
               phoneNumber={phoneNumber}
               isUploaded={isUploaded}

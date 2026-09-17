@@ -8,8 +8,6 @@ export default function DetectionPanel({
   selectedImageFile,
   sendEmailChecked,
   setSendEmailChecked,
-  sendSMSChecked,
-  setSendSMSChecked,
   userEmail,
   phoneNumber,
   isUploaded,
@@ -102,18 +100,6 @@ export default function DetectionPanel({
           <span className="text-[#6D2932] font-medium text-sm">
             📧 Email:{" "}
             <span className="font-semibold">{userEmail || "N/A"}</span>
-          </span>
-        </label>
-        <label className="flex items-center gap-2 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={sendSMSChecked}
-            onChange={(e) => setSendSMSChecked(e.target.checked)}
-            className="w-4 h-4 text-[#6D2932] border-2 border-[#99B19C] rounded"
-          />
-          <span className="text-[#6D2932] font-medium text-sm">
-            📱 SMS:{" "}
-            <span className="font-semibold">{phoneNumber || "N/A"}</span>
           </span>
         </label>
       </motion.div>
