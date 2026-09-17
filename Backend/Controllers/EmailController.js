@@ -1,22 +1,3 @@
-const nodemailer = require("nodemailer");
-const path = require("path");
-const fs = require("fs");
-
-// Configure nodemailer transporter
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false,
-  requireTLS: true,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 15000,
-});
-
 const sendPredictionEmail = async (req, res) => {
   try {
     const {
@@ -36,28 +17,12 @@ const sendPredictionEmail = async (req, res) => {
       });
     }
 
-    // Email content with embedded image (cid:binduLogo)
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: "Blood Group Detection Results - From Bindu ",
-      html: `
-        <div style="max-width:600px;margin:0 auto;padding:20px;font-family:Arial,sans-serif;background-color:#faf5ef">
+    const htmlContent = `
+      <div style="max-width:600px;margin:0 auto;padding:20px;font-family:Arial,sans-serif;background-color:#faf5ef">
     <div style="background:linear-gradient(135deg,#99b19c 0%,#6d2932 100%);padding:30px;border-radius:15px;text-align:center;margin-bottom:20px">
-      <div style="display: inline-block; text-align: center;">
-        <table style="margin: 0 auto;" cellpadding="0" cellspacing="0">
-          <tr>
-            <td style="vertical-align: middle; padding-right: 0;">
-              <img src="cid:binduLogo" alt="Bindu Logo" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
-            </td>
-            <td style="vertical-align: middle; padding-left: 0;">
-              <h1 style="color: #faf5ef; margin: 0; font-size: 28px; font-weight: bold; white-space: nowrap;">
-                Bindu Blood Detection Results
-              </h1>
-            </td>
-          </tr>
-        </table>
-      </div>
+      <h1 style="color: #faf5ef; margin: 0; font-size: 28px; font-weight: bold;">
+        Bindu Blood Detection Results
+      </h1>
       <p style="color:#faf5ef;margin:8px 0 0 0;font-size:16px">AI-Powered Blood Group Detection</p>
     </div>
 
@@ -117,22 +82,33 @@ const sendPredictionEmail = async (req, res) => {
       </div>
     </div>
   </div>
-      `,
-      attachments: [],
-    };
+    `;
 
-    // Only attach logo if the file exists
-    const logoPath = path.join(__dirname, "../assets/logo.png");
-    if (fs.existsSync(logoPath)) {
-      mailOptions.attachments.push({
-        filename: "logo.png",
-        path: logoPath,
-        cid: "binduLogo",
+    // Send email using Resend HTTP API (no SMTP needed)
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+      },
+      body: JSON.stringify({
+        from: process.env.RESEND_FROM_EMAIL || "Bindu <onboarding@resend.dev>",
+        to: [email],
+        subject: "Blood Group Detection Results - From Bindu",
+        html: htmlContent,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error("Resend API error:", data);
+      return res.status(500).json({
+        message: "Error sending prediction results email",
+        success: false,
+        error: data.message || JSON.stringify(data),
       });
     }
-
-    // Send email
-    await transporter.sendMail(mailOptions);
 
     res.status(200).json({
       message: "Prediction results email sent successfully",
