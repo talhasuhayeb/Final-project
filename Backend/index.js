@@ -16,7 +16,7 @@ app.get("/ping", (req, res) => {
   res.send("PONG");
 });
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '10mb' }));
 app.use(cors());
 app.use("/auth", AuthRouter);
 app.use("/admin", AdminRouter);

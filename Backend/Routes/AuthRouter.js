@@ -149,9 +149,10 @@ router.post("/update-fingerprint", authenticateToken, async (req, res) => {
       imageQuality,
       timestamp,
       processingTime,
+      imageData,
     } = req.body;
 
-    console.log("Update Fingerprint Request Body:", req.body);
+    console.log("Update Fingerprint Request Body:", { ...req.body, imageData: imageData ? `[base64 string, ${imageData.length} chars]` : null });
     console.log("User ID:", userId);
 
     const user = await UserModel.findById(userId);
@@ -177,6 +178,7 @@ router.post("/update-fingerprint", authenticateToken, async (req, res) => {
       processingTime: processingTime || 0,
       imageQuality: imageQuality || 0,
       filename: filename,
+      imageData: imageData || null,
       timestamp: new Date(timestamp || Date.now()),
     };
 

@@ -104,16 +104,16 @@ export default function HistoryTable({
                       <div className="flex justify-center">
                         {" "}
                         {/* Center image */}
-                        {detection.filename ? ( // If we have a filename
+                        {(detection.imageData || detection.filename) ? ( // If we have image data or a filename
                           <img
-                            src={`https://bindu-backend.onrender.com/uploads/${detection.filename}`} // Static served image
+                            src={detection.imageData || `https://bindu-backend.onrender.com/uploads/${detection.filename}`} // Prefer base64 from DB, fallback to static URL
                             alt="Fingerprint" // Alt text
                             className="w-12 h-12 object-cover rounded-xl border border-[#99B19C]/40 shadow" // Thumb style
                             onError={(e) => {
                               // Fallback on error
                               console.log(
                                 "Fingerprint image failed to load:",
-                                e.target.src,
+                                e.target.src ? e.target.src.substring(0, 80) + '...' : 'unknown',
                               ); // Log
                               e.target.onerror = null; // Prevent loop
                               e.target.src =
@@ -420,9 +420,9 @@ export default function HistoryTable({
                   🔎 Fingerprint Image
                 </div>
                 <div className="flex justify-center">
-                  {selectedDetection.filename && !imageError ? (
+                  {(selectedDetection.imageData || selectedDetection.filename) && !imageError ? (
                     <img
-                      src={`https://bindu-backend.onrender.com/uploads/${selectedDetection.filename}`}
+                      src={selectedDetection.imageData || `https://bindu-backend.onrender.com/uploads/${selectedDetection.filename}`}
                       alt="Fingerprint"
                       className="h-40 sm:h-48 object-contain rounded-xl border border-[#99B19C]/40 shadow max-w-full"
                       onError={() => setImageError(true)}

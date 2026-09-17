@@ -22,6 +22,10 @@ const detectionSchema = new Schema({
     type: String,
     required: true,
   },
+  imageData: {
+    type: String,
+    default: null,
+  },
   timestamp: {
     type: Date,
     default: Date.now,

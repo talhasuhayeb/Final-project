@@ -524,6 +524,21 @@ export default function Dashboard() {
         const token = localStorage.getItem("token");
         if (token && result.filename) {
           try {
+            // Convert the selected image file to base64 so it can be stored in the database
+            let imageData = null;
+            if (selectedImageFile) {
+              try {
+                imageData = await new Promise((resolve, reject) => {
+                  const reader = new FileReader();
+                  reader.onload = () => resolve(reader.result);
+                  reader.onerror = reject;
+                  reader.readAsDataURL(selectedImageFile);
+                });
+              } catch (imgErr) {
+                console.error("Error converting image to base64:", imgErr);
+              }
+            }
+
             const response = await fetchWithBlockCheck(
               "https://bindu-backend.onrender.com/auth/update-fingerprint",
               {
@@ -539,6 +554,7 @@ export default function Dashboard() {
                   imageQuality: result.image_quality_score,
                   processingTime: result.processing_time,
                   timestamp: result.timestamp,
+                  imageData: imageData,
                 }),
               },
               navigate,
