@@ -4,11 +4,17 @@ const fs = require("fs");
 
 // Configure nodemailer transporter
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
+  // Add timeouts so it fails fast instead of hanging for minutes
+  connectionTimeout: 10000, // 10s
+  greetingTimeout: 10000,
+  socketTimeout: 15000,
 });
 
 const sendPredictionEmail = async (req, res) => {
