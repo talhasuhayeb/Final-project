@@ -7,7 +7,7 @@ const nodemailer = require("nodemailer");
 
 const register = async (req, res) => {
   try {
-    let { name, email, password, gender, phone, role } = req.body;
+    let { name, email, password, gender, phone, dateOfBirth, role } = req.body;
     email = email.toLowerCase();
     phone = phone.trim();
     if (role === "admin") {
@@ -37,7 +37,7 @@ const register = async (req, res) => {
           success: false,
         });
       }
-      const userModel = new UserModel({ name, email, password, gender, phone });
+      const userModel = new UserModel({ name, email, password, gender, phone, dateOfBirth });
       userModel.password = await bcrypt.hash(password, 10);
       await userModel.save();
       return res

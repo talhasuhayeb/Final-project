@@ -11,6 +11,7 @@ const Register = () => {
     password: "",
     gender: "",
     phone: "",
+    dateOfBirth: "",
   });
   const navigate = useNavigate();
   const handleChange = (e) => {
@@ -24,14 +25,14 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { name, email, password, gender, phone } = formData;
+    const { name, email, password, gender, phone, dateOfBirth } = formData;
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       toast.error("Invalid email format", { position: "top-center" });
       return;
     }
-    if (!name || !email || !password || !gender || !phone) {
+    if (!name || !email || !password || !gender || !phone || !dateOfBirth) {
       toast.error("Please fill all fields", {
         position: "top-center",
       });
@@ -141,6 +142,23 @@ const Register = () => {
                     className="w-full px-4 py-2 bg-transparent border-b-2 border-[#C7B7A3] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#C7B7A3] transition-all text-xs sm:text-sm focus:scale-105"
                     placeholder="Phone Number"
                   />
+                </motion.div>
+                <motion.div whileFocus={{ scale: 1.05 }} className="relative">
+                  <input
+                    type="date"
+                    id="regDateOfBirth"
+                    name="dateOfBirth"
+                    value={formData.dateOfBirth}
+                    onChange={handleChange}
+                    max={new Date().toISOString().split("T")[0]}
+                    className="w-full px-4 py-2 bg-transparent border-b-2 border-[#C7B7A3] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#C7B7A3] transition-all text-xs sm:text-sm focus:scale-105"
+                    placeholder="Date of Birth"
+                  />
+                  {!formData.dateOfBirth && (
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#C7B7A3] pointer-events-none text-xs sm:text-sm">
+                      Date of Birth
+                    </span>
+                  )}
                 </motion.div>
                 <div className="relative flex flex-col items-start">
                   <span className="text-[#C7B7A3] text-xs sm:text-sm mb-2">
