@@ -1,5 +1,6 @@
 const nodemailer = require("nodemailer");
 const path = require("path");
+const fs = require("fs");
 
 // Configure nodemailer transporter
 const transporter = nodemailer.createTransport({
@@ -111,14 +112,18 @@ const sendPredictionEmail = async (req, res) => {
     </div>
   </div>
       `,
-      attachments: [
-        {
-          filename: "logo.png",
-          path: path.join(__dirname, "../assets/logo.png"),
-          cid: "binduLogo",
-        },
-      ],
+      attachments: [],
     };
+
+    // Only attach logo if the file exists
+    const logoPath = path.join(__dirname, "../assets/logo.png");
+    if (fs.existsSync(logoPath)) {
+      mailOptions.attachments.push({
+        filename: "logo.png",
+        path: logoPath,
+        cid: "binduLogo",
+      });
+    }
 
     // Send email
     await transporter.sendMail(mailOptions);
