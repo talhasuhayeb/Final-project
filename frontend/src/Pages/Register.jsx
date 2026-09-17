@@ -154,11 +154,6 @@ const Register = () => {
                     className="w-full px-4 py-2 bg-transparent border-b-2 border-[#C7B7A3] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#C7B7A3] transition-all text-xs sm:text-sm focus:scale-105"
                     placeholder="Date of Birth"
                   />
-                  {!formData.dateOfBirth && (
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#C7B7A3] pointer-events-none text-xs sm:text-sm">
-                      Date of Birth
-                    </span>
-                  )}
                 </motion.div>
                 <div className="relative flex flex-col items-start">
                   <span className="text-[#C7B7A3] text-xs sm:text-sm mb-2">
