@@ -1,3 +1,5 @@
+const BACKEND_URL = process.env.BACKEND_URL || "https://bindu-backend.onrender.com";
+
 const sendPredictionEmail = async (req, res) => {
   try {
     const {
@@ -17,12 +19,26 @@ const sendPredictionEmail = async (req, res) => {
       });
     }
 
+    const logoUrl = `${BACKEND_URL}/assets/logo.png`;
+
+    // Email content - same as original Bindu template
     const htmlContent = `
       <div style="max-width:600px;margin:0 auto;padding:20px;font-family:Arial,sans-serif;background-color:#faf5ef">
     <div style="background:linear-gradient(135deg,#99b19c 0%,#6d2932 100%);padding:30px;border-radius:15px;text-align:center;margin-bottom:20px">
-      <h1 style="color: #faf5ef; margin: 0; font-size: 28px; font-weight: bold;">
-        Bindu Blood Detection Results
-      </h1>
+      <div style="display: inline-block; text-align: center;">
+        <table style="margin: 0 auto;" cellpadding="0" cellspacing="0">
+          <tr>
+            <td style="vertical-align: middle; padding-right: 0;">
+              <img src="${logoUrl}" alt="Bindu Logo" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
+            </td>
+            <td style="vertical-align: middle; padding-left: 0;">
+              <h1 style="color: #faf5ef; margin: 0; font-size: 28px; font-weight: bold; white-space: nowrap;">
+                Bindu Blood Detection Results
+              </h1>
+            </td>
+          </tr>
+        </table>
+      </div>
       <p style="color:#faf5ef;margin:8px 0 0 0;font-size:16px">AI-Powered Blood Group Detection</p>
     </div>
 
@@ -84,7 +100,7 @@ const sendPredictionEmail = async (req, res) => {
   </div>
     `;
 
-    // Send email using Resend HTTP API (no SMTP needed)
+    // Send email using Resend HTTP API
     const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -94,7 +110,7 @@ const sendPredictionEmail = async (req, res) => {
       body: JSON.stringify({
         from: process.env.RESEND_FROM_EMAIL || "Bindu <onboarding@resend.dev>",
         to: [email],
-        subject: "Blood Group Detection Results - From Bindu",
+        subject: "Blood Group Detection Results - From Bindu ",
         html: htmlContent,
       }),
     });

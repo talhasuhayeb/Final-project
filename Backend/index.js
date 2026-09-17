@@ -30,6 +30,9 @@ app.use(
   express.static(path.join(__dirname, "uploads/profile-pictures"))
 );
 
+// Serve assets (logo, etc.) statically
+app.use("/assets", express.static(path.join(__dirname, "assets")));
+
 app.post("/send-sms", SmsController.sendSms);
 
 // Scanner routes
