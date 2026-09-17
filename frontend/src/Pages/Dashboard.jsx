@@ -647,13 +647,13 @@ export default function Dashboard() {
                 position: "top-center",
               });
             } else {
-              toast.error(emailData.message || "Failed to send email", {
+              toast.error(emailData.error || emailData.message || "Failed to send email", {
                 position: "top-center",
               });
             }
           } catch (err) {
             console.error("Error sending email:", err);
-            toast.error("Error sending email", { position: "top-center" });
+            toast.error("Error sending email: " + err.message, { position: "top-center" });
           }
         } else if (sendEmailChecked && !userEmail) {
           toast.warn("Email address not found. Please contact support.", {
