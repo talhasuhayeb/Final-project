@@ -298,23 +298,9 @@ const updateProfile = async (req, res) => {
     if (gender !== undefined) updateData.gender = gender;
     if (dateOfBirth !== undefined) updateData.dateOfBirth = dateOfBirth;
 
-    // Handle profile picture upload
-    if (req.file) {
-      // Delete old profile picture if it exists
-      if (user.profilePicture) {
-        const fs = require("fs");
-        const path = require("path");
-        const oldImagePath = path.join(
-          __dirname,
-          "../uploads/profile-pictures",
-          path.basename(user.profilePicture)
-        );
-        if (fs.existsSync(oldImagePath)) {
-          fs.unlinkSync(oldImagePath);
-        }
-      }
-      // Store the relative path to the new image
-      updateData.profilePicture = `/uploads/profile-pictures/${req.file.filename}`;
+    // Handle profile picture as Base64 string
+    if (profilePicture !== undefined) {
+      updateData.profilePicture = profilePicture;
     }
 
     // Update the user
@@ -363,20 +349,6 @@ const removeProfilePicture = async (req, res) => {
         message: "User not found",
         success: false,
       });
-    }
-
-    // Delete the profile picture file if it exists
-    if (user.profilePicture) {
-      const fs = require("fs");
-      const path = require("path");
-      const imagePath = path.join(
-        __dirname,
-        "../uploads/profile-pictures",
-        path.basename(user.profilePicture)
-      );
-      if (fs.existsSync(imagePath)) {
-        fs.unlinkSync(imagePath);
-      }
     }
 
     // Remove profile picture from database

@@ -121,9 +121,7 @@ export default function Dashboard() {
               dateOfBirth: data.dateOfBirth
                 ? data.dateOfBirth.split("T")[0]
                 : "",
-              profilePicture: data.profilePicture
-                ? `https://bindu-backend.onrender.com${data.profilePicture}`
-                : null,
+              profilePicture: data.profilePicture || null,
               bloodType: data.bloodType || "",
             });
 
@@ -705,14 +703,13 @@ export default function Dashboard() {
   const handleProfileImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setProfilePictureFile(file);
-
       const reader = new FileReader();
       reader.onloadend = () => {
         setUserProfile((prev) => ({
           ...prev,
           profilePicture: reader.result,
         }));
+        setProfilePictureFile(reader.result);
       };
       reader.readAsDataURL(file);
     }
@@ -734,17 +731,18 @@ export default function Dashboard() {
         return;
       }
 
-      // Create FormData to handle file upload
-      const formData = new FormData();
-      formData.append("name", userProfile.name);
-      formData.append("email", userProfile.email);
-      formData.append("phone", userProfile.phone);
-      formData.append("gender", userProfile.gender);
-      formData.append("dateOfBirth", userProfile.dateOfBirth);
+      // Build JSON payload with Base64 profile picture
+      const payload = {
+        name: userProfile.name,
+        email: userProfile.email,
+        phone: userProfile.phone,
+        gender: userProfile.gender,
+        dateOfBirth: userProfile.dateOfBirth,
+      };
 
-      // Add profile picture file if selected
+      // Add Base64 profile picture if a new one was selected
       if (profilePictureFile) {
-        formData.append("profilePicture", profilePictureFile);
+        payload.profilePicture = profilePictureFile;
       }
 
       const response = await fetch(
@@ -753,9 +751,9 @@ export default function Dashboard() {
           method: "PUT",
           headers: {
             Authorization: `Bearer ${token}`,
-            // Don't set Content-Type header - let browser set it for FormData
+            "Content-Type": "application/json",
           },
-          body: formData,
+          body: JSON.stringify(payload),
         },
       );
 
@@ -767,11 +765,11 @@ export default function Dashboard() {
         setUserEmail(userProfile.email);
         setPhoneNumber(userProfile.phone);
 
-        // Update profile picture URL if it was updated
+        // Update profile picture from response (already Base64)
         if (result.user.profilePicture) {
           setUserProfile((prev) => ({
             ...prev,
-            profilePicture: `https://bindu-backend.onrender.com${result.user.profilePicture}`,
+            profilePicture: result.user.profilePicture,
           }));
         }
 

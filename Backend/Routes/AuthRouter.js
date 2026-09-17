@@ -77,7 +77,6 @@ router.post("/reset-password/:token", resetPasswordValidation, resetPassword);
 router.put(
   "/update-profile",
   authenticateToken,
-  upload.single("profilePicture"),
   updateProfile
 );
 router.delete(

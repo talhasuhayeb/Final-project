@@ -77,7 +77,7 @@ export default function UsersTable({
                       {" "}
                       {/* Center image */}
                       <img
-                        src={`https://bindu-backend.onrender.com${user.profilePicture}`}
+                        src={user.profilePicture}
                         alt="Profile"
                         className="w-12 h-12 rounded-xl object-cover border border-[#99B19C]/40 shadow"
                         onError={(e) => {
