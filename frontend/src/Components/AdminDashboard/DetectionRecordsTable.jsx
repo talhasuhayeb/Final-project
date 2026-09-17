@@ -85,7 +85,7 @@ export default function DetectionRecordsTable({
                     {" "}
                     {/* Center image */}
                     <img
-                      src={`https://bindu-backend.onrender.com/uploads/${record.filename}`}
+                      src={record.imageData || `https://bindu-backend.onrender.com/uploads/${record.filename}`}
                       alt="Fingerprint"
                       className="w-12 h-12 object-cover rounded-xl border border-[#99B19C]/40 shadow"
                       onError={(e) => {

@@ -1116,8 +1116,8 @@ export default function Dashboard() {
           <div class="section-title">🔎 Fingerprint Image</div>
           <div style="display: flex; justify-content: center; margin-top: 10px;">
             ${
-              detection.filename
-                ? `<img src="https://bindu-backend.onrender.com/uploads/${detection.filename}"
+              (detection.imageData || detection.filename)
+                ? `<img src="${detection.imageData || `https://bindu-backend.onrender.com/uploads/${detection.filename}`}"
                      alt="Fingerprint" 
                      style="max-width: 200px; max-height: 200px; object-fit: contain; 
                             border: 1px solid #99B19C; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" 
@@ -1125,7 +1125,7 @@ export default function Dashboard() {
                 : ""
             }
             <div style="display: ${
-              detection.filename ? "none" : "flex"
+              (detection.imageData || detection.filename) ? "none" : "flex"
             }; flex-direction: column; align-items: center; justify-content: center; 
                         width: 200px; height: 150px; border: 2px dashed #D7D1C9; 
                         border-radius: 8px; background-color: #FAF5EF; color: #6D2932;">

@@ -254,10 +254,10 @@ export default function DetectionRecordModal({
           <div className="text-xs font-bold text-[#6D2932] border-b border-[#99B19C] pb-1 mb-3">
             🔎 Fingerprint Image
           </div>
-          <div className="flex justify-center">
-            {selectedDetection.filename ? (
+           <div className="flex justify-center">
+            {(selectedDetection.imageData || selectedDetection.filename) ? (
               <img
-                src={`https://bindu-backend.onrender.com/uploads/${selectedDetection.filename}`}
+                src={selectedDetection.imageData || `https://bindu-backend.onrender.com/uploads/${selectedDetection.filename}`}
                 alt="Fingerprint"
                 className="h-48 object-contain rounded-xl border border-[#99B19C]/40 shadow"
                 onError={(e) => {

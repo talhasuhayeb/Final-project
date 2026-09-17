@@ -665,9 +665,9 @@ const AdminDashboard = () => {
         <div class="image-section">
           <div class="section-title">🔎 Fingerprint Image</div>
           ${
-            detection.filename
+            (detection.imageData || detection.filename)
               ? `<img 
-            src="https://bindu-backend.onrender.com/uploads/${detection.filename}"
+            src="${detection.imageData || `https://bindu-backend.onrender.com/uploads/${detection.filename}`}"
             alt="Fingerprint" 
             class="fingerprint-image"
             onerror="this.onerror=null; this.style.display='none'; this.parentElement.querySelector('.no-image-message').style.display='block';"
