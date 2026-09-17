@@ -114,7 +114,7 @@ const sendPredictionEmail = async (req, res) => {
       attachments: [
         {
           filename: "logo.png",
-          path: path.join(__dirname, "../../frontend/src/assets/logo.png"),
+          path: path.join(__dirname, "../assets/logo.png"),
           cid: "binduLogo",
         },
       ],
