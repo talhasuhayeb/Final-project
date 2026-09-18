@@ -18,6 +18,8 @@ import DetectionPanel from "../Components/Dashboard/DetectionPanel";
 
 const ML_API_URL =
   import.meta.env.VITE_ML_API_URL || "https://bindu-ml.onrender.com";
+const SCANNER_API_URL =
+  import.meta.env.VITE_SCANNER_API_URL || "http://localhost:8080";
 import ProfilePanel from "../Components/Dashboard/ProfilePanel";
 import MethodologySection from "../Components/Dashboard/MethodologySection";
 import BloodArticles from "../Components/Dashboard/BloodArticles";
@@ -269,7 +271,7 @@ export default function Dashboard() {
 
       // Create a temporary folder for scanner images
       try {
-        await fetch("https://bindu-backend.onrender.com/create-temp-folder", {
+        await fetch(`${SCANNER_API_URL}/create-temp-folder`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ folderPath: "scanner_temp" }),
@@ -288,14 +290,11 @@ export default function Dashboard() {
       }
 
       // Launch the fingerprint scanner SDK through the backend
-      const launchResponse = await fetch(
-        "https://bindu-backend.onrender.com/launch-scanner",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ sdkPath: zkSdkPath }),
-        },
-      );
+      const launchResponse = await fetch(`${SCANNER_API_URL}/launch-scanner`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sdkPath: zkSdkPath }),
+      });
 
       if (!launchResponse.ok) {
         const errorData = await launchResponse.json();
@@ -333,7 +332,7 @@ export default function Dashboard() {
       // Start the watcher for the fingerprint file
       try {
         const watchResponse = await fetchWithBlockCheck(
-          "https://bindu-backend.onrender.com/watch-fingerprint",
+          `${SCANNER_API_URL}/watch-fingerprint`,
           {
             method: "POST",
             headers: {
@@ -360,13 +359,13 @@ export default function Dashboard() {
           if (result.base64Image) {
             setSelectedImage(result.base64Image);
           } else {
-            const fullImageUrl = `https://bindu-backend.onrender.com${result.filePath}`;
+            const fullImageUrl = `${SCANNER_API_URL}${result.filePath}`;
             setSelectedImage(fullImageUrl);
           }
 
           // Create a file object from the returned path
           try {
-            const fullImageUrl = `https://bindu-backend.onrender.com${result.filePath}`;
+            const fullImageUrl = `${SCANNER_API_URL}${result.filePath}`;
             const response = await fetch(fullImageUrl);
             const blob = await response.blob();
             const file = new File([blob], result.fileName, {
@@ -410,7 +409,7 @@ export default function Dashboard() {
     ) {
       toast.error(
         "Cannot call HTTP model server from an HTTPS site. Please set VITE_ML_API_URL to your secure HTTPS Render ML URL.",
-        { position: "top-center", autoClose: 9000 }
+        { position: "top-center", autoClose: 9000 },
       );
       return;
     }
@@ -429,7 +428,8 @@ export default function Dashboard() {
       // Progressive feedback during cold start
       const wakeTimer1 = setTimeout(() => {
         toast.update(loadingToast, {
-          render: "ML server is starting up... (Render free-tier cold start, please wait ~60s)",
+          render:
+            "ML server is starting up... (Render free-tier cold start, please wait ~60s)",
           type: "info",
           isLoading: true,
         });
@@ -437,7 +437,8 @@ export default function Dashboard() {
 
       const wakeTimer2 = setTimeout(() => {
         toast.update(loadingToast, {
-          render: "Still waking up... loading TensorFlow model (~30-90s remaining)",
+          render:
+            "Still waking up... loading TensorFlow model (~30-90s remaining)",
           type: "info",
           isLoading: true,
         });
@@ -458,7 +459,10 @@ export default function Dashboard() {
       clearTimeout(wakeTimer3);
     } catch (wakeErr) {
       // If the wake-up ping itself timed out or failed, warn but still try the predict call
-      console.warn("Wake-up ping failed (will still attempt prediction):", wakeErr);
+      console.warn(
+        "Wake-up ping failed (will still attempt prediction):",
+        wakeErr,
+      );
     }
 
     // --- Step 2: Send the actual prediction request ---
@@ -609,13 +613,18 @@ export default function Dashboard() {
                 position: "top-center",
               });
             } else {
-              toast.error(emailData.error || emailData.message || "Failed to send email", {
-                position: "top-center",
-              });
+              toast.error(
+                emailData.error || emailData.message || "Failed to send email",
+                {
+                  position: "top-center",
+                },
+              );
             }
           } catch (err) {
             console.error("Error sending email:", err);
-            toast.error("Error sending email: " + err.message, { position: "top-center" });
+            toast.error("Error sending email: " + err.message, {
+              position: "top-center",
+            });
           }
         } else if (sendEmailChecked && !userEmail) {
           toast.warn("Email address not found. Please contact support.", {
@@ -631,12 +640,12 @@ export default function Dashboard() {
       if (err.name === "AbortError") {
         toast.error(
           "Request timed out after 4 minutes. The ML server may still be starting. Please wait a moment and try again.",
-          { position: "top-center", autoClose: 9000 }
+          { position: "top-center", autoClose: 9000 },
         );
       } else {
         toast.error(
           `Cannot connect to ML server at ${ML_API_URL}. Check VITE_ML_API_URL and ensure service is active.`,
-          { position: "top-center", autoClose: 7000 }
+          { position: "top-center", autoClose: 7000 },
         );
       }
     }
@@ -1076,7 +1085,7 @@ export default function Dashboard() {
           <div class="section-title">🔎 Fingerprint Image</div>
           <div style="display: flex; justify-content: center; margin-top: 10px;">
             ${
-              (detection.imageData || detection.filename)
+              detection.imageData || detection.filename
                 ? `<img src="${detection.imageData || `https://bindu-backend.onrender.com/uploads/${detection.filename}`}"
                      alt="Fingerprint" 
                      style="max-width: 200px; max-height: 200px; object-fit: contain; 
@@ -1085,7 +1094,7 @@ export default function Dashboard() {
                 : ""
             }
             <div style="display: ${
-              (detection.imageData || detection.filename) ? "none" : "flex"
+              detection.imageData || detection.filename ? "none" : "flex"
             }; flex-direction: column; align-items: center; justify-content: center; 
                         width: 200px; height: 150px; border: 2px dashed #D7D1C9; 
                         border-radius: 8px; background-color: #FAF5EF; color: #6D2932;">
