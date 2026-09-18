@@ -28,13 +28,13 @@ export default function DetectionPanel({
   };
 
   return (
-    <div className="w-full max-w-lg mx-auto p-8 bg-white rounded-xl shadow-lg flex flex-col items-center gap-8">
+    <div className="w-full max-w-lg mx-auto p-4 sm:p-8 bg-white rounded-xl shadow-lg flex flex-col items-center gap-6 sm:gap-8">
       <motion.h2
         custom={0}
         initial="hidden"
         animate="visible"
         variants={sectionVariants}
-        className="text-2xl font-bold text-[#6D2932]"
+        className="text-xl sm:text-2xl font-bold text-[#6D2932]"
       >
         Upload Fingerprint
       </motion.h2>
@@ -46,16 +46,16 @@ export default function DetectionPanel({
         className="w-full"
       >
         <div className="flex flex-col gap-3">
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-2 w-full">
             <input
               type="file"
               accept="image/*"
               onChange={onImageChange}
-              className="file-input file-input-bordered flex-1 border border-[#99B19C] rounded-lg bg-white/70 text-[#6D2932] focus:border-[#6D2932] focus:outline-none"
+              className="file-input file-input-bordered flex-1 border border-[#99B19C] rounded-lg bg-white/70 text-[#6D2932] focus:border-[#6D2932] focus:outline-none min-h-[48px]"
             />
             <button
               onClick={onCaptureByScanner}
-              className="px-4 py-1.5 rounded-lg bg-[#6D2932] hover:bg-[#8B3A40] text-white font-bold transition-all duration-300 shadow border-2 border-[#6D2932] hover:border-[#8B3A40] whitespace-nowrap"
+              className="px-4 py-3 sm:py-1.5 rounded-lg bg-[#6D2932] hover:bg-[#8B3A40] text-white font-bold transition-all duration-300 shadow border-2 border-[#6D2932] hover:border-[#8B3A40] whitespace-nowrap min-h-[48px]"
             >
               Capture by Scanner
             </button>
@@ -108,12 +108,12 @@ export default function DetectionPanel({
         initial="hidden"
         animate="visible"
         variants={sectionVariants}
-        className="flex gap-4 w-full"
+        className="flex flex-col sm:flex-row gap-4 w-full"
       >
         <button
           onClick={onUpload}
           disabled={!selectedImageFile || isUploaded}
-          className={`flex-1 px-5 py-2 rounded-full font-bold transition-all duration-300 border-2 focus:outline-none text-sm ${
+          className={`flex-1 px-5 py-3 sm:py-2 min-h-[48px] rounded-full font-bold transition-all duration-300 border-2 focus:outline-none text-sm ${
             !selectedImageFile || isUploaded
               ? "bg-gray-300 text-gray-400 border-gray-300 cursor-not-allowed"
               : "bg-[#C7B7A3] text-[#6D2932] border-[#C7B7A3] hover:bg-[#6D2932] hover:text-[#FAF5EF] hover:border-[#6D2932]"
@@ -124,7 +124,7 @@ export default function DetectionPanel({
         <button
           onClick={onDetect}
           disabled={!isUploaded}
-          className={`flex-1 px-5 py-2 rounded-full font-bold transition-all duration-300 border-2 focus:outline-none text-sm ${
+          className={`flex-1 px-5 py-3 sm:py-2 min-h-[48px] rounded-full font-bold transition-all duration-300 border-2 focus:outline-none text-sm ${
             !isUploaded
               ? "bg-gray-300 text-gray-400 border-gray-300 cursor-not-allowed"
               : "bg-[#C7B7A3] text-[#6D2932] border-[#C7B7A3] hover:bg-[#6D2932] hover:text-[#FAF5EF] hover:border-[#6D2932]"

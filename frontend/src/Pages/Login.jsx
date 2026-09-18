@@ -78,13 +78,13 @@ const Login = () => {
         className="w-full max-w-md"
       >
         <div className="bg-white/70 backdrop-blur-lg text-[#6D2932] rounded-2xl shadow-2xl border border-[#E8D8C4]/40 overflow-hidden">
-          <div className="p-8 text-center text-xs sm:text-sm">
+          <div className="p-6 sm:p-8 text-center text-xs sm:text-sm">
             <div className="space-y-6">
               <motion.h2
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="text-2xl font-extrabold uppercase text-[#6D2932] tracking-tight"
+                className="text-xl sm:text-2xl font-extrabold uppercase text-[#6D2932] tracking-tight"
               >
                 Login
               </motion.h2>

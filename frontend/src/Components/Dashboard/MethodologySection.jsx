@@ -7,10 +7,10 @@ export default function MethodologySection({
   confusionMatrix,
 }) {
   return (
-    <div className="p-8 bg-white/80 rounded-2xl">
+    <div className="p-4 sm:p-8 bg-white/80 rounded-2xl">
       {" "}
       {/* Container card */}
-      <h2 className="text-2xl font-bold mb-4 text-[#6D2932]">
+      <h2 className="text-xl sm:text-2xl font-bold mb-4 text-[#6D2932]">
         {" "}
         {/* Title */}
         Methodology

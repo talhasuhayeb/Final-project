@@ -97,7 +97,7 @@ const About = () => {
   return (
     <section
       id="about"
-      className="min-h-screen flex items-center justify-center p-6"
+      className="min-h-screen flex items-center justify-center py-16 px-4 sm:px-6 md:py-24"
       style={{
         background:
           "linear-gradient(120deg, #fff 0%, #f8e6e6 60%, #6D2932 100%)",
@@ -106,13 +106,13 @@ const About = () => {
       <div className="max-w-6xl mx-auto w-full">
         {/* Text Section */}
         <motion.div
-          className="text-center mb-14"
+          className="text-center mb-10 sm:mb-14"
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, type: "spring", stiffness: 80 }}
         >
           <motion.h2
-            className="text-4xl md:text-5xl font-extrabold tracking-wide border-b-4 pb-2 inline-block shadow-sm"
+            className="text-2xl sm:text-3xl md:text-5xl font-extrabold tracking-wide border-b-4 pb-2 inline-block shadow-sm"
             style={{
               color: "#6D2932",
               borderColor: "#561C24",
@@ -130,8 +130,8 @@ const About = () => {
           </motion.h2>
         </motion.div>
 
-        <div className="flex justify-center">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-5xl">
+        <div className="flex justify-center w-full px-4 sm:px-0">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 lg:gap-10 w-full max-w-5xl">
             {cards.map((card, i) => (
               <motion.div
                 key={card.title}
@@ -167,7 +167,7 @@ const About = () => {
                 />
                 {card.icon}
                 <h3
-                  className="text-xl font-bold mb-2 text-center"
+                  className="text-lg sm:text-xl font-bold mb-2 text-center"
                   style={{
                     color: "#6D2932",
                   }}

@@ -30,7 +30,9 @@
   background: #c7b7a3;
   width: 0;
   opacity: 0;
-  transition: opacity 0 ease, width 0 ease;
+  transition:
+    opacity 0 ease,
+    width 0 ease;
   transition-delay: 0.5s;
 }
 
@@ -47,7 +49,9 @@
 .card:hover::before {
   width: 100%;
   opacity: 1;
-  transition: opacity 0.5s ease, width 0.5s ease;
+  transition:
+    opacity 0.5s ease,
+    width 0.5s ease;
   transition-delay: 0;
 }
 
@@ -77,4 +81,18 @@
 .card:hover .hover_content {
   max-height: 10em;
   transform: none;
+}
+
+@media (max-width: 768px) {
+  .card {
+    width: 100%;
+    max-width: 100%;
+    padding: 1.5em 1em;
+  }
+  .card:hover {
+    width: 100%;
+  }
+  .card .logo {
+    width: 3em;
+  }
 }

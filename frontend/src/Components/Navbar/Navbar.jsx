@@ -94,16 +94,16 @@ export default function Navbar() {
       }}
     >
       <div
-        className={`flex items-center justify-between h-20 ${
-          scrolled ? "px-8" : "px-20"
+        className={`flex items-center justify-between h-16 sm:h-20 ${
+          scrolled ? "px-4 sm:px-8" : "px-4 sm:px-10 md:px-20"
         }`}
       >
         {/* Logo & Brand */}
-        <Link to="/" className="flex items-center gap-4">
+        <Link to="/" className="flex items-center gap-3 lg:gap-4">
           <motion.img
             src={Logo}
             alt="BloodDetect logo"
-            className="h-14 w-14 object-cover rounded-full shadow-lg cursor-pointer border-4 border-white"
+            className="h-10 w-10 lg:h-14 lg:w-14 object-cover rounded-full shadow-lg cursor-pointer border-2 lg:border-4 border-white transition-all duration-300"
             variants={logoVariants}
             initial="rest"
             whileHover="hover"
@@ -111,9 +111,9 @@ export default function Navbar() {
               background: "#fff",
             }}
           />
-          <div className="flex flex-col items-start">
+          <div className="flex flex-col">
             <span
-              className="font-extrabold text-2xl tracking-tight select-none"
+              className="font-extrabold text-xl lg:text-2xl tracking-tight select-none transition-all duration-300"
               style={{
                 color: "#E8D8C4",
                 letterSpacing: "0.04em",
@@ -122,7 +122,7 @@ export default function Navbar() {
               Bindu
             </span>
             <span
-              className="text-xs font-medium"
+              className="text-[10px] lg:text-xs font-medium transition-all duration-300"
               style={{ color: "#C7B7A3", opacity: 0.7 }}
             >
               AI-Powered Blood Detection
@@ -131,7 +131,7 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-4">
+        <div className="hidden sm:flex items-center gap-4">
           <NavLink to="/" label="Home" />
           <NavLink
             to="#about"
@@ -147,7 +147,7 @@ export default function Navbar() {
         </div>
 
         {/* Auth Buttons */}
-        <div className="hidden md:flex items-center gap-2">
+        <div className="hidden sm:flex items-center gap-2">
           {!loggedInUser ? (
             <>
               <ButtonLink to="/register" label="Register" variant="outline" />
@@ -159,7 +159,7 @@ export default function Navbar() {
                 onClick={() =>
                   navigate(role === "admin" ? "/admin-dashboard" : "/dashboard")
                 }
-                className="px-5 py-2 rounded-xl font-semibold text-[#C7B7A3] bg-[#E8D8C4]/10 border border-[#C7B7A3] transition shadow cursor-pointer hover:scale-105"
+                className="px-3 py-2 lg:px-5 lg:py-2 text-sm lg:text-base min-h-[40px] lg:min-h-[48px] flex items-center justify-center rounded-xl font-semibold text-[#C7B7A3] bg-[#E8D8C4]/10 border border-[#C7B7A3] transition shadow cursor-pointer hover:scale-105"
                 type="button"
                 style={{
                   backdropFilter: "blur(8px)",
@@ -170,7 +170,7 @@ export default function Navbar() {
               </button>
               <button
                 onClick={handleLogout}
-                className="px-5 py-2 rounded-xl font-semibold text-[#561C24] bg-gradient-to-r from-[#C7B7A3] to-[#E8D8C4] transition shadow cursor-pointer hover:scale-105"
+                className="px-3 py-2 lg:px-5 lg:py-2 text-sm lg:text-base min-h-[40px] lg:min-h-[48px] flex items-center justify-center rounded-xl font-semibold text-[#561C24] bg-gradient-to-r from-[#C7B7A3] to-[#E8D8C4] transition shadow cursor-pointer hover:scale-105"
                 type="button"
                 style={{
                   border: "1.5px solid #C7B7A3",
@@ -185,13 +185,13 @@ export default function Navbar() {
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden p-2 rounded-xl bg-[#C7B7A3]/60 hover:bg-[#E8D8C4]/10 transition shadow"
+          className="sm:hidden p-2 rounded-xl bg-[#C7B7A3]/60 hover:bg-[#E8D8C4]/10 transition shadow flex items-center justify-center"
           onClick={() => setMenuOpen((v) => !v)}
           aria-label="Toggle menu"
         >
           <motion.svg
-            width="32"
-            height="32"
+            className="w-6 h-6 sm:w-8 sm:h-8"
+            viewBox="0 0 32 32"
             fill="none"
             stroke="#E8D8C4"
             strokeWidth="2"
@@ -217,7 +217,7 @@ export default function Navbar() {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="md:hidden fixed top-24 right-4 w-72 h-[calc(100vh-6rem)] bg-[#561C24]/90 backdrop-blur-xl shadow-2xl border-l border-[#C7B7A3] flex flex-col px-8 py-10 gap-6 z-50 rounded-2xl"
+            className="sm:hidden fixed top-20 right-4 w-60 bg-[#561C24]/90 backdrop-blur-xl shadow-2xl border-l border-[#C7B7A3] flex flex-col p-6 gap-4 z-50 rounded-2xl"
             style={{
               background:
                 "linear-gradient(135deg, rgba(86,28,36,0.95) 60%, rgba(232,216,196,0.09) 100%)",
@@ -263,10 +263,10 @@ export default function Navbar() {
                     onClick={() => {
                       setMenuOpen(false);
                       navigate(
-                        role === "admin" ? "/admin-dashboard" : "/dashboard"
+                        role === "admin" ? "/admin-dashboard" : "/dashboard",
                       );
                     }}
-                    className="w-full px-5 py-2 rounded-xl font-semibold text-[#C7B7A3] bg-white/80 border border-[#C7B7A3] hover:bg-[#E8D8C4]/10 transition shadow"
+                    className="w-full px-5 py-3 sm:py-2 min-h-[48px] flex items-center justify-center rounded-xl font-semibold text-[#C7B7A3] bg-white/80 border border-[#C7B7A3] hover:bg-[#E8D8C4]/10 transition shadow"
                     type="button"
                   >
                     Dashboard
@@ -276,7 +276,7 @@ export default function Navbar() {
                       setMenuOpen(false);
                       handleLogout();
                     }}
-                    className="w-full px-5 py-2 rounded-xl font-semibold text-[#561C24] bg-gradient-to-r from-[#C7B7A3] to-[#E8D8C4] hover:from-[#E8D8C4] hover:to-[#C7B7A3] transition shadow"
+                    className="w-full px-5 py-3 sm:py-2 min-h-[48px] flex items-center justify-center rounded-xl font-semibold text-[#561C24] bg-gradient-to-r from-[#C7B7A3] to-[#E8D8C4] hover:from-[#E8D8C4] hover:to-[#C7B7A3] transition shadow"
                     type="button"
                   >
                     Logout
@@ -320,7 +320,7 @@ function NavLink({ to, label, onClick }) {
 // ButtonLink component for buttons
 function ButtonLink({ to, label, variant, onClick }) {
   const base =
-    "px-5 py-2 rounded-xl font-semibold transition w-full md:w-auto text-center shadow";
+    "px-3 py-2 lg:px-5 lg:py-2 text-sm lg:text-base min-h-[40px] lg:min-h-[48px] flex items-center justify-center rounded-xl font-semibold transition w-full md:w-auto text-center shadow";
   const styles =
     variant === "primary"
       ? "bg-gradient-to-r from-[#C7B7A3] to-[#E8D8C4] text-[#561C24] border border-[#C7B7A3] hover:from-[#E8D8C4] hover:to-[#C7B7A3] hover:scale-105"

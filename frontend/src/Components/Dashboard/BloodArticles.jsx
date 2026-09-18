@@ -51,25 +51,24 @@ export default function BloodArticles({
         </div>
       </div>
       {/* Articles Grid */}
-      <h2 className="text-2xl font-bold mb-8 text-[#6D2932] text-center">
+      <h2 className="text-xl sm:text-2xl font-bold mb-6 sm:mb-8 text-[#6D2932] text-center">
         Trending Blood Articles
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
         {trendingArticles.map((article) => (
           <div
             key={article.id}
-            className="bg-white rounded-xl border-l-4 border-[#6D2932] shadow-md flex flex-col hover:-translate-y-2 hover:shadow-xl transition-all duration-300 overflow-hidden"
-            style={{ minHeight: "340px" }}
+            className="bg-white rounded-xl border-l-4 border-[#6D2932] shadow-md flex flex-col hover:-translate-y-2 hover:shadow-xl transition-all duration-300 overflow-hidden min-h-[280px] sm:min-h-[340px]"
           >
-            <div style={{ width: "100%", height: "180px" }}>
+            <div className="w-full h-36 sm:h-[180px]">
               <img
                 src={article.image}
                 alt={article.title}
                 className="w-full h-full object-cover"
               />
             </div>
-            <div className="p-5 flex-1 flex flex-col items-center justify-between">
-              <h3 className="text-lg font-bold text-[#6D2932] mb-2 text-center">
+            <div className="p-4 sm:p-5 flex-1 flex flex-col items-center justify-between">
+              <h3 className="text-base sm:text-lg font-bold text-[#6D2932] mb-2 text-center">
                 {article.title}
               </h3>
               <p className="text-[#6D2932] text-xs mb-3 text-center">

@@ -1173,14 +1173,15 @@ export default function Dashboard() {
       <main className="flex-grow flex flex-col items-center justify-center px-4 py-8">
         {/* Sidebar Trigger Icon (kept) */}
         <div
-          className="fixed top-1/2 left-0 z-50 transform -translate-y-1/2 cursor-pointer w-6 h-6"
+          className="fixed top-1/2 left-0 z-50 transform -translate-y-1/2 cursor-pointer w-10 h-10 sm:w-6 sm:h-6"
           onMouseEnter={() => setSidebarOpen(true)}
           onMouseLeave={() => setSidebarOpen(false)}
+          onClick={() => setSidebarOpen(!sidebarOpen)}
         >
-          <div className="bg-[#99B19C] hover:bg-[#6D2932] text-[#FAF5EF] p-0.5 w-6 h-6 rounded-r-lg shadow flex items-center justify-center">
+          <div className="bg-[#99B19C] hover:bg-[#6D2932] text-[#FAF5EF] p-0.5 w-10 h-10 sm:w-6 sm:h-6 rounded-r-lg shadow flex items-center justify-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4"
+              className="h-6 w-6 sm:h-4 sm:w-4"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"

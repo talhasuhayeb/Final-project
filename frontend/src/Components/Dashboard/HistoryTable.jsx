@@ -18,10 +18,10 @@ export default function HistoryTable({
   const [imageError, setImageError] = React.useState(false);
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-8 bg-white/80 backdrop-blur-lg shadow-2xl rounded-2xl border border-[#99B19C]/40">
+    <div className="w-full max-w-4xl mx-auto p-4 sm:p-8 bg-white/80 backdrop-blur-lg shadow-2xl rounded-2xl border border-[#99B19C]/40">
       {" "}
       {/* Wrapper card */}
-      <h2 className="text-2xl font-extrabold mb-6 text-center text-[#6D2932] tracking-tight">
+      <h2 className="text-xl sm:text-2xl font-extrabold mb-6 text-center text-[#6D2932] tracking-tight">
         {" "}
         {/* Title */}
         Detection History
@@ -104,16 +104,21 @@ export default function HistoryTable({
                       <div className="flex justify-center">
                         {" "}
                         {/* Center image */}
-                        {(detection.imageData || detection.filename) ? ( // If we have image data or a filename
+                        {detection.imageData || detection.filename ? ( // If we have image data or a filename
                           <img
-                            src={detection.imageData || `https://bindu-backend.onrender.com/uploads/${detection.filename}`} // Prefer base64 from DB, fallback to static URL
+                            src={
+                              detection.imageData ||
+                              `https://bindu-backend.onrender.com/uploads/${detection.filename}`
+                            } // Prefer base64 from DB, fallback to static URL
                             alt="Fingerprint" // Alt text
                             className="w-12 h-12 object-cover rounded-xl border border-[#99B19C]/40 shadow" // Thumb style
                             onError={(e) => {
                               // Fallback on error
                               console.log(
                                 "Fingerprint image failed to load:",
-                                e.target.src ? e.target.src.substring(0, 80) + '...' : 'unknown',
+                                e.target.src
+                                  ? e.target.src.substring(0, 80) + "..."
+                                  : "unknown",
                               ); // Log
                               e.target.onerror = null; // Prevent loop
                               e.target.src =
@@ -154,12 +159,12 @@ export default function HistoryTable({
                         {/* Button group */}
                         <button
                           onClick={() => handleViewDetection(detection)} // Open modal with details
-                          className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 flex items-center justify-center shadow border-2 border-blue-500 hover:border-blue-600" // View button
+                          className="bg-blue-500 hover:bg-blue-600 text-white p-3 sm:p-2 min-h-[48px] min-w-[48px] sm:min-h-0 sm:min-w-0 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 flex items-center justify-center shadow border-2 border-blue-500 hover:border-blue-600" // View button
                           title="View full report" // Tooltip
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            className="h-4 w-4"
+                            className="h-5 w-5 sm:h-4 sm:w-4"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
@@ -183,12 +188,12 @@ export default function HistoryTable({
                         </button>
                         <button
                           onClick={() => handleDownloadReport(detection)} // Trigger download
-                          className="bg-green-500 hover:bg-green-600 text-white p-2 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 flex items-center justify-center shadow border-2 border-green-500 hover:border-green-600" // Download button
+                          className="bg-green-500 hover:bg-green-600 text-white p-3 sm:p-2 min-h-[48px] min-w-[48px] sm:min-h-0 sm:min-w-0 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 flex items-center justify-center shadow border-2 border-green-500 hover:border-green-600" // Download button
                           title="Download PDF report" // Tooltip
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            className="h-4 w-4"
+                            className="h-5 w-5 sm:h-4 sm:w-4"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
@@ -256,7 +261,7 @@ export default function HistoryTable({
                   setSelectedDetection(null);
                   setImageError(false);
                 }}
-                className="absolute top-3 right-3 text-[#6D2932] text-xl font-bold hover:text-[#99B19C] w-7 h-7 flex items-center justify-center rounded-full hover:bg-[#F0EBE3]"
+                className="absolute top-2 right-2 sm:top-3 sm:right-3 text-[#6D2932] text-2xl sm:text-xl font-bold hover:text-[#99B19C] w-12 h-12 sm:w-8 sm:h-8 flex items-center justify-center rounded-full hover:bg-[#F0EBE3]"
                 aria-label="Close"
               >
                 &times;
@@ -420,9 +425,14 @@ export default function HistoryTable({
                   🔎 Fingerprint Image
                 </div>
                 <div className="flex justify-center">
-                  {(selectedDetection.imageData || selectedDetection.filename) && !imageError ? (
+                  {(selectedDetection.imageData ||
+                    selectedDetection.filename) &&
+                  !imageError ? (
                     <img
-                      src={selectedDetection.imageData || `https://bindu-backend.onrender.com/uploads/${selectedDetection.filename}`}
+                      src={
+                        selectedDetection.imageData ||
+                        `https://bindu-backend.onrender.com/uploads/${selectedDetection.filename}`
+                      }
                       alt="Fingerprint"
                       className="h-40 sm:h-48 object-contain rounded-xl border border-[#99B19C]/40 shadow max-w-full"
                       onError={() => setImageError(true)}
@@ -506,7 +516,7 @@ export default function HistoryTable({
               <div className="flex justify-center mt-2">
                 <button
                   onClick={() => handleDownloadReport(selectedDetection)}
-                  className="px-3 py-1 rounded-full bg-[#6D2932] text-[#FAF5EF] font-medium transition-all duration-300 border border-[#6D2932] hover:scale-105 hover:shadow-lg text-xs"
+                  className="px-4 py-3 sm:px-3 sm:py-1 min-h-[48px] rounded-full bg-[#6D2932] text-[#FAF5EF] font-medium transition-all duration-300 border border-[#6D2932] hover:scale-105 hover:shadow-lg text-sm sm:text-xs w-full sm:w-auto"
                 >
                   📝 Download PDF Report
                 </button>

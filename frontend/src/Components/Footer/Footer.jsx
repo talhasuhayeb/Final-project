@@ -130,7 +130,7 @@ const Footer = ({ variant = 2 }) => {
                 <motion.li key={label} initial="rest" whileHover="hover">
                   <motion.a
                     href={label === "About" ? "#about" : "#"}
-                    className="font-medium"
+                    className="font-medium inline-block py-2"
                     variants={linkVariants}
                     style={{
                       color: theme.color,
@@ -157,7 +157,7 @@ const Footer = ({ variant = 2 }) => {
                 <motion.li key={label} initial="rest" whileHover="hover">
                   <motion.a
                     href="#"
-                    className="font-medium"
+                    className="font-medium inline-block py-2"
                     variants={linkVariants}
                     style={{
                       color: theme.color,
@@ -178,7 +178,7 @@ const Footer = ({ variant = 2 }) => {
         <div className="flex space-x-6 mt-6 md:mt-0">
           <motion.a
             href="#"
-            className="transition"
+            className="transition p-2 min-w-[48px] min-h-[48px] flex items-center justify-center"
             initial="rest"
             whileHover="hover"
             variants={iconVariants}
@@ -193,7 +193,7 @@ const Footer = ({ variant = 2 }) => {
           </motion.a>
           <motion.a
             href="#"
-            className="transition"
+            className="transition p-2 min-w-[48px] min-h-[48px] flex items-center justify-center"
             initial="rest"
             whileHover="hover"
             variants={iconVariants}

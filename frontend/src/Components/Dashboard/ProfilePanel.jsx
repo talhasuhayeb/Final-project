@@ -13,13 +13,13 @@ export default function ProfilePanel({
   handleRemoveProfilePicture,
 }) {
   return (
-    <div className="w-full max-w-4xl mx-auto p-8 bg-white/80 backdrop-blur-lg shadow-2xl rounded-2xl border border-[#99B19C]/40">
+    <div className="w-full max-w-4xl mx-auto p-4 sm:p-8 bg-white/80 backdrop-blur-lg shadow-2xl rounded-2xl border border-[#99B19C]/40">
       {" "}
       {/* Card container */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
         {" "}
         {/* Header row */}
-        <h2 className="text-2xl font-extrabold text-[#6D2932] tracking-tight">
+        <h2 className="text-xl sm:text-2xl font-extrabold text-[#6D2932] tracking-tight">
           {" "}
           {/* Title */}
           User Profile
@@ -27,23 +27,23 @@ export default function ProfilePanel({
         {!isEditingProfile ? ( // Show edit button when not editing
           <button
             onClick={() => setIsEditingProfile(true)} // Enter edit mode
-            className="px-4 py-2 rounded-full bg-[#99B19C] hover:bg-[#6D2932] text-[#6D2932] hover:text-[#FAF5EF] font-bold transition-all duration-300 border-2 border-[#99B19C] hover:border-[#6D2932] text-xs sm:text-sm" // Button style
+            className="px-4 py-3 sm:py-2 min-h-[48px] w-full sm:w-auto rounded-full bg-[#99B19C] hover:bg-[#6D2932] text-[#6D2932] hover:text-[#FAF5EF] font-bold transition-all duration-300 border-2 border-[#99B19C] hover:border-[#6D2932] text-xs sm:text-sm" // Button style
           >
             ✏️ Edit Profile
           </button>
         ) : (
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
             {" "}
             {/* Action buttons when editing */}
             <button
               onClick={handleSaveProfile} // Save edits handler
-              className="px-4 py-2 rounded-full bg-[#6D2932] hover:bg-[#99B19C] text-[#FAF5EF] hover:text-[#6D2932] font-bold transition-all duration-300 border-2 border-[#6D2932] hover:border-[#99B19C] text-xs sm:text-sm" // Save button style
+              className="px-4 py-3 sm:py-2 min-h-[48px] w-full sm:w-auto rounded-full bg-[#6D2932] hover:bg-[#99B19C] text-[#FAF5EF] hover:text-[#6D2932] font-bold transition-all duration-300 border-2 border-[#6D2932] hover:border-[#99B19C] text-xs sm:text-sm" // Save button style
             >
               💾 Save
             </button>
             <button
               onClick={handleCancelEdit} // Cancel edits
-              className="px-4 py-2 rounded-full bg-gray-400 hover:bg-gray-500 text-white font-bold transition-all duration-300 border-2 border-gray-400 hover:border-gray-500 text-xs sm:text-sm" // Cancel button style
+              className="px-4 py-3 sm:py-2 min-h-[48px] w-full sm:w-auto rounded-full bg-gray-400 hover:bg-gray-500 text-white font-bold transition-all duration-300 border-2 border-gray-400 hover:border-gray-500 text-xs sm:text-sm" // Cancel button style
             >
               ❌ Cancel
             </button>
@@ -153,7 +153,7 @@ export default function ProfilePanel({
                   name="name" // Model key
                   value={userProfile.name} // Controlled value
                   onChange={handleProfileInputChange} // Update state
-                  className="w-full px-4 py-2 border-2 border-[#99B19C] rounded-lg bg-white focus:border-[#6D2932] focus:outline-none text-[#6D2932] text-sm" // Input styles
+                  className="w-full px-4 py-2 min-h-[48px] border-2 border-[#99B19C] rounded-lg bg-white focus:border-[#6D2932] focus:outline-none text-[#6D2932] text-sm" // Input styles
                   placeholder="Enter your full name" // Helper text
                 />
               ) : (
@@ -180,7 +180,7 @@ export default function ProfilePanel({
                   name="email" // Model key
                   value={userProfile.email} // Controlled value
                   onChange={handleProfileInputChange} // Update state
-                  className="w-full px-4 py-2 border-2 border-[#99B19C] rounded-lg bg-white focus:border-[#6D2932] focus:outline-none text-[#6D2932] text-sm" // Styles
+                  className="w-full px-4 py-2 min-h-[48px] border-2 border-[#99B19C] rounded-lg bg-white focus:border-[#6D2932] focus:outline-none text-[#6D2932] text-sm" // Styles
                   placeholder="Enter your email" // Placeholder
                 />
               ) : (
@@ -207,7 +207,7 @@ export default function ProfilePanel({
                   name="phone" // Model key
                   value={userProfile.phone} // Controlled
                   onChange={handleProfileInputChange} // Update state
-                  className="w-full px-4 py-2 border-2 border-[#99B19C] rounded-lg bg-white focus:border-[#6D2932] focus:outline-none text-[#6D2932] text-sm" // Styles
+                  className="w-full px-4 py-2 min-h-[48px] border-2 border-[#99B19C] rounded-lg bg-white focus:border-[#6D2932] focus:outline-none text-[#6D2932] text-sm" // Styles
                   placeholder="Enter your phone number" // Placeholder
                 />
               ) : (
@@ -233,7 +233,7 @@ export default function ProfilePanel({
                   name="gender" // Model key
                   value={userProfile.gender} // Controlled
                   onChange={handleProfileInputChange} // Update state
-                  className="w-full px-4 py-2 border-2 border-[#99B19C] rounded-lg bg-white focus:border-[#6D2932] focus:outline-none text-[#6D2932] text-sm" // Styles
+                  className="w-full px-4 py-2 min-h-[48px] border-2 border-[#99B19C] rounded-lg bg-white focus:border-[#6D2932] focus:outline-none text-[#6D2932] text-sm" // Styles
                 >
                   <option value="">Select Gender</option> {/* Empty option */}
                   <option value="Male">Male</option> {/* Male option */}
@@ -264,7 +264,7 @@ export default function ProfilePanel({
                   name="dateOfBirth" // Model key
                   value={userProfile.dateOfBirth} // Controlled value
                   onChange={handleProfileInputChange} // Update state
-                  className="w-full px-4 py-2 border-2 border-[#99B19C] rounded-lg bg-white focus:border-[#6D2932] focus:outline-none text-[#6D2932] text-sm" // Styles
+                  className="w-full px-4 py-2 min-h-[48px] border-2 border-[#99B19C] rounded-lg bg-white focus:border-[#6D2932] focus:outline-none text-[#6D2932] text-sm" // Styles
                 />
               ) : (
                 // Read-only
@@ -274,7 +274,7 @@ export default function ProfilePanel({
                   {userProfile.dateOfBirth
                     ? new Date(userProfile.dateOfBirth).toLocaleDateString(
                         "en-US",
-                        { year: "numeric", month: "long", day: "numeric" }
+                        { year: "numeric", month: "long", day: "numeric" },
                       ) // Pretty date
                     : "Not specified"}{" "}
                   {/* Fallback */}

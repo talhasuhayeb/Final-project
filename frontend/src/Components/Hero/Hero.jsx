@@ -101,11 +101,9 @@ const imageVariants = {
 const Hero = () => {
   return (
     <section
-      className="relative w-full min-h-screen h-screen flex items-center justify-center overflow-hidden"
+      className="relative w-full min-h-screen flex items-center justify-center overflow-x-hidden pt-24 pb-12 md:pt-0 md:pb-0"
       style={{
         background: "linear-gradient(120deg, #561C24 0%, #fff 100%)",
-        minHeight: "100vh",
-        height: "100vh",
       }}
     >
       {/* Glass background accent */}
@@ -120,15 +118,15 @@ const Hero = () => {
         }}
       />
 
-      <div className="max-w-7xl w-full mx-auto grid grid-cols-1 md:grid-cols-2 gap-0 items-center px-6 md:px-12 relative z-10">
+      <div className="max-w-7xl w-full mx-auto grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-0 items-center px-4 sm:px-6 md:px-12 relative z-10 pt-8 md:pt-20">
         {/* Left: Content */}
         <motion.div
-          className="flex flex-col justify-center items-start bg-white/95 backdrop-blur-xl rounded-2xl p-10 shadow-2xl"
+          className="flex flex-col justify-center items-start bg-white/95 backdrop-blur-xl rounded-2xl p-5 sm:p-10 shadow-2xl mx-auto w-full max-w-lg md:max-w-md lg:max-w-lg"
           animate={{ x: [0, -10, 10, 0] }}
           transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
         >
           <motion.h1
-            className="text-4xl md:text-5xl font-black mb-6 leading-tight tracking-tight"
+            className="text-2xl sm:text-4xl lg:text-4xl font-black mb-3 sm:mb-6 leading-snug sm:leading-tight tracking-tight"
             style={{
               color: "#561C24",
               textShadow: "0 2px 16px rgba(86,28,36,0.12)",
@@ -139,7 +137,7 @@ const Hero = () => {
             animate={{ y: 0, opacity: 1 }}
             transition={{ type: "spring", stiffness: 400, damping: 18 }}
             whileHover={{
-              scale: 1.06,
+              scale: 1.03,
               textShadow: "0 0 32px #6D2932",
               transition: { type: "spring", stiffness: 300, damping: 18 },
             }}
@@ -155,12 +153,15 @@ const Hero = () => {
               Blood Group Detection
             </span>
             <br />
-            <span style={{ color: "#222", fontWeight: 700 }}>
+            <span
+              style={{ color: "#222", fontWeight: 700 }}
+              className="text-xl sm:text-3xl lg:text-3xl mt-1 sm:mt-2 inline-block"
+            >
               Using Fingerprint
             </span>
           </motion.h1>
           <motion.p
-            className="mb-8 text-lg font-medium max-w-md"
+            className="mb-6 sm:mb-8 text-sm sm:text-base lg:text-lg font-medium max-w-md"
             style={{ color: "#222", opacity: 0.85, cursor: "pointer" }}
             variants={subheadingVariants}
             initial="hidden"
@@ -197,7 +198,7 @@ const Hero = () => {
           >
             <Link
               to="/register"
-              className="inline-block px-8 py-3 rounded-full font-bold text-lg shadow-lg transition-all duration-300 border-2"
+              className="inline-block px-5 py-2 text-sm sm:px-8 sm:py-3 rounded-full font-bold sm:text-lg shadow-lg transition-all duration-300 border-2"
               style={{
                 background: "linear-gradient(90deg, #561C24 0%, #561C24 100%)",
                 color: "#fff",
@@ -212,7 +213,7 @@ const Hero = () => {
 
         {/* Right: Realistic Fingerprint Image with unique hover animation */}
         <motion.div
-          className="flex justify-center items-center relative"
+          className="flex justify-center items-center relative mt-4 md:mt-0"
           initial={{ scale: 0.7, opacity: 0, rotate: -8 }}
           animate={{ scale: 1, opacity: 1, rotate: 0 }}
           transition={{
@@ -223,7 +224,7 @@ const Hero = () => {
           }}
         >
           <motion.div
-            className="relative w-[300px] h-[300px] rounded-2xl shadow-2xl border-4 flex items-center justify-center overflow-hidden"
+            className="relative w-[180px] h-[180px] sm:w-[300px] sm:h-[300px] rounded-2xl shadow-2xl border-4 flex items-center justify-center overflow-hidden"
             style={{
               borderColor: "#561C24",
               background: "rgba(255,255,255,0.85)",

@@ -20,7 +20,7 @@ export default function Sidebar({
       {/* Detection button */}
       <button
         onClick={() => setActiveSection("main")} // Switch to detection section
-        className={`w-full text-left px-4 py-2 rounded-lg font-bold text-[#6D2932] border border-[#99B19C]/40 mb-2 transition-all duration-200 hover:bg-[#99B19C]/10 ${
+        className={`w-full text-left px-4 py-3 sm:py-2 min-h-[48px] rounded-lg font-bold text-[#6D2932] border border-[#99B19C]/40 mb-2 transition-all duration-200 hover:bg-[#99B19C]/10 ${
           activeSection === "main" ? "bg-[#99B19C]/20" : ""
         }`} // Highlight when active
       >
@@ -30,7 +30,7 @@ export default function Sidebar({
       {/* Profile button */}
       <button
         onClick={() => setActiveSection("profile")} // Switch to profile section
-        className={`w-full text-left px-4 py-2 rounded-lg font-bold text-[#6D2932] border border-[#99B19C]/40 mb-2 transition-all duration-200 hover:bg-[#99B19C]/10 ${
+        className={`w-full text-left px-4 py-3 sm:py-2 min-h-[48px] rounded-lg font-bold text-[#6D2932] border border-[#99B19C]/40 mb-2 transition-all duration-200 hover:bg-[#99B19C]/10 ${
           activeSection === "profile" ? "bg-[#99B19C]/20" : ""
         }`} // Highlight when active
       >
@@ -40,7 +40,7 @@ export default function Sidebar({
       {/* Methodology button */}
       <button
         onClick={() => setActiveSection("methodology")} // Switch to methodology section
-        className={`w-full text-left px-4 py-2 rounded-lg font-bold text-[#6D2932] border border-[#99B19C]/40 mb-2 transition-all duration-200 hover:bg-[#99B19C]/10 ${
+        className={`w-full text-left px-4 py-3 sm:py-2 min-h-[48px] rounded-lg font-bold text-[#6D2932] border border-[#99B19C]/40 mb-2 transition-all duration-200 hover:bg-[#99B19C]/10 ${
           activeSection === "methodology" ? "bg-[#99B19C]/20" : ""
         }`}
       >
@@ -50,7 +50,7 @@ export default function Sidebar({
       {/* Blood Article button */}
       <button
         onClick={() => setActiveSection("bloodArticle")} // Switch to blood articles section
-        className={`w-full text-left px-4 py-2 rounded-lg font-bold text-[#6D2932] border border-[#99B19C]/40 mb-2 transition-all duration-200 hover:bg-[#99B19C]/10 ${
+        className={`w-full text-left px-4 py-3 sm:py-2 min-h-[48px] rounded-lg font-bold text-[#6D2932] border border-[#99B19C]/40 mb-2 transition-all duration-200 hover:bg-[#99B19C]/10 ${
           activeSection === "bloodArticle" ? "bg-[#99B19C]/20" : ""
         }`}
       >
@@ -60,7 +60,7 @@ export default function Sidebar({
       {/* History button */}
       <button
         onClick={() => setActiveSection("history")} // Switch to history section
-        className={`w-full text-left px-4 py-2 rounded-lg font-bold text-[#6D2932] border border-[#99B19C]/40 transition-all duration-200 hover:bg-[#99B19C]/10 ${
+        className={`w-full text-left px-4 py-3 sm:py-2 min-h-[48px] rounded-lg font-bold text-[#6D2932] border border-[#99B19C]/40 transition-all duration-200 hover:bg-[#99B19C]/10 ${
           activeSection === "history" ? "bg-[#99B19C]/20" : ""
         }`}
       >
