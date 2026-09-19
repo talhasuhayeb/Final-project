@@ -7,8 +7,6 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
     allowedHosts: [
-      "final-project-production-d01c.up.railway.app",
-      "*.up.railway.app",
       "bindu-011l.onrender.com",
     ],
   },
