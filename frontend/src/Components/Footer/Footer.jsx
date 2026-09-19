@@ -112,7 +112,7 @@ const Footer = ({ variant = 2 }) => {
             </div>
           </div>
           <p className="mt-2 text-center md:text-left opacity-80 text-sm">
-            © 2025 Blood Group Detection System. All rights reserved.
+            © 2025 Bindu.All rights reserved by Talha Suhayeb.
           </p>
         </div>
 
