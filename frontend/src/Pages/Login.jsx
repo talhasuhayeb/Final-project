@@ -30,7 +30,9 @@ const Login = () => {
       return;
     }
     try {
-      const url = "https://bindu-backend.onrender.com/auth/login";
+      const baseUrl =
+        import.meta.env.VITE_API_URL || "https://bindu-backend.onrender.com";
+      const url = `${baseUrl}/auth/login`;
       const response = await fetch(url, {
         method: "POST",
         headers: {

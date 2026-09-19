@@ -56,7 +56,9 @@ const ResetPassword = () => {
     setIsLoading(true);
 
     try {
-      const url = `https://bindu-backend.onrender.com/auth/reset-password/${token}`;
+      const baseUrl =
+        import.meta.env.VITE_API_URL || "https://bindu-backend.onrender.com";
+      const url = `${baseUrl}/auth/reset-password/${token}`;
       const response = await fetch(url, {
         method: "POST",
         headers: {

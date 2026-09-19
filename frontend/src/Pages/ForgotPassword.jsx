@@ -33,7 +33,9 @@ const ForgotPassword = () => {
     setIsLoading(true);
 
     try {
-      const url = "https://bindu-backend.onrender.com/auth/forgot-password";
+      const baseUrl =
+        import.meta.env.VITE_API_URL || "https://bindu-backend.onrender.com";
+      const url = `${baseUrl}/auth/forgot-password`;
       const response = await fetch(url, {
         method: "POST",
         headers: {
