@@ -28,7 +28,7 @@ export default function MethodologySection({
         <img
           src={heroPic3}
           alt="Blood Group Distribution Diagram"
-          className="w-full max-w-2xl rounded-xl"
+          className="w-full max-w-full sm:max-w-2xl rounded-xl"
         />{" "}
         {/* Chart image */}
       </div>
@@ -47,7 +47,7 @@ export default function MethodologySection({
         <img
           src={modelAccuracy}
           alt="Model Accuracy Chart"
-          className="w-full max-w-2xl rounded-xl"
+          className="w-full max-w-full sm:max-w-2xl rounded-xl"
         />{" "}
         {/* Chart image */}
       </div>
@@ -64,7 +64,7 @@ export default function MethodologySection({
         <img
           src={confusionMatrix}
           alt="Confusion Matrix"
-          className="w-full max-w-2xl rounded-xl"
+          className="w-full max-w-full sm:max-w-2xl rounded-xl"
         />{" "}
         {/* Matrix image */}
       </div>

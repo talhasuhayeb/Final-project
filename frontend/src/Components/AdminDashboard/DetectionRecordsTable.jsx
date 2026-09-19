@@ -19,19 +19,19 @@ export default function DetectionRecordsTable({
           {" "}
           {/* Header */}
           <tr>
-            <th className="px-4 py-3 text-center font-semibold">Date & Time</th>
-            <th className="px-4 py-3 text-center font-semibold">Analysis ID</th>
-            <th className="px-4 py-3 text-center font-semibold">User</th>
-            <th className="px-4 py-3 text-center font-semibold">Blood Group</th>
-            <th className="px-4 py-3 text-center font-semibold">Confidence</th>
-            <th className="px-4 py-3 text-center font-semibold">
+            <th className="px-4 py-3 text-center font-semibold whitespace-nowrap">Date & Time</th>
+            <th className="px-4 py-3 text-center font-semibold whitespace-nowrap">Analysis ID</th>
+            <th className="px-4 py-3 text-center font-semibold whitespace-nowrap">User</th>
+            <th className="px-4 py-3 text-center font-semibold whitespace-nowrap">Blood Group</th>
+            <th className="px-4 py-3 text-center font-semibold whitespace-nowrap">Confidence</th>
+            <th className="px-4 py-3 text-center font-semibold whitespace-nowrap">
               Processing Time
             </th>
-            <th className="px-4 py-3 text-center font-semibold">
+            <th className="px-4 py-3 text-center font-semibold whitespace-nowrap">
               Image Quality
             </th>
-            <th className="px-4 py-3 text-center font-semibold">Fingerprint</th>
-            <th className="px-4 py-3 text-center font-semibold">Actions</th>
+            <th className="px-4 py-3 text-center font-semibold whitespace-nowrap">Fingerprint</th>
+            <th className="px-4 py-3 text-center font-semibold whitespace-nowrap">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -45,41 +45,41 @@ export default function DetectionRecordsTable({
               >
                 {" "}
                 {/* Row */}
-                <td className="px-4 py-2 text-center text-[#6D2932]">
+                <td className="px-4 py-2 text-center text-[#6D2932] whitespace-nowrap">
                   {/* Date & Time */}
                   {formatDate(record.timestamp)}{" "}
                   {new Date(record.timestamp).toLocaleTimeString()}
                 </td>
-                <td className="px-4 py-2 text-center text-[#6D2932]">
+                <td className="px-4 py-2 text-center text-[#6D2932] whitespace-nowrap">
                   {/* Analysis ID */}
                   {record.analysis_id ||
                     (record._id
                       ? record._id.toString().substring(0, 8)
                       : "N/A")}
                 </td>
-                <td className="px-4 py-2 text-center text-[#6D2932] font-medium">
+                <td className="px-4 py-2 text-center text-[#6D2932] font-medium whitespace-nowrap">
                   {/* User */}
                   {record.userName}
                 </td>
-                <td className="px-4 py-2 text-center">
+                <td className="px-4 py-2 text-center whitespace-nowrap">
                   {/* Blood Group */}
                   <span className="bg-[#6D2932] text-[#FAF5EF] px-2 py-1 rounded-full font-bold text-xs sm:text-sm">
                     {record.bloodGroup}
                   </span>
                 </td>
-                <td className="px-4 py-2 text-center text-green-600 font-medium">
+                <td className="px-4 py-2 text-center text-green-600 font-medium whitespace-nowrap">
                   {/* Confidence */}
                   {record.confidence.toFixed(2)}%
                 </td>
-                <td className="px-4 py-2 text-center text-[#6D2932]">
+                <td className="px-4 py-2 text-center text-[#6D2932] whitespace-nowrap">
                   {/* Processing Time */}
                   {record.processingTime.toFixed(2)}ms
                 </td>
-                <td className="px-4 py-2 text-center text-[#6D2932]">
+                <td className="px-4 py-2 text-center text-[#6D2932] whitespace-nowrap">
                   {/* Image Quality */}
                   {record.imageQuality.toFixed(0)}%
                 </td>
-                <td className="px-4 py-2 text-center">
+                <td className="px-4 py-2 text-center whitespace-nowrap">
                   {/* Fingerprint */}
                   <div className="flex justify-center">
                     {" "}
@@ -96,7 +96,7 @@ export default function DetectionRecordsTable({
                     />
                   </div>
                 </td>
-                <td className="px-4 py-2 text-center">
+                <td className="px-4 py-2 text-center whitespace-nowrap">
                   {/* Actions */}
                   <div className="flex justify-center space-x-2">
                     {" "}
@@ -177,7 +177,7 @@ export default function DetectionRecordsTable({
             ))
           ) : (
             <tr>
-              <td colSpan="9" className="text-center py-4 text-[#6D2932]">
+              <td colSpan="9" className="text-center py-4 text-[#6D2932] whitespace-nowrap">
                 {/* Empty state */}
                 No detection records found
               </td>

@@ -13,7 +13,7 @@ export default function DetectionRecordModal({
   if (!recordModalIsOpen || !selectedDetection) return null; // Only render if open and record selected
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center"
+      className="fixed inset-0 z-50 flex items-center justify-center px-2 sm:px-0"
       style={{ alignItems: "flex-start", paddingTop: "1vh" }}
     >
       {" "}
@@ -43,7 +43,7 @@ export default function DetectionRecordModal({
             setRecordModalIsOpen(false);
             setSelectedDetection(null);
           }}
-          className="absolute top-3 right-3 text-[#6D2932] text-xl font-bold hover:text-[#99B19C] w-7 h-7 flex items-center justify-center rounded-full hover:bg-[#F0EBE3]"
+          className="absolute top-3 right-3 text-[#6D2932] text-2xl sm:text-xl font-bold hover:text-[#99B19C] w-10 h-10 sm:w-7 sm:h-7 flex items-center justify-center rounded-full hover:bg-[#F0EBE3]"
           aria-label="Close"
         >
           &times;
@@ -309,7 +309,7 @@ export default function DetectionRecordModal({
           {/* Button wrapper */}
           <button
             onClick={() => handleDownloadReport(selectedDetection)}
-            className="px-3 py-1 rounded-full bg-[#6D2932] text-[#FAF5EF] font-medium transition-all duration-300 border border-[#6D2932] hover:scale-105 hover:shadow-lg text-xs"
+            className="w-full sm:w-auto px-4 py-3 sm:px-3 sm:py-1 min-h-[44px] rounded-full bg-[#6D2932] text-[#FAF5EF] font-medium transition-all duration-300 border border-[#6D2932] hover:scale-105 hover:shadow-lg text-xs"
           >
             📝 Download PDF Report
           </button>

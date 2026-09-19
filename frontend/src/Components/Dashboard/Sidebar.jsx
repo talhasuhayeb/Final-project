@@ -13,7 +13,7 @@ export default function Sidebar({
 
   return (
     <div
-      className={`fixed top-1/2 left-0 h-80 w-44 bg-white/80 backdrop-blur-lg shadow-lg rounded-r-2xl border border-[#99B19C]/40 p-3 space-y-3 z-40 transition-transform duration-300 transform -translate-y-1/2 ${slideClass}`} // Container styles and motion
+      className={`fixed top-1/2 left-0 h-auto max-h-[calc(100vh-4rem)] w-52 sm:w-44 overflow-y-auto bg-white/80 backdrop-blur-lg shadow-lg rounded-r-2xl border border-[#99B19C]/40 p-3 space-y-3 z-40 transition-transform duration-300 transform -translate-y-1/2 ${slideClass}`} // Container styles and motion
       onMouseEnter={onEnter} // Keep open on hover
       onMouseLeave={onLeave} // Hide on leave
     >

@@ -121,7 +121,7 @@ const Hero = () => {
       <div className="max-w-7xl w-full mx-auto grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-0 items-center px-4 sm:px-6 md:px-12 relative z-10 pt-8 md:pt-20">
         {/* Left: Content */}
         <motion.div
-          className="flex flex-col justify-center items-start bg-white/95 backdrop-blur-xl rounded-2xl p-5 sm:p-10 shadow-2xl mx-auto w-full max-w-lg md:max-w-md lg:max-w-lg"
+          className="flex flex-col justify-center items-start bg-white/95 backdrop-blur-xl rounded-2xl p-5 sm:p-8 md:p-8 lg:p-10 shadow-2xl mx-auto w-full max-w-lg md:max-w-md lg:max-w-lg"
           animate={{ x: [0, -10, 10, 0] }}
           transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
         >
@@ -224,7 +224,7 @@ const Hero = () => {
           }}
         >
           <motion.div
-            className="relative w-[180px] h-[180px] sm:w-[300px] sm:h-[300px] rounded-2xl shadow-2xl border-4 flex items-center justify-center overflow-hidden"
+            className="relative w-[150px] h-[150px] sm:w-[220px] sm:h-[220px] md:w-[260px] md:h-[260px] lg:w-[300px] lg:h-[300px] rounded-2xl shadow-2xl border-4 flex items-center justify-center overflow-hidden"
             style={{
               borderColor: "#561C24",
               background: "rgba(255,255,255,0.85)",

@@ -15,14 +15,14 @@ export default function BloodArticles({
     <div className="p-6 min-h-screen bg-[#FAF5EF]">
       {/* Carousel */}
       <div className="w-full max-w-5xl mx-auto mb-12">
-        <div className="relative rounded-2xl overflow-hidden shadow-lg bg-white border-2 border-[#C7B7A3] h-[350px] md:h-[420px] flex items-center justify-center">
+        <div className="relative rounded-2xl overflow-hidden shadow-lg bg-white border-2 border-[#C7B7A3] h-[220px] sm:h-[300px] md:h-[420px] flex items-center justify-center">
           <img
             src={trendingArticles[carouselIndex].image}
             alt={trendingArticles[carouselIndex].title}
             className="absolute top-0 left-0 w-full h-full object-cover transition-all duration-500"
           />
-          <div className="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-[#6D2932]/80 to-transparent">
-            <h2 className="text-2xl md:text-4xl font-bold text-white mb-1">
+          <div className="absolute bottom-0 left-0 w-full p-3 sm:p-6 bg-gradient-to-t from-[#6D2932]/80 to-transparent">
+            <h2 className="text-lg sm:text-2xl md:text-4xl font-bold text-white mb-1">
               {trendingArticles[carouselIndex].title}
             </h2>
             <p className="text-white text-base mb-2">
@@ -54,7 +54,7 @@ export default function BloodArticles({
       <h2 className="text-xl sm:text-2xl font-bold mb-6 sm:mb-8 text-[#6D2932] text-center">
         Trending Blood Articles
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
         {trendingArticles.map((article) => (
           <div
             key={article.id}

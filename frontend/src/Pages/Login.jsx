@@ -114,7 +114,7 @@ const Login = () => {
                     name="email"
                     value={loginInfo.email}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 bg-transparent border-b-2 border-[#C7B7A3] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#C7B7A3] transition-all text-xs sm:text-sm focus:scale-105"
+                    className="w-full px-4 py-3 sm:py-2 bg-transparent border-b-2 border-[#C7B7A3] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#C7B7A3] transition-all text-xs sm:text-sm focus:scale-105"
                     placeholder="Email"
                   />
                 </motion.div>
@@ -126,7 +126,7 @@ const Login = () => {
                     name="password"
                     value={loginInfo.password}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 bg-transparent border-b-2 border-[#C7B7A3] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#C7B7A3] transition-all text-xs sm:text-sm focus:scale-105"
+                    className="w-full px-4 py-3 sm:py-2 bg-transparent border-b-2 border-[#C7B7A3] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#C7B7A3] transition-all text-xs sm:text-sm focus:scale-105"
                     placeholder="Password"
                   />
                 </motion.div>
@@ -136,7 +136,7 @@ const Login = () => {
                     name="role"
                     value={loginInfo.role}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 bg-transparent border-b-2 border-[#C7B7A3] focus:outline-none focus:border-[#6D2932] text-[#6D2932] text-xs sm:text-sm focus:scale-105"
+                    className="w-full px-4 py-3 sm:py-2 bg-transparent border-b-2 border-[#C7B7A3] focus:outline-none focus:border-[#6D2932] text-[#6D2932] text-xs sm:text-sm focus:scale-105"
                   >
                     <option value="user">User</option>
                     <option value="admin">Admin</option>
@@ -153,7 +153,7 @@ const Login = () => {
                     color: "#6D2932",
                     borderColor: "#6D2932",
                   }}
-                  className="w-full py-2 rounded-full bg-[#6D2932] text-[#FAF5EF] font-bold text-base shadow-md transition-all duration-300 border-2 border-[#6D2932] focus:outline-none focus:ring-2 focus:ring-[#C7B7A3]/50 sm:text-sm cursor-pointer"
+                  className="w-full py-3 sm:py-2 min-h-[44px] rounded-full bg-[#6D2932] text-[#FAF5EF] font-bold text-base shadow-md transition-all duration-300 border-2 border-[#6D2932] focus:outline-none focus:ring-2 focus:ring-[#C7B7A3]/50 sm:text-sm cursor-pointer"
                 >
                   Login
                 </motion.button>
@@ -198,7 +198,7 @@ const Login = () => {
           borderColor: "#C7B7A3",
         }}
         whileTap={{ scale: 0.95 }}
-        className="fixed bottom-6 right-6 z-50 px-5 py-3 rounded-full bg-[#6D2932] text-[#FAF5EF] font-bold shadow-lg border-2 border-[#6D2932] transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#C7B7A3]/50 text-xs sm:text-sm cursor-pointer"
+        className="fixed bottom-6 right-6 z-50 px-5 py-3 rounded-full bg-[#6D2932] text-[#FAF5EF] font-bold shadow-lg border-2 border-[#6D2932] transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#C7B7A3]/50 text-xs sm:text-sm cursor-pointer min-h-[44px] min-w-[44px]"
         aria-label="Go to Home"
       >
         Home

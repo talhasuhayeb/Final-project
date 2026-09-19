@@ -108,7 +108,7 @@ const Register = () => {
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 bg-transparent border-b-2 border-[#C7B7A3] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#C7B7A3] transition-all text-xs sm:text-sm focus:scale-105"
+                    className="w-full px-4 py-3 sm:py-2 bg-transparent border-b-2 border-[#C7B7A3] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#C7B7A3] transition-all text-xs sm:text-sm focus:scale-105"
                     placeholder="Full Name"
                   />
                 </motion.div>
@@ -119,7 +119,7 @@ const Register = () => {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 bg-transparent border-b-2 border-[#C7B7A3] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#C7B7A3] transition-all text-xs sm:text-sm focus:scale-105"
+                    className="w-full px-4 py-3 sm:py-2 bg-transparent border-b-2 border-[#C7B7A3] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#C7B7A3] transition-all text-xs sm:text-sm focus:scale-105"
                     placeholder="Email"
                   />
                 </motion.div>
@@ -130,7 +130,7 @@ const Register = () => {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 bg-transparent border-b-2 border-[#C7B7A3] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#C7B7A3] transition-all text-xs sm:text-sm focus:scale-105"
+                    className="w-full px-4 py-3 sm:py-2 bg-transparent border-b-2 border-[#C7B7A3] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#C7B7A3] transition-all text-xs sm:text-sm focus:scale-105"
                     placeholder="Password"
                   />
                 </motion.div>
@@ -141,7 +141,7 @@ const Register = () => {
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 bg-transparent border-b-2 border-[#C7B7A3] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#C7B7A3] transition-all text-xs sm:text-sm focus:scale-105"
+                    className="w-full px-4 py-3 sm:py-2 bg-transparent border-b-2 border-[#C7B7A3] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#C7B7A3] transition-all text-xs sm:text-sm focus:scale-105"
                     placeholder="Phone Number"
                   />
                 </motion.div>
@@ -153,7 +153,7 @@ const Register = () => {
                     value={formData.dateOfBirth}
                     onChange={handleChange}
                     max={new Date().toISOString().split("T")[0]}
-                    className="w-full px-4 py-2 bg-transparent border-b-2 border-[#C7B7A3] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#C7B7A3] transition-all text-xs sm:text-sm focus:scale-105"
+                    className="w-full px-4 py-3 sm:py-2 bg-transparent border-b-2 border-[#C7B7A3] focus:outline-none focus:border-[#6D2932] text-[#6D2932] placeholder-[#C7B7A3] transition-all text-xs sm:text-sm focus:scale-105"
                     placeholder="Date of Birth"
                   />
                 </motion.div>
@@ -161,7 +161,7 @@ const Register = () => {
                   <span className="text-[#C7B7A3] text-xs sm:text-sm mb-2">
                     Gender
                   </span>
-                  <div className="flex gap-6">
+                  <div className="flex flex-wrap gap-4 sm:gap-6">
                     <motion.label
                       whileHover={{ scale: 1.08 }}
                       className="inline-flex items-center transition-transform duration-200"
@@ -222,7 +222,7 @@ const Register = () => {
                     color: "#6D2932",
                     borderColor: "#6D2932", // maroon border on hover
                   }}
-                  className="w-full py-2 rounded-full bg-[#6D2932] text-[#FAF5EF] font-bold text-base shadow-md transition-all duration-300 border-2 border-[#6D2932] focus:outline-none focus:ring-2 focus:ring-[#C7B7A3]/50 sm:text-sm cursor-pointer"
+                  className="w-full py-3 sm:py-2 min-h-[44px] rounded-full bg-[#6D2932] text-[#FAF5EF] font-bold text-base shadow-md transition-all duration-300 border-2 border-[#6D2932] focus:outline-none focus:ring-2 focus:ring-[#C7B7A3]/50 sm:text-sm cursor-pointer"
                 >
                   Register
                 </motion.button>
@@ -260,7 +260,7 @@ const Register = () => {
           borderColor: "#C7B7A3",
         }}
         whileTap={{ scale: 0.95 }}
-        className="fixed bottom-6 right-6 z-50 px-5 py-3 rounded-full bg-[#6D2932] text-[#FAF5EF] font-bold shadow-lg border-2 border-[#6D2932] transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#C7B7A3]/50 text-xs sm:text-sm cursor-pointer"
+        className="fixed bottom-6 right-6 z-50 px-5 py-3 rounded-full bg-[#6D2932] text-[#FAF5EF] font-bold shadow-lg border-2 border-[#6D2932] transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#C7B7A3]/50 text-xs sm:text-sm cursor-pointer min-h-[44px] min-w-[44px]"
         aria-label="Go to Home"
       >
         Home

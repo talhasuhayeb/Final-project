@@ -19,18 +19,18 @@ export default function UsersTable({
           {" "}
           {/* Header */}
           <tr>
-            <th className="px-4 py-3 text-center font-semibold">Profile ID</th>
-            <th className="px-4 py-3 text-center font-semibold">Name</th>
-            <th className="px-4 py-3 text-center font-semibold">Email</th>
-            <th className="px-4 py-3 text-center font-semibold">Gender</th>
-            <th className="px-4 py-3 text-center font-semibold">Phone</th>
-            <th className="px-4 py-3 text-center font-semibold">DOB</th>
-            <th className="px-4 py-3 text-center font-semibold">
+            <th className="px-4 py-3 text-center font-semibold whitespace-nowrap">Profile ID</th>
+            <th className="px-4 py-3 text-center font-semibold whitespace-nowrap">Name</th>
+            <th className="px-4 py-3 text-center font-semibold whitespace-nowrap">Email</th>
+            <th className="px-4 py-3 text-center font-semibold whitespace-nowrap">Gender</th>
+            <th className="px-4 py-3 text-center font-semibold whitespace-nowrap">Phone</th>
+            <th className="px-4 py-3 text-center font-semibold whitespace-nowrap">DOB</th>
+            <th className="px-4 py-3 text-center font-semibold whitespace-nowrap">
               Profile Picture
             </th>
-            <th className="px-4 py-3 text-center font-semibold">Role</th>
-            <th className="px-4 py-3 text-center font-semibold">Status</th>
-            <th className="px-4 py-3 text-center font-semibold">Actions</th>
+            <th className="px-4 py-3 text-center font-semibold whitespace-nowrap">Role</th>
+            <th className="px-4 py-3 text-center font-semibold whitespace-nowrap">Status</th>
+            <th className="px-4 py-3 text-center font-semibold whitespace-nowrap">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -46,31 +46,31 @@ export default function UsersTable({
               >
                 {" "}
                 {/* Row */}
-                <td className="px-4 py-2 text-center text-[#6D2932]">
+                <td className="px-4 py-2 text-center text-[#6D2932] whitespace-nowrap">
                   {/* ID */}
                   {user._id ? user._id.substring(0, 8) : "N/A"}
                 </td>
-                <td className="px-4 py-2 text-center text-[#6D2932] font-medium">
+                <td className="px-4 py-2 text-center text-[#6D2932] font-medium whitespace-nowrap">
                   {/* Name */}
                   {user.name}
                 </td>
-                <td className="px-4 py-2 text-center text-[#6D2932]">
+                <td className="px-4 py-2 text-center text-[#6D2932] whitespace-nowrap">
                   {/* Email */}
                   {user.email}
                 </td>
-                <td className="px-4 py-2 text-center text-[#6D2932]">
+                <td className="px-4 py-2 text-center text-[#6D2932] whitespace-nowrap">
                   {/* Gender */}
                   {user.gender || "N/A"}
                 </td>
-                <td className="px-4 py-2 text-center text-[#6D2932]">
+                <td className="px-4 py-2 text-center text-[#6D2932] whitespace-nowrap">
                   {/* Phone */}
                   {user.phone}
                 </td>
-                <td className="px-4 py-2 text-center text-[#6D2932]">
+                <td className="px-4 py-2 text-center text-[#6D2932] whitespace-nowrap">
                   {/* DOB */}
                   {formatDate(user.dateOfBirth)}
                 </td>
-                <td className="px-4 py-2 text-center">
+                <td className="px-4 py-2 text-center whitespace-nowrap">
                   {/* Avatar */}
                   {user.profilePicture ? (
                     <div className="flex justify-center">
@@ -93,7 +93,7 @@ export default function UsersTable({
                     <span className="text-gray-400 italic">No image</span>
                   )}
                 </td>
-                <td className="px-4 py-2 text-center">
+                <td className="px-4 py-2 text-center whitespace-nowrap">
                   {/* Role select */}
                   <select
                     value={user.role || "user"}
@@ -106,7 +106,7 @@ export default function UsersTable({
                     <option value="admin">Admin</option>
                   </select>
                 </td>
-                <td className="px-4 py-2 text-center">
+                <td className="px-4 py-2 text-center whitespace-nowrap">
                   {/* Status */}
                   <span
                     className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
@@ -118,7 +118,7 @@ export default function UsersTable({
                     {user.isBlocked ? "Blocked" : "Active"}
                   </span>
                 </td>
-                <td className="px-4 py-2 text-center">
+                <td className="px-4 py-2 text-center whitespace-nowrap">
                   {/* Actions */}
                   <div className="flex justify-center space-x-1">
                     {" "}
@@ -207,7 +207,7 @@ export default function UsersTable({
             ))
           ) : (
             <tr>
-              <td colSpan="12" className="text-center py-4 text-[#6D2932]">
+              <td colSpan="12" className="text-center py-4 text-[#6D2932] whitespace-nowrap">
                 {/* Empty state */}
                 No users found
               </td>

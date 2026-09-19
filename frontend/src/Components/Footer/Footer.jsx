@@ -74,7 +74,7 @@ const Footer = ({ variant = 2 }) => {
       }}
     >
       <motion.div
-        className="max-w-6xl mx-auto w-full bg-white/80 backdrop-blur-xl rounded-2xl shadow-2xl px-8 py-8 flex flex-col md:flex-row md:justify-between md:items-center gap-8"
+        className="max-w-6xl mx-auto w-full bg-white/80 backdrop-blur-xl rounded-2xl shadow-2xl px-4 py-6 sm:px-6 sm:py-8 md:px-8 flex flex-col md:flex-row md:justify-between md:items-center gap-8"
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, type: "spring", stiffness: 80 }}
@@ -117,7 +117,7 @@ const Footer = ({ variant = 2 }) => {
         </div>
 
         {/* Links */}
-        <div className="flex flex-col md:flex-row gap-10">
+        <div className="flex flex-col sm:flex-row gap-6 sm:gap-10">
           <div>
             <h3
               className="font-semibold tracking-wider uppercase mb-4"
@@ -175,7 +175,7 @@ const Footer = ({ variant = 2 }) => {
         </div>
 
         {/* Social Icons */}
-        <div className="flex space-x-6 mt-6 md:mt-0">
+        <div className="flex justify-center sm:justify-start space-x-6 mt-6 md:mt-0">
           <motion.a
             href="#"
             className="transition p-2 min-w-[48px] min-h-[48px] flex items-center justify-center"

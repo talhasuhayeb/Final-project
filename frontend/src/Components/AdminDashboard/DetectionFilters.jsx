@@ -16,7 +16,7 @@ export default function DetectionFilters({
       <h3 className="text-sm font-semibold mb-3 text-[#6D2932]">
         Filter Records
       </h3>
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         {" "}
         {/* Grid for filters */}
         <div>
@@ -84,10 +84,10 @@ export default function DetectionFilters({
         </div>
       </div>
       {/* Search bar and buttons in one line */}
-      <div className="flex items-center mt-4 space-x-3">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center mt-4 space-y-2 sm:space-y-0 sm:space-x-3">
         {" "}
         {/* Row for search and buttons */}
-        <div className="relative flex items-center flex-grow mr-2">
+        <div className="relative flex items-center flex-grow sm:mr-2 mr-0">
           {" "}
           {/* Search input */}
           <input
@@ -127,13 +127,13 @@ export default function DetectionFilters({
         </div>
         <button
           onClick={resetFilters}
-          className="px-4 py-1.5 border border-[#D7D1C9] rounded-lg text-[#6D2932] hover:bg-[#D7D1C9]/30 transition-colors text-xs"
+          className="w-full sm:w-auto px-4 py-1.5 border border-[#D7D1C9] rounded-lg text-[#6D2932] hover:bg-[#D7D1C9]/30 transition-colors text-xs"
         >
           Reset Filters
         </button>
         <button
           onClick={applyFilters}
-          className="px-4 py-1.5 bg-[#6D2932] text-white rounded-lg hover:bg-[#99B19C] transition-colors text-xs"
+          className="w-full sm:w-auto px-4 py-1.5 bg-[#6D2932] text-white rounded-lg hover:bg-[#99B19C] transition-colors text-xs"
         >
           Apply Filters
         </button>

@@ -735,7 +735,7 @@ const AdminDashboard = () => {
         {/* Users Section */}
         {activeTab === "users" && (
           <section className="mb-8">
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2 sm:gap-0">
               <h2 className="text-xl sm:text-2xl font-bold text-[#6D2932] tracking-tight">
                 All Users
               </h2>
@@ -773,7 +773,7 @@ const AdminDashboard = () => {
         {/* Detection Records Section */}
         {activeTab === "detection" && (
           <section className="mb-8">
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2 sm:gap-0">
               <h2 className="text-xl sm:text-2xl font-bold text-[#6D2932] tracking-tight">
                 Blood Group Detection Records
               </h2>

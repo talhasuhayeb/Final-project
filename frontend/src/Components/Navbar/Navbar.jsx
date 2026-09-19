@@ -216,7 +216,7 @@ export default function Navbar() {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="sm:hidden fixed top-20 right-4 w-60 bg-[#561C24]/90 backdrop-blur-xl shadow-2xl border-l border-[#C7B7A3] flex flex-col p-6 gap-4 z-50 rounded-2xl"
+            className="sm:hidden fixed top-20 right-4 w-60 bg-[#561C24]/90 backdrop-blur-xl shadow-2xl border-l border-[#C7B7A3] flex flex-col p-6 gap-4 z-50 rounded-2xl max-h-[calc(100vh-6rem)] overflow-y-auto"
             style={{
               background:
                 "linear-gradient(135deg, rgba(86,28,36,0.95) 60%, rgba(232,216,196,0.09) 100%)",

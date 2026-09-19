@@ -85,14 +85,23 @@
 
 @media (max-width: 768px) {
   .card {
+    max-width: 22em;
     width: 100%;
-    max-width: 100%;
     padding: 1.5em 1em;
   }
   .card:hover {
     width: 100%;
+    max-width: 22em;
   }
   .card .logo {
     width: 3em;
+  }
+  .hover_content {
+    max-height: 200px;
+    opacity: 1;
+  }
+  .card .hover_content {
+    max-height: 200px;
+    opacity: 1;
   }
 }

@@ -28,7 +28,7 @@ export default function DetectionPanel({
   };
 
   return (
-    <div className="w-full max-w-lg mx-auto p-4 sm:p-8 bg-white rounded-xl shadow-lg flex flex-col items-center gap-6 sm:gap-8">
+    <div className="w-full max-w-lg lg:max-w-xl mx-auto p-4 sm:p-8 bg-white rounded-xl shadow-lg flex flex-col items-center gap-6 sm:gap-8">
       <motion.h2
         custom={0}
         initial="hidden"
