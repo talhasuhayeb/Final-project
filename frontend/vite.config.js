@@ -6,8 +6,6 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
-    allowedHosts: [
-      "bindu-011l.onrender.com",
-    ],
+    allowedHosts: ["bindu-011l.onrender.com"],
   },
 });
