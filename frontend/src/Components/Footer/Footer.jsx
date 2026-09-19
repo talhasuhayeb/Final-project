@@ -126,7 +126,7 @@ const Footer = ({ variant = 2 }) => {
               Navigation
             </h3>
             <ul className="space-y-2">
-              {["Home", "About", "Blood Bank"].map((label) => (
+              {["Home", "About"].map((label) => (
                 <motion.li key={label} initial="rest" whileHover="hover">
                   <motion.a
                     href={label === "About" ? "#about" : "#"}

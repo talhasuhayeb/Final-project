@@ -143,7 +143,6 @@ export default function Navbar() {
                 aboutSection.scrollIntoView({ behavior: "smooth" });
             }}
           />
-          <NavLink to="/blood-bank" label="Blood Bank" />
         </div>
 
         {/* Auth Buttons */}
@@ -236,11 +235,7 @@ export default function Navbar() {
                   aboutSection.scrollIntoView({ behavior: "smooth" });
               }}
             />
-            <NavLink
-              to="/blood-bank"
-              label="Blood Bank"
-              onClick={() => setMenuOpen(false)}
-            />
+
             <div className="border-t border-[#C7B7A3] pt-4 mt-4 flex flex-col gap-2">
               {!loggedInUser ? (
                 <>
