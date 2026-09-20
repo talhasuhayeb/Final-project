@@ -387,12 +387,13 @@ As shown in the Confusion Matrix, the model demonstrated near-perfect precision 
 
 ## 24. 🎓 ACADEMIC / PROJECT INFORMATION
 
-| Information | Details                                                |
-| ----------- | ------------------------------------------------------ |
-| **Project** | Bindu                                                  |
-| **Type**    | Academic / Research Prototype                          |
-| **Domain**  | Artificial Intelligence, Computer Vision, & Biometrics |
-| **Focus**   | Fingerprint-based blood group classification           |
+| Information    | Details                                                                           |
+| -------------- | --------------------------------------------------------------------------------- |
+| **Project**    | Bindu: A Non-Invasive Blood Group Detection Using Fingerprint                     |
+| **Type**       | Academic / Research Prototype                                                     |
+| **Domain**     | Artificial Intelligence, Computer Vision, & Biometrics                            |
+| **Focus**      | Fingerprint-based blood group classification                                      |
+| **Conference** | Presented at the 5th International Gaziantep Scientific Research Congress, Turkey |
 
 ---
 
