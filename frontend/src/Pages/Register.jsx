@@ -50,12 +50,22 @@ const Register = () => {
         body: JSON.stringify(formData),
       });
       const result = await response.json();
-      const { success, message, error } = result;
+      const {
+        success,
+        message,
+        error,
+        jwtToken,
+        name: userName,
+        role,
+      } = result;
       if (success) {
         toast.success(message, { position: "top-center" });
+        localStorage.setItem("token", jwtToken);
+        localStorage.setItem("loggedInUser", userName);
+        localStorage.setItem("role", role);
         setTimeout(() => {
-          navigate("/");
-        }, 3000);
+          navigate("/dashboard");
+        }, 1000);
       } else if (error) {
         const details = error?.details?.[0]?.message;
         toast.error(details || message, { position: "top-center" });
